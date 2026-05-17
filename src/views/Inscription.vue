@@ -110,10 +110,10 @@ watch(() => form.childDob, (newVal) => {
     return
   }
   const picked = new Date(newVal)
-  // For 2026/2027, born after 2021-12-31 is too young generally (under 5-6)
-  const limit = new Date('2021-12-31')
+  // For 2026/2027, born after 2020-12-31 is too young (under 6)
+  const limit = new Date('2020-12-31')
   if (picked > limit) {
-    alertMsg.value = "L’âge de votre enfant ne permet pas d’être inscrit(e) pour l’année 2026/2027 au sein de notre centre."
+    alertMsg.value = "L’âge de votre enfant ne permet pas d’être inscrit(e) pour l’année 2026/2027 au sein de notre centre. Il doit avoir 6 ans ou plus au 31 décembre 2026."
   } else {
     alertMsg.value = ''
   }
@@ -206,6 +206,7 @@ const classRecommendationInfo = computed(() => {
   let unknownLevel = false;
 
   const nextLevels = {
+      'GS': 'CP',
       'N0': 'N1_1',
       'N1_1': 'N2_1',
       'N2_1': 'N2_2',
@@ -238,7 +239,7 @@ const classRecommendationInfo = computed(() => {
   }
 
   if (!targetLevel && !unknownLevel) {
-    if (age === 6 || age === 7) {
+    if (age < 8) {
       targetLevel = 'CP'; 
     } else if (age === 8 || age === 9) {
       targetLevel = 'N0'; targetAgeRange = 'Petit';
@@ -248,7 +249,7 @@ const classRecommendationInfo = computed(() => {
       targetLevel = 'Adult';
     } else if (age >= 13) {
       targetLevel = 'Adolescent';
-    } else if (age < 6) {
+    } else {
       unknownLevel = true;
     }
   }
@@ -354,9 +355,8 @@ const validateStep1 = () => {
 
   if (form.childDob) {
     const dobDate = new Date(form.childDob)
-    const today = new Date()
-    const age = today.getFullYear() - dobDate.getFullYear()
-    if (age < 5) return false // Too young filter loosely
+    const limit = new Date('2020-12-31')
+    if (dobDate > limit) return false // Too young filter loosely
   }
 
   return true
