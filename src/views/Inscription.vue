@@ -332,7 +332,7 @@ const startRegistrationQueue = () => {
   
   fillStudentData(childrenQueue.value[0])
   currentStep.value = 1
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  scrollToTop()
 }
 
 const confirmSelection = async () => {
@@ -456,13 +456,13 @@ const nextStep = async () => {
         childrenQueue.value = [];
         currentIndex.value = 0;
         currentStep.value = 1;
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        scrollToTop()
       }
     } catch (err) {
       console.error("Search error", err);
       // Fallback: Just proceed
       currentStep.value = 1;
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      scrollToTop()
     } finally {
       isSearching.value = false;
     }
@@ -475,7 +475,7 @@ const nextStep = async () => {
     } else {
       currentStep.value++
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scrollToTop()
   }
 }
 
@@ -485,7 +485,7 @@ const prevStep = () => {
   } else if (currentStep.value > 0) {
     currentStep.value--
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  scrollToTop()
 }
 
 const submitForm = async () => {
@@ -551,10 +551,18 @@ const moveToNextChild = () => {
     form.paymentTerms = false
 
     currentStep.value = 1
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    scrollToTop()
   } else {
     demandSent.value = true
   }
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+  setTimeout(() => {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+  }, 50)
 }
 
 const reloadPage = () => {
