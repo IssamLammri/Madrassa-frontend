@@ -84,13 +84,6 @@
           </span>
         </BaseButton>
       </form>
-
-      <p class="login-page__register">
-        {{ $t('auth.no_account') }}
-        <RouterLink to="/register">
-          {{ $t('auth.register_link') }}
-        </RouterLink>
-      </p>
     </BaseCard>
   </div>
 </template>

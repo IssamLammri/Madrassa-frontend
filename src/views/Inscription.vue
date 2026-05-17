@@ -225,11 +225,13 @@ const classRecommendationInfo = computed(() => {
         targetLevel = 'N0'; targetAgeRange = 'Petit';
       } else if (age >= 10 && age < 13) {
         targetLevel = 'N0'; targetAgeRange = 'Grand';
+      } else if (age > 18) {
+        targetLevel = 'Adult';
       } else if (age >= 13) {
-        targetLevel = 'ADO/Arabe'; 
-      }
-    } else {
+        targetLevel = 'Adolescent'; 
+      } else {
         unknownLevel = true;
+      }
     }
   }
 
@@ -240,10 +242,12 @@ const classRecommendationInfo = computed(() => {
       targetLevel = 'N0'; targetAgeRange = 'Petit';
     } else if (age >= 10 && age <= 12) {
       targetLevel = 'N0'; targetAgeRange = 'Grand';
+    } else if (age > 18) {
+      targetLevel = 'Adult';
     } else if (age >= 13) {
-      targetLevel = 'ADO/Arabe';
+      targetLevel = 'Adolescent';
     } else if (age < 6) {
-        unknownLevel = true;
+      unknownLevel = true;
     }
   }
 
