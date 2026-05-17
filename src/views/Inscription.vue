@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/services/apiClient.js'
 import { 
   CheckCircle2, 
@@ -14,6 +15,7 @@ import {
   Send
 } from 'lucide-vue-next'
 
+const router = useRouter()
 const currentStep = ref(0)
 const isSubmitting = ref(false)
 const demandSent = ref(false)
@@ -597,7 +599,7 @@ const reloadPage = () => {
         </div>
 
         <div class="mt-8 flex justify-center">
-          <button @click="reloadPage" class="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-500 shadow-md transition-colors w-full sm:w-auto">
+          <button @click="router.push('/login')" class="px-6 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-500 shadow-md transition-colors w-full sm:w-auto">
             Retour à l'accueil
           </button>
         </div>
@@ -645,7 +647,7 @@ const reloadPage = () => {
           <button @click="reloadPage" class="px-6 py-3 border-2 border-emerald-600 text-emerald-600 font-bold rounded-xl hover:bg-emerald-50 transition-colors w-full sm:w-auto">
             Inscrire un autre enfant
           </button>
-          <button class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 shadow-md transition-colors w-full sm:w-auto">
+          <button @click="router.push('/login')" class="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 shadow-md transition-colors w-full sm:w-auto">
             Retour à l'accueil
           </button>
         </div>
