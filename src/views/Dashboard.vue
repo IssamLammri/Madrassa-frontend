@@ -71,7 +71,7 @@ const loadDemands = async () => {
   isLoading.value = true
   try {
     // Modify URL once backend endpoint for getting demands is available.
-    const res = await api.get('/registrations/api/me') 
+    const res = await api.get('/api/parent/registrations/me') 
     if (res.data) {
       demands.value = Array.isArray(res.data) ? res.data : (res.data.registrations || [])
     }
