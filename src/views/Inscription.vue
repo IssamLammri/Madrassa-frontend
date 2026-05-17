@@ -223,14 +223,14 @@ const classRecommendationInfo = computed(() => {
     if (nextLevels[currentLevel]) {
       targetLevel = nextLevels[currentLevel];
     } else if (currentLevel === 'CP' || currentLevel.toLowerCase() === 'cp') {
-      if (age >= 8 && age <= 9) {
+      if (age < 10) {
         targetLevel = 'N0'; targetAgeRange = 'Petit';
       } else if (age >= 10 && age < 13) {
         targetLevel = 'N0'; targetAgeRange = 'Grand';
       } else if (age > 18) {
         targetLevel = 'Adult';
       } else if (age >= 13) {
-        targetLevel = 'Adolescent'; 
+        targetLevel = 'Adolescent';
       } else {
         unknownLevel = true;
       }
