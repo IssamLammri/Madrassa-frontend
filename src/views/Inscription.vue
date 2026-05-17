@@ -561,20 +561,20 @@ const reloadPage = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full font-sans text-slate-800">
-    <div class="max-w-4xl mx-auto space-y-8">
+  <div class="min-h-screen bg-slate-50 py-6 sm:py-12 px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full font-sans text-slate-800">
+    <div class="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       
       <!-- Header -->
-      <div class="relative text-center bg-white rounded-3xl p-8 shadow-sm border border-slate-100 mb-8">
-        <div v-if="childrenQueue.length > 1 && currentStep > 0 && demandSent === false" class="absolute top-4 right-4 bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full shadow-sm">
+      <div class="relative text-center bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 mb-6 sm:mb-8">
+        <div v-if="childrenQueue.length > 1 && currentStep > 0 && demandSent === false" class="absolute top-4 right-4 bg-emerald-100 text-emerald-800 text-[10px] sm:text-sm font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-sm">
           Enfant {{ currentIndex + 1 }} sur {{ childrenQueue.length }}
         </div>
-        <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Inscription Cours d’Arabe</h1>
-        <p class="text-slate-500 font-medium">Année scolaire 2026 / 2027</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight mb-2 sm:mt-0 mt-4">Inscription Cours d’Arabe</h1>
+        <p class="text-slate-500 font-medium text-sm sm:text-base">Année scolaire 2026 / 2027</p>
 
-        <div v-if="currentStep > 0 && demandSent === false && !showInitialSiblingPrompt" class="mt-6 inline-block bg-blue-50 text-blue-700 px-6 py-3 rounded-xl border border-blue-100 shadow-sm text-left">
-          <span class="text-blue-500 text-xs uppercase tracking-wider font-bold block mb-1">Dossier en cours</span>
-          <span class="text-xl sm:text-2xl font-bold">{{ form.childFirstName }} {{ form.childLastName }}</span>
+        <div v-if="currentStep > 0 && demandSent === false && !showInitialSiblingPrompt" class="mt-6 inline-block bg-blue-50 text-blue-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl border border-blue-100 shadow-sm text-left">
+          <span class="text-blue-500 text-[10px] sm:text-xs uppercase tracking-wider font-bold block mb-1">Dossier en cours</span>
+          <span class="text-lg sm:text-2xl font-bold">{{ form.childFirstName }} {{ form.childLastName }}</span>
         </div>
       </div>
 
@@ -654,24 +654,31 @@ const reloadPage = () => {
       <form v-else @submit.prevent="submitForm" class="space-y-8">
         
         <!-- STEPPER -->
-        <div v-show="!showInitialSiblingPrompt" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+        <div v-show="!showInitialSiblingPrompt" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-100">
+          
+          <!-- Mobile Stepper Title -->
+          <div class="sm:hidden mb-4 text-center">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Etape {{ currentStep + 1 }} sur {{ stepLabels.length }}</span>
+            <h3 class="text-base font-bold text-slate-800">{{ stepLabels[currentStep] }}</h3>
+          </div>
+
           <div class="flex items-center justify-between w-full relative">
             <div class="absolute left-0 top-1/2 -mt-[1px] w-full h-[2px] bg-slate-100 z-0"></div>
             
             <template v-for="(label, idx) in stepLabels" :key="idx">
               <div class="relative z-10 flex flex-col items-center">
                 <div 
-                  class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300"
+                  class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all duration-300"
                   :class="[
-                    currentStep > idx ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 ring-4 ring-white' : 
-                    currentStep === idx ? 'bg-slate-800 text-white ring-4 ring-white shadow-md' : 'bg-slate-200 text-slate-500'
+                    currentStep > idx ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 ring-2 sm:ring-4 ring-white' : 
+                    currentStep === idx ? 'bg-slate-800 text-white ring-2 sm:ring-4 ring-white shadow-md' : 'bg-slate-200 text-slate-500'
                   ]"
                 >
-                  <Check v-if="currentStep > idx" class="w-5 h-5" />
+                  <Check v-if="currentStep > idx" class="w-4 h-4 sm:w-5 sm:h-5" />
                   <span v-else>{{ idx + 1 }}</span>
                 </div>
                 <span 
-                  class="absolute top-12 text-[10px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-colors"
+                  class="hidden sm:block absolute top-12 text-[10px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-colors"
                   :class="currentStep >= idx ? 'text-slate-800' : 'text-slate-400'"
                 >
                   {{ label }}
@@ -679,11 +686,11 @@ const reloadPage = () => {
               </div>
             </template>
           </div>
-          <div class="h-8"></div> <!-- Spacer for absolute labels -->
+          <div class="hidden sm:block h-8"></div> <!-- Spacer for absolute labels -->
         </div>
 
         <!-- SIBLING PROMPT CONTAINER -->
-        <div v-if="showInitialSiblingPrompt" class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 animate-[fadeIn_0.3s_ease-out]">
+        <div v-if="showInitialSiblingPrompt" class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 animate-[fadeIn_0.3s_ease-out]">
           <div class="text-center mb-8">
             <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <UserCircle class="w-8 h-8" />
@@ -730,7 +737,7 @@ const reloadPage = () => {
         </div>
 
         <!-- FORM CONTAINER -->
-        <div v-else class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden transition-all duration-500">
+        <div v-else class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden transition-all duration-500">
           
           <!-- Alert si erreur de date -->
           <div v-if="alertMsg" class="mb-6 bg-red-50 text-red-700 px-4 py-4 rounded-xl flex items-start border border-red-100 shadow-sm">
@@ -740,16 +747,16 @@ const reloadPage = () => {
 
           <!-- Selection Dialog -->
           <div v-if="showSelectionDialog" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-            <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 animate-[fadeIn_0.2s_ease-out] max-h-[90vh] overflow-y-auto">
-              <h3 class="text-xl font-bold text-slate-800 mb-2">Plusieurs dossiers trouvés</h3>
-              <p class="text-slate-600 mb-6">Nous avons trouvé plusieurs enfants correspondant à ce nom. Veuillez sélectionner le vôtre :</p>
+            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full p-6 animate-[fadeIn_0.2s_ease-out] max-h-[90vh] overflow-y-auto">
+              <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-2">Plusieurs dossiers trouvés</h3>
+              <p class="text-sm sm:text-base text-slate-600 mb-6">Nous avons trouvé plusieurs enfants correspondant à ce nom. Veuillez sélectionner le vôtre :</p>
               
               <div class="space-y-4">
                 <div v-for="(res, idx) in searchResults" :key="idx" 
                      @click="selectedStudentIndex = idx"
                      class="p-4 rounded-xl border-2 cursor-pointer transition-colors"
                      :class="selectedStudentIndex === idx ? 'border-emerald-500 bg-emerald-50' : 'border-slate-200 hover:border-emerald-300'">
-                  <div class="flex items-start gap-4">
+                  <div class="flex items-start gap-3 sm:gap-4">
                     <div class="w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center shrink-0"
                          :class="selectedStudentIndex === idx ? 'border-emerald-500' : 'border-slate-300'">
                       <div v-if="selectedStudentIndex === idx" class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
@@ -758,15 +765,15 @@ const reloadPage = () => {
                       <p class="font-bold text-slate-800">
                         {{ res.student?.firstName || res.firstName }} {{ res.student?.lastName || res.lastName }}
                       </p>
-                      <p class="text-sm text-slate-600">Né(e) le : {{ formatDate(res.student?.birthDate || res.student?.dob || res.birthDate || res.dob) }}</p>
+                      <p class="text-xs sm:text-sm text-slate-600">Né(e) le : {{ formatDate(res.student?.birthDate || res.student?.dob || res.birthDate || res.dob) }}</p>
                       <div v-if="res.parent || res.parentEntity">
-                        <p class="text-sm text-slate-500 mt-1">
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">
                           Parents : 
                           <span v-if="res.parent?.father">{{ res.parent.father.firstName }} {{ res.parent.father.lastName }}</span>
                           <span v-if="res.parent?.mother"> &amp; {{ res.parent.mother.firstName }} {{ res.parent.mother.lastName }}</span>
                         </p>
                       </div>
-                      <div v-if="res.registrations && res.registrations.length > 0" class="mt-2 text-xs text-slate-500 font-medium">
+                      <div v-if="res.registrations && res.registrations.length > 0" class="mt-2 text-[10px] sm:text-xs text-slate-500 font-medium">
                          Inscriptions: {{ res.registrations.map(r => r.class?.name).join(', ') }}
                       </div>
                     </div>
@@ -774,23 +781,23 @@ const reloadPage = () => {
                 </div>
               </div>
               
-              <div class="mt-8 flex justify-end gap-3">
-                <button type="button" @click="cancelSelection" class="px-5 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl">Ignorer (Nouveau)</button>
-                <button type="button" @click="confirmSelection" :disabled="selectedStudentIndex === null" class="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 disabled:opacity-50">Confirmer</button>
+              <div class="mt-8 flex flex-col-reverse sm:flex-row justify-end gap-3">
+                <button type="button" @click="cancelSelection" class="w-full sm:w-auto px-5 py-3 sm:py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl text-sm sm:text-base">Ignorer (Nouveau)</button>
+                <button type="button" @click="confirmSelection" :disabled="selectedStudentIndex === null" class="w-full sm:w-auto px-5 py-3 sm:py-2.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 disabled:opacity-50 text-sm sm:text-base">Confirmer</button>
               </div>
             </div>
           </div>
 
           <!-- STEP 0 -->
-          <div v-show="currentStep === 0" class="space-y-8 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 0" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-emerald-100 text-emerald-600 rounded-lg"><Search class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Identification de l’enfant</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Identification de l’enfant</h2>
             </div>
             
-            <p class="text-slate-600">Veuillez saisir le nom et le prénom de l'enfant pour vérifier s'il est déjà inscrit dans notre base de données.</p>
+            <p class="text-sm sm:text-base text-slate-600">Veuillez saisir le nom et le prénom de l'enfant pour vérifier s'il est déjà inscrit dans notre base de données.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Nom de l’enfant</label>
                 <input type="text" v-model.trim="form.childLastName" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow text-slate-800" required />
@@ -803,13 +810,13 @@ const reloadPage = () => {
           </div>
 
           <!-- STEP 1 -->
-          <div v-show="currentStep === 1" class="space-y-8 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 1" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-emerald-100 text-emerald-600 rounded-lg"><UserCircle class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Détails de l’enfant</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Détails de l’enfant</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Nom de l’enfant</label>
                 <input type="text" v-model.trim="form.childLastName" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-shadow text-slate-800" required />
@@ -837,14 +844,14 @@ const reloadPage = () => {
           </div>
 
           <!-- STEP 2: Parents -->
-          <div v-show="currentStep === 2" class="space-y-8 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 2" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><UserCircle class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Information des parents</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Information des parents</h2>
             </div>
 
             <!-- Father -->
-            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
               <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider">Le Père</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -863,7 +870,7 @@ const reloadPage = () => {
             </div>
 
             <!-- Mother -->
-            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
               <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider">La Mère</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -887,7 +894,7 @@ const reloadPage = () => {
               <input type="email" v-model.trim="form.contactEmail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
               <div class="md:col-span-3">
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Adresse postale</label>
                 <input type="text" v-model.trim="form.address" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
@@ -902,7 +909,7 @@ const reloadPage = () => {
               </div>
             </div>
 
-            <div class="mt-6 p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div class="mt-6 p-4 sm:p-6 bg-slate-50 border border-slate-200 rounded-2xl">
               <h3 class="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">Création de compte (Optionnel)</h3>
               <p class="text-xs text-slate-500 mb-4">Afin de faciliter vos prochaines démarches et de suivre vos demandes d'inscription, vous pouvez choisir un mot de passe pour accéder à la plateforme prochainement.</p>
               <div>
@@ -913,28 +920,28 @@ const reloadPage = () => {
           </div>
 
           <!-- STEP 3: Classe -->
-          <div v-show="currentStep === 3" class="space-y-6 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 3" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><Calendar class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Choix de la classe & créneau</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Choix de la classe & créneau</h2>
             </div>
 
-            <div v-if="classRecommendationInfo.unknownLevel || (!recommendedClasses.length && !allClasses.length)" class="bg-amber-50 text-amber-800 p-6 rounded-2xl border border-amber-200">
+            <div v-if="classRecommendationInfo.unknownLevel || (!recommendedClasses.length && !allClasses.length)" class="bg-amber-50 text-amber-800 p-4 sm:p-6 rounded-2xl border border-amber-200">
                <p class="font-bold flex items-center mb-2"><Info class="w-5 h-5 mr-2" /> Niveau non déterminé</p>
-               <p class="text-sm">
+               <p class="text-xs sm:text-sm">
                   Le niveau de votre enfant n'est pas connu, ou ne correspond pas aux schémas standards.
                   Merci de continuer à inscrire votre enfant et de vous rapprocher de l'administration après l'inscription afin de définir le bon niveau.
                </p>
             </div>
             
             <div v-else>
-               <p class="text-slate-600 mb-6 font-medium">
+               <p class="text-sm sm:text-base text-slate-600 mb-6 font-medium">
                   Voici les classes recommandées pour le niveau de <strong>{{ form.childFirstName }}</strong>. Vous pouvez choisir un créneau ci-dessous.
                </p>
                
-               <div v-if="recommendedClasses.length === 0" class="bg-amber-50 text-amber-800 p-6 rounded-2xl border border-amber-200 mb-6">
-                 <p class="font-bold">Aucune classe trouvée pour ce niveau.</p>
-                 <p class="text-sm">Vous pouvez continuer sans choisir de créneau et contacter l'administration.</p>
+               <div v-if="recommendedClasses.length === 0" class="bg-amber-50 text-amber-800 p-4 sm:p-6 rounded-2xl border border-amber-200 mb-6">
+                 <p class="font-bold text-sm sm:text-base">Aucune classe trouvée pour ce niveau.</p>
+                 <p class="text-xs sm:text-sm">Vous pouvez continuer sans choisir de créneau et contacter l'administration.</p>
                </div>
                
                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -946,16 +953,16 @@ const reloadPage = () => {
                    <input type="radio" :value="c.id" v-model="form.selectedClassId" class="sr-only" />
                    
                    <div class="flex justify-between items-start mb-2">
-                     <span class="font-bold text-slate-800 text-lg">{{ c.name }}</span>
+                     <span class="font-bold text-slate-800 text-base sm:text-lg">{{ c.name }}</span>
                      <div class="w-5 h-5 rounded-full border-2 mt-0.5 flex items-center justify-center shrink-0"
                           :class="form.selectedClassId === c.id ? 'border-indigo-500' : 'border-slate-300'">
                        <div v-if="form.selectedClassId === c.id" class="w-2.5 h-2.5 bg-indigo-500 rounded-full"></div>
                      </div>
                    </div>
                    
-                   <div class="text-sm text-slate-600 space-y-1">
+                   <div class="text-xs sm:text-sm text-slate-600 space-y-1">
                      <p><strong>Niveau:</strong> {{ c.level }} <span v-if="c.ageRange">({{ c.ageRange }})</span></p>
-                     <p class="flex items-center text-slate-500"><Calendar class="w-4 h-4 mr-1"/> {{ c.day }} de {{ c.startHour }} à {{ c.endHour }}</p>
+                     <p class="flex items-center text-slate-500"><Calendar class="w-4 h-4 mr-1 shrink-0"/> {{ c.day }} de {{ c.startHour }} à {{ c.endHour }}</p>
                      <p v-if="c.capacity" class="text-xs mt-2" :class="c.capacity.remainingPlaces > 0 ? 'text-emerald-600' : 'text-red-500 font-bold'">
                        Places restantes: {{ c.capacity.remainingPlaces }}
                      </p>
@@ -963,7 +970,7 @@ const reloadPage = () => {
                  </label>
                </div>
 
-               <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex items-start text-sm text-amber-800 mb-6">
+               <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex items-start text-xs sm:text-sm text-amber-800 mb-6">
                  <AlertCircle class="w-5 h-5 text-amber-600 mr-3 shrink-0 mt-0.5" />
                  <div>
                    <span class="font-bold block mb-1 text-amber-900">Attention important</span>
@@ -971,7 +978,7 @@ const reloadPage = () => {
                  </div>
                </div>
 
-               <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 flex items-start text-sm text-indigo-800 mb-6">
+               <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 flex items-start text-xs sm:text-sm text-indigo-800 mb-6">
                  <Info class="w-5 h-5 text-indigo-500 mr-2 shrink-0 mt-0.5" />
                  <p>
                    Si vous voyez que votre enfant a fait l'étude de l'arabe auparavant dans une autre école, 
@@ -980,34 +987,34 @@ const reloadPage = () => {
                </div>
             </div>
 
-            <label class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-indigo-500 bg-indigo-50 border-indigo-200': form.skipClassSelection}">
+            <label class="flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-indigo-500 bg-indigo-50 border-indigo-200': form.skipClassSelection}">
               <input type="checkbox" v-model="form.skipClassSelection" @change="form.skipClassSelection ? form.selectedClassId = null : null" class="mt-1 w-5 h-5 text-indigo-600 rounded shrink-0 focus:ring-indigo-500" />
-              <span class="text-sm text-slate-700 leading-snug">Je souhaite continuer sans choisir le créneau pour le moment et faire la demande d'inscription compléte.</span>
+              <span class="text-xs sm:text-sm text-slate-700 leading-snug">Je souhaite continuer sans choisir le créneau pour le moment et faire la demande d'inscription compléte.</span>
             </label>
 
           </div>
 
           <!-- STEP 4: Autorisations -->
-          <div v-show="currentStep === 4" class="space-y-6 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 4" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-amber-100 text-amber-600 rounded-lg"><Info class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Autorisations & consentements</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Autorisations & consentements</h2>
             </div>
 
-            <fieldset class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <fieldset class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
               <legend class="text-sm font-bold text-slate-800 mb-4">Personnes autorisées à récupérer l’enfant après le cours</legend>
-              <div class="flex flex-wrap gap-6 mb-4">
+              <div class="flex flex-wrap gap-4 sm:gap-6 mb-4">
                 <label class="flex items-center cursor-pointer">
                   <input type="checkbox" value="Père" v-model="form.authorized" class="w-5 h-5 text-amber-600 rounded border-slate-300 focus:ring-amber-500" />
-                  <span class="ml-2 font-medium text-slate-700">Père</span>
+                  <span class="ml-2 font-medium text-sm sm:text-base text-slate-700">Père</span>
                 </label>
                 <label class="flex items-center cursor-pointer">
                   <input type="checkbox" value="Mère" v-model="form.authorized" class="w-5 h-5 text-amber-600 rounded border-slate-300 focus:ring-amber-500" />
-                  <span class="ml-2 font-medium text-slate-700">Mère</span>
+                  <span class="ml-2 font-medium text-sm sm:text-base text-slate-700">Mère</span>
                 </label>
                 <label class="flex items-center cursor-pointer">
                   <input type="checkbox" value="Autre" v-model="form.authorized" class="w-5 h-5 text-amber-600 rounded border-slate-300 focus:ring-amber-500" />
-                  <span class="ml-2 font-medium text-slate-700">Autre</span>
+                  <span class="ml-2 font-medium text-sm sm:text-base text-slate-700">Autre</span>
                 </label>
               </div>
               <div v-if="form.authorized.includes('Autre')" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-200">
@@ -1016,31 +1023,31 @@ const reloadPage = () => {
               </div>
             </fieldset>
 
-            <fieldset class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between flex-wrap gap-4">
+            <fieldset class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <legend class="text-sm font-bold text-slate-800">J’autorise mon enfant à partir seul après l’école ?</legend>
               <div class="flex gap-6">
-                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.leaveAlone" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2">Oui</span></label>
-                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.leaveAlone" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2">Non</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.leaveAlone" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2 text-sm sm:text-base">Oui</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.leaveAlone" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2 text-sm sm:text-base">Non</span></label>
               </div>
             </fieldset>
 
-            <fieldset class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between flex-wrap gap-4">
+            <fieldset class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <legend class="text-sm font-bold text-slate-800">Droit à l’image</legend>
                 <p class="text-[11px] text-slate-500 mt-1">J’autorise l’école à utiliser photos/vidéos de mon enfant</p>
               </div>
               <div class="flex gap-6">
-                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.imageRights" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2">Oui</span></label>
-                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.imageRights" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2">Non</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.imageRights" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2 text-sm sm:text-base">Oui</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.imageRights" class="w-5 h-5 text-amber-600 focus:ring-amber-500" /><span class="ml-2 text-sm sm:text-base">Non</span></label>
               </div>
             </fieldset>
             
-            <fieldset class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+            <fieldset class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <legend class="text-sm font-bold text-red-600">Informations médicales à nous transmettre</legend>
                 <div class="flex gap-6">
-                  <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.medicalInfo" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2">Oui</span></label>
-                  <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.medicalInfo" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2">Non</span></label>
+                  <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.medicalInfo" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2 text-sm sm:text-base">Oui</span></label>
+                  <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.medicalInfo" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2 text-sm sm:text-base">Non</span></label>
                 </div>
               </div>
               <div v-if="form.medicalInfo === 'oui'" class="mt-4">
@@ -1048,67 +1055,67 @@ const reloadPage = () => {
               </div>
             </fieldset>
 
-            <fieldset class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between flex-wrap gap-4">
+            <fieldset class="bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                <div>
                 <legend class="text-sm font-bold text-red-600">L’enfant suit-il un traitement médical ?</legend>
                 <p class="text-[11px] text-slate-500 mt-1">(aucun traitement sans ordonnance)</p>
               </div>
               <div class="flex gap-6">
-                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.medicalTreatment" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2">Oui</span></label>
-                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.medicalTreatment" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2">Non</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="oui" v-model="form.medicalTreatment" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2 text-sm sm:text-base">Oui</span></label>
+                <label class="flex items-center cursor-pointer"><input type="radio" value="non" v-model="form.medicalTreatment" class="w-5 h-5 text-red-600 focus:ring-red-500" /><span class="ml-2 text-sm sm:text-base">Non</span></label>
               </div>
             </fieldset>
           </div>
 
           <!-- STEP 5: Validation -->
-          <div v-show="currentStep === 5" class="space-y-6 animate-[fadeIn_0.3s_ease-out]">
+          <div v-show="currentStep === 5" class="space-y-6 sm:space-y-8 animate-[fadeIn_0.3s_ease-out]">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div class="p-2 bg-purple-100 text-purple-600 rounded-lg"><CheckCircle2 class="w-6 h-6" /></div>
-              <h2 class="text-xl font-bold text-slate-800">Récapitulatif & Validation</h2>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-800">Récapitulatif & Validation</h2>
             </div>
             
-            <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100 shadow-sm mb-6">
-              <ul class="space-y-3 text-sm text-slate-700">
-                <li class="flex items-start"><span class="font-bold w-32 shrink-0">Enfant :</span> <span>{{ form.childFirstName }} {{ form.childLastName }} ({{ form.childGender }}), Né(e) le {{ form.childDob }}</span></li>
-                <li class="flex items-start"><span class="font-bold w-32 shrink-0">Parents :</span> <span>{{ form.fatherFirstName }} & {{ form.motherFirstName }} - {{ form.contactEmail }}</span></li>
-                <li class="flex items-start"><span class="font-bold w-32 shrink-0">Adresse :</span> <span>{{ form.address }}, {{ form.postalCode }} {{ form.city }}</span></li>
-                <li v-if="form.selectedClassId" class="flex items-start"><span class="font-bold w-32 shrink-0">Classe :</span> <span>{{ allClasses.find(c => c.id === form.selectedClassId)?.name || '...' }} ({{ allClasses.find(c => c.id === form.selectedClassId)?.day || '' }} {{ allClasses.find(c => c.id === form.selectedClassId)?.startHour || '' }})</span></li>
-                <li v-else-if="form.skipClassSelection" class="flex items-start"><span class="font-bold w-32 shrink-0">Classe :</span> <span class="text-amber-600">Choix reporté</span></li>
-                <li class="flex items-start"><span class="font-bold w-32 shrink-0">Autorisés :</span> <span>{{ form.authorized.join(', ') }}</span></li>
+            <div class="bg-purple-50 p-4 sm:p-6 rounded-2xl border border-purple-100 shadow-sm mb-6 overflow-hidden">
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-700">
+                <li class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Enfant :</span> <span>{{ form.childFirstName }} {{ form.childLastName }} ({{ form.childGender }}), Né(e) le {{ form.childDob }}</span></li>
+                <li class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Parents :</span> <span class="break-words">{{ form.fatherFirstName }} & {{ form.motherFirstName }} <br class="sm:hidden" />- {{ form.contactEmail }}</span></li>
+                <li class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Adresse :</span> <span>{{ form.address }}, {{ form.postalCode }} {{ form.city }}</span></li>
+                <li v-if="form.selectedClassId" class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Classe :</span> <span>{{ allClasses.find(c => c.id === form.selectedClassId)?.name || '...' }} ({{ allClasses.find(c => c.id === form.selectedClassId)?.day || '' }} {{ allClasses.find(c => c.id === form.selectedClassId)?.startHour || '' }})</span></li>
+                <li v-else-if="form.skipClassSelection" class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Classe :</span> <span class="text-amber-600">Choix reporté</span></li>
+                <li class="flex flex-col sm:flex-row sm:items-start"><span class="font-bold sm:w-32 shrink-0 mb-1 sm:mb-0">Autorisés :</span> <span>{{ form.authorized.join(', ') }}</span></li>
               </ul>
             </div>
 
             <div class="space-y-4">
-              <label class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.commitmentSitu}">
+              <label class="flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.commitmentSitu}">
                 <input type="checkbox" v-model="form.commitmentSitu" class="mt-1 w-5 h-5 text-emerald-600 rounded" required />
-                <span class="text-sm text-slate-700 leading-snug">
+                <span class="text-xs sm:text-sm text-slate-700 leading-snug">
                   Je m’engage à informer l’école de tout changement de situation (coordonnées, autorisations, etc.)
                 </span>
               </label>
 
-              <label class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.legalDeclaration}">
+              <label class="flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.legalDeclaration}">
                 <input type="checkbox" v-model="form.legalDeclaration" class="mt-1 w-5 h-5 text-emerald-600 rounded shrink-0" required />
-                <span class="text-sm text-slate-700 leading-snug">
+                <span class="text-xs sm:text-sm text-slate-700 leading-snug">
                   Je soussigné(e), responsable légal(e) de l’enfant, déclare exacts les renseignements fournis et autorise le CCIB38 à prendre, si besoin, toutes mesures nécessaires (traitement médical, hospitalisation, intervention chirurgicale).
                 </span>
               </label>
 
-              <label class="flex items-start gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.paymentTerms}">
+              <label class="flex items-start gap-3 sm:gap-4 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors" :class="{'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-200': form.paymentTerms}">
                 <input type="checkbox" v-model="form.paymentTerms" class="mt-1 w-5 h-5 text-emerald-600 rounded shrink-0" required />
-                <div class="text-sm text-slate-700 leading-snug">
+                <div class="text-xs sm:text-sm text-slate-700 leading-snug">
                   J’accepte que l’inscription ne soit validée qu’à réception du règlement. <br/>
-                  <small class="text-slate-500 block mt-2 p-2 bg-white rounded-lg border border-slate-100">Grille tarifaire : 1 enfant : 230 € | 2 enfants : 430 € | 3 enfants : 600 € | frais de dossier : 10 € par enfant.<br/>Paiement possible en CB, espèces ou chèques (plusieurs fois).</small>
+                  <small class="text-slate-500 block mt-2 p-2 bg-white rounded-lg border border-slate-100 text-[10px] sm:text-xs">Grille tarifaire : 1 enfant : 230 € | 2 enfants : 430 € | 3 enfants : 600 € | frais de dossier : 10 € par enfant.<br/>Paiement possible en CB, espèces ou chèques (plusieurs fois).</small>
                 </div>
               </label>
             </div>
           </div>
 
           <!-- NAVIGATION BUTTONS -->
-          <div class="mt-10 pt-6 border-t border-slate-100 flex items-center justify-between">
+          <div class="mt-8 sm:mt-10 pt-6 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
             <button 
               type="button" 
               @click="prevStep" 
-              class="flex items-center px-5 py-2.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-bold text-sm rounded-xl transition-colors disabled:opacity-0"
+              class="flex items-center justify-center w-full sm:w-auto px-5 py-3 sm:py-2.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-bold text-sm rounded-xl transition-colors disabled:opacity-0"
               :disabled="currentStep === 0"
             >
               <ChevronLeft class="w-4 h-4 mr-1" /> Précédent
@@ -1119,7 +1126,7 @@ const reloadPage = () => {
               type="button" 
               @click="nextStep" 
               :disabled="!stepValid || isSearching"
-              class="flex items-center px-6 py-2.5 bg-slate-800 text-white hover:bg-slate-700 font-bold text-sm rounded-xl transition-colors shadow-md shadow-slate-800/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex items-center justify-center w-full sm:w-auto px-6 py-3 sm:py-2.5 bg-slate-800 text-white hover:bg-slate-700 font-bold text-sm rounded-xl transition-colors shadow-md shadow-slate-800/10 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span v-if="isSearching" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
@@ -1134,7 +1141,7 @@ const reloadPage = () => {
               v-else
               type="submit" 
               :disabled="!stepValid || isSubmitting"
-              class="flex items-center px-8 py-3 bg-emerald-600 text-white hover:bg-emerald-500 font-bold text-sm rounded-xl transition-colors shadow-lg shadow-emerald-600/30 disabled:bg-emerald-400 disabled:cursor-wait"
+              class="flex items-center justify-center w-full sm:w-auto px-8 py-3 bg-emerald-600 text-white hover:bg-emerald-500 font-bold text-sm rounded-xl transition-colors shadow-lg shadow-emerald-600/30 disabled:bg-emerald-400 disabled:cursor-wait"
             >
               <span v-if="isSubmitting" class="flex items-center gap-2">
                 <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
