@@ -1,0 +1,63 @@
+$white: #ffffff !default;
+$white-soft: #f8f8f8 !default;
+$white-mute: #f2f2f2 !default;
+$black: #181818 !default;
+$black-soft: #222222 !default;
+$black-mute: #282828 !default;
+$indigo: #2c3e50 !default;
+
+/* 2. CSS Variables (Runtime Variables) */
+:root {
+  --vt-c-white: #{$white};
+  --vt-c-white-soft: #{$white-soft};
+  --vt-c-white-mute: #{$white-mute};
+  --vt-c-black: #{$black};
+  --vt-c-black-soft: #{$black-soft};
+  --vt-c-black-mute: #{$black-mute};
+  --vt-c-indigo: #{$indigo};
+
+  // Semantic Light Mode
+  --color-background: var(--vt-c-white);
+  --color-background-soft: var(--vt-c-white-soft);
+  --color-background-mute: var(--vt-c-white-mute);
+  --color-border: rgba(60, 60, 60, 0.12);
+  --color-border-hover: rgba(60, 60, 60, 0.29);
+  --color-heading: var(--vt-c-indigo);
+  --color-text: var(--vt-c-indigo);
+  --section-gap: 160px;
+}
+
+// 3. Semantic Dark Mode
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--vt-c-black);
+    --color-background-soft: var(--vt-c-black-soft);
+    --color-background-mute: var(--vt-c-black-mute);
+    --color-border: rgba(84, 84, 84, 0.48);
+    --color-border-hover: rgba(84, 84, 84, 0.65);
+    --color-heading: var(--vt-c-white);
+    --color-text: rgba(235, 235, 235, 0.64);
+  }
+}
+
+// 4. Global Reset
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', sans-serif;
+}

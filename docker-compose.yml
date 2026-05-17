@@ -1,0 +1,19 @@
+services:
+  frontend:
+    container_name: ningiahub-front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3002:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - ningiahub-network
+    env_file:
+      - .env
+    restart: always
+
+networks:
+  ningiahub-network:
+    external: true

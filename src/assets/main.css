@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@import "./base.scss";
+:root {
+  --radius-card: 24px;
+  --radius-card-sm: 20px;
+  --radius-card-xs: 16px;
+  --radius-button: 14px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+}
+@theme {
+  /* Colors */
+  --color-primary: #00c896;
+  --color-primary-hover: #00b386;
+  --color-accent: #cd395b;
+  --color-heading: #2D3239;
+  --color-body: #5A616A;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-bg-cream: #F9F8F6;
+  --color-input-bg: #F2F1ED;
+  --color-border: #E8E7E1;
+
+  /* Additional semantic colors */
+  --color-success-bg: rgba(72, 156, 134, 0.08);
+  --color-success-border: rgba(72, 156, 134, 0.18);
+  --color-accent-bg: rgba(214, 106, 129, 0.08);
+  --color-accent-border: rgba(214, 106, 129, 0.18);
+  --color-heading-soft: rgba(45, 50, 57, 0.05);
+  --color-heading-muted: rgba(45, 50, 57, 0.9);
+  --color-body-soft: rgba(90, 97, 106, 0.6);
+  --color-body-faint: rgba(90, 97, 106, 0.5);
+  --color-body-ultra-faint: rgba(90, 97, 106, 0.3);
+  --color-white-soft-border: rgba(255, 255, 255, 0.1);
+  --color-white-soft-text: rgba(255, 255, 255, 0.6);
+
+  /* Shadows */
+  --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 20px 60px -15px rgba(0, 0, 0, 0.06);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 10px 24px -12px rgba(72, 156, 134, 0.45);
+  --shadow-thumb: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --shadow-tooltip: 0 16px 32px rgba(0, 0, 0, 0.12);
+
+  /* Radii */
+  --radius-card: 24px;
+  --radius-card-sm: 20px;
+  --radius-card-xs: 16px;
+  --radius-button: 12px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+
+  /* Spacing */
+  --space-section: 5rem;
+  --space-card: 2.5rem;
+  --space-card-lg: 3rem;
+  --space-block: 2rem;
+  --space-inline: 1rem;
+
+  /* Typography */
+  --text-display: 3.75rem;
+  --text-h1: 3rem;
+  --text-h2: 2.25rem;
+  --text-h3: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-overline: 0.6875rem;
+
+  /* Layout */
+  --container-page: 72rem;
+  --control-height: 3.25rem;
+
+  /* Transitions */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 700ms;
+}
+
+@layer base {
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg-cream text-body font-sans antialiased selection:bg-primary/30;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-heading font-black tracking-tight;
+  }
+}
+
+#app {
+  min-height: 100vh;
+  width: 100%;
+}
