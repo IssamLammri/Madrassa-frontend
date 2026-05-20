@@ -17,13 +17,14 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
-const isMaintenance = ref(true)
+const isMaintenance = ref(false)
 const currentStep = ref(0)
 const isSubmitting = ref(false)
 const demandSent = ref(false)
 const requestToken = ref(null)
 const completedRegistrations = ref([])
 const isParentBanned = ref(false)
+const submitError = ref('')
 const allClasses = ref([])
 
 onMounted(async () => {
@@ -495,30 +496,33 @@ const prevStep = () => {
 const submitForm = async () => {
   if (!stepValid.value) return
   isSubmitting.value = true
+  submitError.value = ''
 
   try {
     const response = await api.post('/registrations/arabic-cours/api/create', form)
-    requestToken.value = response.data?.token || response.data?.id
     
-    completedRegistrations.value.push({
-      firstName: form.childFirstName,
-      lastName: form.childLastName,
-      dob: form.childDob,
-      gender: form.childGender
-    })
+    if (response.data && (response.data.token || response.data.id || response.data.status === 'success')) {
+      requestToken.value = response.data.token || response.data.id
+      
+      completedRegistrations.value.push({
+        firstName: form.childFirstName,
+        lastName: form.childLastName,
+        dob: form.childDob,
+        gender: form.childGender
+      })
+      
+      moveToNextChild()
+    } else {
+      throw new Error('Réponse invalide de l\'API')
+    }
   } catch (error) {
+    console.error(error.response?.data);
     console.error('Erreur lors de l’inscription :', error)
-    completedRegistrations.value.push({
-      firstName: form.childFirstName,
-      lastName: form.childLastName,
-      dob: form.childDob,
-      gender: form.childGender
-    })
+    submitError.value = 'Une erreur s\'est produite lors de l\'inscription. Merci de retenter l\'inscription prochainement.'
+    scrollToTop()
   } finally {
     isSubmitting.value = false
   }
-
-  moveToNextChild()
 }
 
 const moveToNextChild = () => {
@@ -679,6 +683,15 @@ const reloadPage = () => {
 
       <form v-else @submit.prevent="submitForm" class="space-y-8">
         
+        <!-- API Error Alert -->
+        <div v-if="submitError" class="bg-red-50 border border-red-200 text-red-700 px-4 sm:px-6 py-4 rounded-2xl flex items-start shadow-sm mb-6">
+          <AlertCircle class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5 text-red-500" />
+          <div>
+            <p class="font-bold text-sm sm:text-base mb-1">Erreur de soumission</p>
+            <p class="text-sm font-medium">{{ submitError }}</p>
+          </div>
+        </div>
+
         <!-- STEPPER -->
         <div v-show="!showInitialSiblingPrompt" class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-100">
           
