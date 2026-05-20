@@ -12,10 +12,12 @@ import {
   UserCircle,
   AlertCircle,
   Check,
-  Send
+  Send,
+  Wrench
 } from 'lucide-vue-next'
 
 const router = useRouter()
+const isMaintenance = ref(true)
 const currentStep = ref(0)
 const isSubmitting = ref(false)
 const demandSent = ref(false)
@@ -372,7 +374,9 @@ const validateStep2 = () => {
     (form.fatherPhone || form.motherPhone) &&
     form.address &&
     form.postalCode &&
-    form.city
+    form.city &&
+    form.parentPassword && 
+    form.parentPassword.length >= 6
   )
 }
 
@@ -571,7 +575,19 @@ const reloadPage = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 py-6 sm:py-12 px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full font-sans text-slate-800">
+  <div v-if="isMaintenance" class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 max-w-lg w-full text-center">
+       <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+         <Wrench class="w-8 h-8" />
+       </div>
+       <h1 class="text-2xl font-bold text-slate-800 mb-2">Inscription en maintenance</h1>
+       <p class="text-slate-600 mb-8">
+         Nous effectuons une courte mise à jour. Les inscriptions seront de retour très rapidement ! Merci de votre patience.
+       </p>
+    </div>
+  </div>
+
+  <div v-else class="min-h-screen bg-slate-50 py-6 sm:py-12 px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full font-sans text-slate-800">
     <div class="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       
       <!-- Header -->
@@ -920,11 +936,11 @@ const reloadPage = () => {
             </div>
 
             <div class="mt-6 p-4 sm:p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-              <h3 class="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">Création de compte (Optionnel)</h3>
-              <p class="text-xs text-slate-500 mb-4">Afin de faciliter vos prochaines démarches et de suivre vos demandes d'inscription, vous pouvez choisir un mot de passe pour accéder à la plateforme prochainement.</p>
+              <h3 class="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">Création de compte (Obligatoire)</h3>
+              <p class="text-xs text-slate-500 mb-4">Afin de faciliter vos prochaines démarches et de suivre vos demandes d'inscription, vous devez choisir un mot de passe pour accéder à la plateforme prochainement.</p>
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Mot de passe pour votre compte parent</label>
-                <input type="password" v-model="form.parentPassword" placeholder="Minimum 6 caractères" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input type="password" v-model="form.parentPassword" placeholder="Minimum 6 caractères" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" required />
               </div>
             </div>
           </div>
