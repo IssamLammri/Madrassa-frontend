@@ -688,7 +688,8 @@ const reloadPage = () => {
           <AlertCircle class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5 text-red-500" />
           <div>
             <p class="font-bold text-sm sm:text-base mb-1">Erreur de soumission</p>
-            <p class="text-sm font-medium">{{ submitError }}</p>
+            <p class="text-sm font-medium mb-2">{{ submitError }}</p>
+            <p class="text-sm">Vous pouvez réessayer ultérieurement, nous contacter au <strong>04 58 00 89 73</strong> ou envoyer un email à <a href="mailto:contact@ccib38.fr" class="font-bold underline">contact@ccib38.fr</a> afin qu'on puisse voir le problème ensemble.</p>
           </div>
         </div>
 
