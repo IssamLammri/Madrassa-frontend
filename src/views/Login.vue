@@ -83,6 +83,12 @@
             <span class="login-page__spinner"></span>
           </span>
         </BaseButton>
+
+        <div class="mt-4 text-center">
+          <router-link to="/forgot-password" class="text-sm text-[var(--color-primary)] hover:underline">
+            Mot de passe oublié ?
+          </router-link>
+        </div>
       </form>
     </BaseCard>
   </div>

@@ -11,6 +11,16 @@ const routes = [
         redirect: '/login'
     },
     {
+        path: '/forgot-password',
+        name: 'ForgotPasswordPage',
+        component: () => import('@/views/ForgotPassword.vue')
+    },
+    {
+        path: '/reset-password/:token',
+        name: 'ResetPasswordPage',
+        component: () => import('@/views/ResetPassword.vue')
+    },
+    {
         path: '/register',
         name: 'RegisterPage',
         component: () => import('@/views/Register.vue')
