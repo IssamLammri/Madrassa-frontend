@@ -33,40 +33,37 @@ const routes = [
     {
         path: '/home',
         component: () => import('@/views/HomeView.vue'),
-        // Setting a redirect so '/home' automatically loads the dashboard
-        redirect: '/home/dashboard',
+        redirect: '/home/children',
         children: [
             {
-                // Removed the leading '/' to make it relative to /home
-                path: 'dashboard',
-                name: 'Dashboard',
-                component: () => import('@/views/Dashboard.vue')
-            },
-            {
-                path: 'contenus', // Matched to your HomeView.vue navigationItems
-                name: 'Content',
-                component: () => import('@/views/Content.vue')
-            },
-            {
-                path: 'ressources', // Matched to your HomeView.vue navigationItems
-                name: 'Resources',
-                component: () => import('@/views/Resources.vue')
-            },
-            {
-                path: 'design',
-                name: 'Design',
-                component: () => import('@/views/DesignSystem.vue')
-            },
-            {
-                path: 'team',
-                name: 'Team',
-                component: () => import('@/views/Team.vue')
-            },
-            {
-                // Moved inside so the Sidebar stays visible
                 path: 'profile',
                 name: 'Profile',
                 component: () => import('@/views/Profile.vue')
+            },
+            {
+                path: 'children',
+                name: 'Children',
+                component: () => import('@/views/Children.vue')
+            },
+            {
+                path: 'children/:id',
+                name: 'ChildDetail',
+                component: () => import('@/views/ChildDetail.vue')
+            },
+            {
+                path: 'classes',
+                name: 'Classes',
+                component: () => import('@/views/Classes.vue')
+            },
+            {
+                path: 'invoices',
+                name: 'Invoices',
+                component: () => import('@/views/Invoices.vue')
+            },
+            {
+                path: 'invoices/:id',
+                name: 'InvoiceDetail',
+                component: () => import('@/views/InvoiceDetail.vue')
             }
         ]
     }

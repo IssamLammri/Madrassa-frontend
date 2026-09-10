@@ -10,15 +10,11 @@
       <div class="home-view__topbar-actions ml-auto">
         <div class="home-view__user">
           <div class="home-view__user-meta">
-            <strong>{{ user.name || 'Utilisateur' }}</strong>
+            <strong>{{ user.name }}</strong>
           </div>
-          <img
-              v-if="user.avatar"
-              :src="user.avatar"
-              :alt="user.name"
-              class="home-view__avatar-image"
-              style="cursor: default;"
-          />
+          <div class="home-view__avatar-initials" style="cursor: default; width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; color: #475569; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+            {{ userInitials }}
+          </div>
         </div>
       </div>
     </header>
@@ -66,15 +62,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  BookOpen, LayoutDashboard, LogOut, Palette,
-  PanelLeftClose, PanelLeftOpen, Search, Sparkles, Users
+  BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users
 } from 'lucide-vue-next'
 import logoUrl from '@/assets/icons/logoccib38.jpg'
-import { getCurrentUser, logout } from '@/services/authApi.js'
+import { logout } from '@/services/authApi.js'
+import { getParentProfile } from '@/services/parentApi.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -90,15 +86,30 @@ const user = ref({
   avatar: '',
 })
 
+const userInitials = computed(() => {
+  const name = user.value.name;
+  if (!name) return 'U';
+  const parts = name.split(' ').filter(p => p.length > 0);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  } else if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return 'U';
+})
+
 const navigationItems = [
-  { key: 'demandes', labelKey: 'Liste des demandes', label: 'Liste des demandes', icon: LayoutDashboard, to: '/home/dashboard' }
+  { key: 'children', labelKey: 'Mes enfants', label: 'Mes enfants', icon: Users, to: '/home/children' },
+  { key: 'classes', labelKey: 'Classes', label: 'Classes', icon: BookOpen, to: '/home/classes' },
+  { key: 'invoices', labelKey: 'Mes factures', label: 'Mes factures', icon: FileText, to: '/home/invoices' },
+  { key: 'profile', labelKey: 'Mon profil', label: 'Mon profil', icon: UserCircle, to: '/home/profile' }
 ]
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value
 }
 
-const isNavItemActive = (item) => route.path === item.to
+const isNavItemActive = (item) => route.path.startsWith(item.to)
 
 const navigateTo = (item) => router.push(item.to)
 
@@ -111,18 +122,15 @@ const loadCurrentUser = async () => {
   isLoadingUser.value = true
 
   try {
-    const currentUser = await getCurrentUser()
+    const currentUser = await getParentProfile()
 
     user.value = {
-      name: `${currentUser.firstName ?? ''} ${currentUser.lastName ?? ''}`.trim() || currentUser.email || 'Utilisateur',
-      role: Array.isArray(currentUser.roles)
-          ? currentUser.roles.join(', ')
-          : currentUser.role || 'User',
-      avatar: currentUser.pictureUrl || 'https://i.pravatar.cc/120?img=32',
+      name: currentUser.displayName || currentUser.email || '',
+      role: 'Parent',
+      avatar: '',
     }
   } catch (error) {
     console.error('Erreur lors du chargement du profil utilisateur :', error)
-    // Removed handleLogout() to prevent redirect loop when backend is not ready
   } finally {
     isLoadingUser.value = false
   }
