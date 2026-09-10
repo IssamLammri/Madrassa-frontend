@@ -60,7 +60,7 @@
 
 .home-view__topbar-left {
   display: flex;
-  align-items: start;
+  align-items: center;
   gap: 0.875rem;
   min-width: 0;
 }
@@ -649,6 +649,61 @@
   }
 }
 
+
+.home-view__mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--color-heading);
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: var(--radius-button);
+}
+
+.home-view__mobile-menu-btn:hover {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+}
+
+.home-view__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.home-view__sidebar-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.home-view__sidebar-mobile-logo {
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.home-view__mobile-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-heading);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-button);
+}
+
+.home-view__mobile-close-btn:hover {
+  background: var(--color-input-bg);
+}
+
 @media (max-width: 1200px) {
   .home-view__stats,
   .home-view__quick-grid {
@@ -667,7 +722,37 @@
   }
 
   .home-view__sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    max-height: 100vh;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-strong);
+    display: flex;
+  }
+
+  .home-view__sidebar.is-mobile-open {
+    transform: translateX(0);
+  }
+
+  .home-view__mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-view__overlay.is-active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .home-view__sidebar-mobile-header {
+    display: flex;
   }
 
   .home-view__topbar {

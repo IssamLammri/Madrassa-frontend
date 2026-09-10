@@ -4,6 +4,9 @@
       <div class="home-view__topbar-glow" aria-hidden="true"></div>
 
       <div class="home-view__topbar-left">
+        <button class="home-view__mobile-menu-btn" @click="toggleMobileMenu">
+          <Menu :size="24" />
+        </button>
         <img :src="logoUrl" alt="CCIB38 Logo" class="home-view__topbar-logo" />
       </div>
 
@@ -19,7 +22,15 @@
       </div>
     </header>
 
-    <aside class="home-view__sidebar">
+    <div class="home-view__overlay" :class="{ 'is-active': isMobileMenuOpen }" @click="closeMobileMenu"></div>
+
+    <aside class="home-view__sidebar" :class="{ 'is-mobile-open': isMobileMenuOpen }">
+      <div class="home-view__sidebar-mobile-header">
+        <img :src="logoUrl" alt="CCIB38 Logo" class="home-view__sidebar-mobile-logo" />
+        <button class="home-view__mobile-close-btn" @click="closeMobileMenu">
+          <X :size="24" />
+        </button>
+      </div>
       <div class="home-view__sidebar-top">
         <div class="home-view__nav-scroll">
           <nav class="home-view__nav">
@@ -66,7 +77,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users
+  BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users, Menu, X
 } from 'lucide-vue-next'
 import logoUrl from '@/assets/icons/logoccib38.jpg'
 import { logout } from '@/services/authApi.js'
@@ -78,6 +89,7 @@ const { t } = useI18n()
 
 const search = ref('')
 const isSidebarCollapsed = ref(false)
+const isMobileMenuOpen = ref(false)
 const isLoadingUser = ref(false)
 
 const user = ref({
@@ -109,9 +121,20 @@ const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value
 }
 
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+}
+
 const isNavItemActive = (item) => route.path.startsWith(item.to)
 
-const navigateTo = (item) => router.push(item.to)
+const navigateTo = (item) => {
+  router.push(item.to)
+  closeMobileMenu()
+}
 
 const handleLogout = () => {
   logout()
