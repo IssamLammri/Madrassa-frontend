@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
 jobs:
@@ -21,27 +22,59 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
+          timeout: 30s
+          command_timeout: 10m
+
           script: |
             set -e
 
-            echo "=== Déploiement Madrassa Frontend ==="
+            echo "========================================"
+            echo "Déploiement Portail CCIB38"
+            echo "========================================"
 
             cd /home/ubuntu/projets/Madrassa-frontend
 
-            echo "=== Récupération du code ==="
+            echo ""
+            echo "=== Récupération du dernier code ==="
+
             git fetch origin
             git reset --hard origin/main
 
+            echo ""
+            echo "=== Commit déployé ==="
+
+            git log -1 --oneline
+
+            echo ""
+            echo "=== Versions Node / npm ==="
+
+            node -v
+            npm -v
+
+            echo ""
             echo "=== Installation des dépendances ==="
+
             npm ci
 
+            echo ""
             echo "=== Build frontend ==="
+
             npm run build
 
-            echo "=== Déploiement Docker ==="
-            docker compose up -d --build
+            echo ""
+            echo "=== Vérification du dossier dist ==="
 
-            echo "=== Etat des containers ==="
-            docker compose ps
+            test -f dist/index.html
 
-            echo "=== Déploiement terminé ==="
+            ls -lah dist
+
+            echo ""
+            echo "=== Vérification Nginx ==="
+
+            sudo nginx -t
+
+            echo ""
+            echo "========================================"
+            echo "Déploiement terminé avec succès"
+            echo "https://portail.ccib38.fr"
+            echo "========================================"
