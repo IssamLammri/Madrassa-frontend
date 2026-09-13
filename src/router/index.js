@@ -26,6 +26,11 @@ const routes = [
         component: () => import('@/views/Register.vue')
     },
     {
+        path: '/inscription-soutien-scolaire',
+        name: 'InscriptionSoutienScolaire',
+        component: () => import('@/views/InscriptionSoutienScolaire.vue')
+    },
+    {
         path: '/inscription',
         name: 'InscriptionPage',
         component: () => import('@/views/Inscription.vue')
