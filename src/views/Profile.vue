@@ -361,6 +361,7 @@ const handleSavePassword = async () => {
 }
 
 .profile-view__hero-card {
+  --base-card-max-width: none;
   overflow: hidden;
   position: relative;
   border-radius: 1rem;
@@ -403,6 +404,7 @@ const handleSavePassword = async () => {
 }
 
 .profile-view__section-card {
+  --base-card-max-width: none;
   padding: 2rem;
   border-radius: 1rem;
 }

@@ -22,9 +22,14 @@
           <p class="text-slate-600 text-lg mb-8 leading-relaxed">
             Un email de confirmation vous a été envoyé.
           </p>
-          <button @click="reloadPage" class="px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 shadow-md transition-colors">
-            Inscrire un autre enfant
-          </button>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button @click="router.push('/home')" class="px-8 py-4 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 shadow-md transition-colors">
+              Aller au portail des parents
+            </button>
+            <button @click="resetForm" class="px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 shadow-md transition-colors">
+              Inscrire un autre enfant
+            </button>
+          </div>
         </div>
 
         <form v-else @submit.prevent="submitForm" class="space-y-8">
@@ -274,10 +279,23 @@
               <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Conditions d'inscription</h2>
               
               <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
-                <p class="text-amber-800 text-sm leading-relaxed">
+                <p class="text-amber-800 text-sm leading-relaxed mb-4">
                   En validant ce formulaire, vous effectuez une demande d'inscription au soutien scolaire.
                   Cette demande sera examinée par l'administration.
                 </p>
+                <div class="bg-amber-100/50 rounded-lg p-4 border border-amber-200/50">
+                  <p class="text-amber-900 font-bold mb-3 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    Attention : votre place n'est pas gardée jusqu'à ce que vous validiez l'inscription par le paiement.
+                  </p>
+                  <p class="text-amber-900 text-sm font-medium mb-3">
+                    Le frais est de <strong class="bg-amber-200 px-1 rounded">30 € par enfant et par matière</strong> et le paiement est fait par an.
+                  </p>
+                  <ul class="text-amber-800 text-sm list-disc pl-5 space-y-1.5 font-medium">
+                    <li>Soit complet en espèce ou CB</li>
+                    <li>Soit en plusieurs fois par chèque (jusqu'à 10 fois)</li>
+                  </ul>
+                </div>
               </div>
 
               <label class="flex items-start gap-3 cursor-pointer group">
@@ -606,37 +624,53 @@ const prevStep = () => {
 
 
 const proceedWithStudent = async (studentData) => {
-  studentId.value = studentData.id || studentData.student_id
-  
-  if (studentData.gender) {
-    form.childGender = (studentData.gender === 'male' || studentData.gender === 'M' || studentData.gender === 'Garçon') ? 'M' : 'F'
+  studentId.value = studentData.id ?? null
+
+  form.childFirstName =
+    studentData.firstName || form.childFirstName
+
+  form.childLastName =
+    studentData.lastName || form.childLastName
+
+  if (studentData.birthDate) {
+    form.childDob = String(studentData.birthDate).slice(0, 10)
   }
-  if (studentData.dob || studentData.birthDate) {
-    const rawDate = new Date(studentData.dob || studentData.birthDate)
-    if (!isNaN(rawDate)) {
-      form.childDob = rawDate.toISOString().split('T')[0]
-    }
+
+  const gender = String(studentData.gender || '').toLowerCase()
+
+  if (['m', 'male', 'garçon', 'garcon'].includes(gender)) {
+    form.childGender = 'M'
+  } else if (['f', 'female', 'fille'].includes(gender)) {
+    form.childGender = 'F'
   }
+
   if (studentData.schoolLevel) {
     form.schoolLevel = studentData.schoolLevel
-    fetchSubjects()
+    await fetchSubjects()
   }
-  if (studentData.address) form.address = studentData.address
-  if (studentData.postalCode) form.postalCode = studentData.postalCode
-  if (studentData.city) form.city = studentData.city
-  
-  if (studentData.parent) {
-    if (studentData.parent.fatherLastName) form.fatherLastName = studentData.parent.fatherLastName
-    if (studentData.parent.fatherFirstName) form.fatherFirstName = studentData.parent.fatherFirstName
-    if (studentData.parent.fatherPhone) form.fatherPhone = studentData.parent.fatherPhone
-    
-    if (studentData.parent.motherLastName) form.motherLastName = studentData.parent.motherLastName
-    if (studentData.parent.motherFirstName) form.motherFirstName = studentData.parent.motherFirstName
-    if (studentData.parent.motherPhone) form.motherPhone = studentData.parent.motherPhone
-    
-    if (studentData.parent.contactEmail) form.contactEmail = studentData.parent.contactEmail
+
+  form.address = studentData.address || ''
+  form.postalCode = studentData.postalCode || ''
+  form.city = studentData.city || ''
+
+  const parent = studentData.parent
+
+  if (parent) {
+    form.fatherFirstName = parent.fatherFirstName || ''
+    form.fatherLastName = parent.fatherLastName || ''
+    form.fatherPhone = parent.fatherPhone || ''
+
+    form.motherFirstName = parent.motherFirstName || ''
+    form.motherLastName = parent.motherLastName || ''
+    form.motherPhone = parent.motherPhone || ''
+
+    form.contactEmail =
+      parent.contactEmail ||
+      parent.fatherEmail ||
+      parent.motherEmail ||
+      ''
   }
-  
+
   showSelectionDialog.value = false
   currentStep.value = 1
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -659,44 +693,70 @@ const skipSelectionAndProceed = () => {
 
 const searchStudent = async () => {
   isSearching.value = true
+  submitError.value = ''
+  searchResults.value = []
+  selectedStudentIndex.value = null
+
   try {
-    const payload = {
-      firstName: form.childFirstName,
-      lastName: form.childLastName
+    const { data } = await axios.post(
+      `${baseURL}/academic-support/api/students/search`,
+      {
+        firstName: form.childFirstName.trim(),
+        lastName: form.childLastName.trim()
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }
+      }
+    )
+
+    const results = Array.isArray(data?.students)
+      ? data.students
+      : []
+
+    if (results.length === 1) {
+      await proceedWithStudent(results[0])
+      return
     }
-    
-    const response = await axios.post(`${baseURL}/academic-support/api/students/search`, payload)
-    
-    let results = []
-    if (response.data && response.data.status === 'success' && response.data.students) {
-      results = response.data.students
-    }
-    
+
     if (results.length > 1) {
       searchResults.value = results
-      selectedStudentIndex.value = null
       showSelectionDialog.value = true
-    } else if (results.length === 1) {
-      await proceedWithStudent(results[0])
-    } else {
-      studentId.value = null
-      currentStep.value = 1
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
     }
-  } catch (error) {
-    console.error("Erreur de recherche:", error)
+
+    // Aucun enfant trouvé : continuer comme nouvelle inscription
     studentId.value = null
     currentStep.value = 1
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  } catch (error) {
+    console.error('Erreur de recherche :', error)
+
+    // Rester à l’étape 0 si l’appel échoue réellement
+    submitError.value =
+      error.response?.data?.message ||
+      "Impossible de rechercher l'enfant. Veuillez réessayer."
   } finally {
     isSearching.value = false
   }
 }
 
-
-
 const reloadPage = () => {
   window.location.reload()
+}
+
+const resetForm = () => {
+  currentStep.value = 0
+  demandSent.value = false
+  studentId.value = null
+  selectedStudentIndex.value = null
+  Object.keys(form).forEach(key => {
+    if (key === 'acceptedPaymentTerms') form[key] = false
+    else if (key === 'selectedClassId') form[key] = null
+    else form[key] = ''
+  })
 }
 
 const submitForm = async () => {
@@ -707,42 +767,46 @@ const submitForm = async () => {
   
   try {
     const payload = {
-      studentId: studentId.value,
-      childFirstName: form.childFirstName,
-      childLastName: form.childLastName,
+      studentId: studentId.value || null,
+      childFirstName: (form.childFirstName || '').trim(),
+      childLastName: (form.childLastName || '').trim(),
       childDob: form.childDob,
       childGender: form.childGender,
       schoolLevel: form.schoolLevel,
       subject: form.subject,
-      fatherLastName: form.fatherLastName,
-      fatherFirstName: form.fatherFirstName,
-      fatherPhone: form.fatherPhone,
-      motherLastName: form.motherLastName,
-      motherFirstName: form.motherFirstName,
-      motherPhone: form.motherPhone,
-      contactEmail: form.contactEmail,
-      parentPhone: form.parentPhone,
-      address: form.address,
-      postalCode: form.postalCode,
-      city: form.city,
-      class_id: form.selectedClassId,
-      acceptedPaymentTerms: form.acceptedPaymentTerms
+      selectedClassId: Number(form.selectedClassId),
+      fatherLastName: (form.fatherLastName || '').trim(),
+      fatherFirstName: (form.fatherFirstName || '').trim(),
+      fatherPhone: (form.fatherPhone || '').trim(),
+      motherLastName: (form.motherLastName || '').trim(),
+      motherFirstName: (form.motherFirstName || '').trim(),
+      motherPhone: (form.motherPhone || '').trim(),
+      contactEmail: (form.contactEmail || '').trim(),
+      address: (form.address || '').trim(),
+      postalCode: (form.postalCode || '').trim(),
+      city: (form.city || '').trim(),
+      acceptedPaymentTerms: true
     }
     
     // Clean up empty fields
     Object.keys(payload).forEach(key => {
-      if (payload[key] === '' || payload[key] === null) {
+      if (typeof payload[key] === 'string' && payload[key] === '') {
         delete payload[key]
       }
     })
     
-    const response = await axios.post(`${baseURL}/academic-support/api/registrations`, payload)
+    const response = await axios.post(`${baseURL}/academic-support/registrations/api/create`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
     
-    if (response.data && response.data.status === 'success') {
+    if (response.status === 201 || (response.data && response.data.status === 'success')) {
       demandSent.value = true
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
-      submitError.value = response.data.message || "Une erreur est survenue lors de l'enregistrement."
+      submitError.value = response.data?.message || 'Une erreur est survenue lors de l\'enregistrement.'
     }
   } catch (error) {
     console.error("Erreur d'inscription:", error)
