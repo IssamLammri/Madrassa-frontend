@@ -82,7 +82,7 @@ import { useRoute, useRouter } from 'vue-router'
 import {
   BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users, Menu, X, ClipboardList
 } from 'lucide-vue-next'
-import logoUrl from '@/assets/icons/ccib38_logo.jpg'
+import logoUrl from '@/assets/icons/ccib38_logo.png'
 import ParentComplaintModal from '@/shared/ui/ParentComplaintModal.vue'
 import { logout } from '@/services/authApi.js'
 import { getParentProfile } from '@/services/parentApi.js'

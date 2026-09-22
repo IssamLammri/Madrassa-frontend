@@ -3,7 +3,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
       <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <img src="@/assets/icons/ccib38_logo.jpg" alt="Logo" class="h-10 w-auto object-contain" />
+          <img src="@/assets/icons/ccib38_logo.png" alt="Logo" class="h-10 w-auto object-contain" />
           <h1 class="text-slate-800 font-bold text-lg hidden sm:block">Soutien Scolaire</h1>
         </div>
         <button @click="router.push('/login')" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-4 py-2 rounded-lg transition-colors">

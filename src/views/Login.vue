@@ -102,7 +102,7 @@ import { useI18n } from 'vue-i18n'
 
 import {login} from '@/services/authApi.js';
 
-import logoUrl from '@/assets/icons/ccib38_logo.jpg'
+import logoUrl from '@/assets/icons/ccib38_logo.png'
 
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue';
 import BaseButton from '@/shared/ui/base/BaseButton.vue';
