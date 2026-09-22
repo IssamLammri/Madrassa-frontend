@@ -27,20 +27,21 @@
           type="button"
           @click="fetchDashboardData"
           :disabled="isLoading"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/70 transition-colors disabled:opacity-50"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/70 transition-colors disabled:opacity-50 cursor-pointer"
           title="Actualiser les indicateurs"
         >
           <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />
           <span>Actualiser</span>
         </button>
 
-        <router-link
-          to="/inscription-soutien-scolaire"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-xs"
+        <button
+          type="button"
+          @click="showRegistrationChoice = true"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
         >
           <PlusCircleIcon class="w-4 h-4" />
           <span>Inscrire un enfant</span>
-        </router-link>
+        </button>
       </div>
     </div>
 
@@ -124,7 +125,7 @@
 
         <!-- 2.3 DEMANDES EN COURS -->
         <div
-          @click="navigateTo('/home/children')"
+          @click="navigateTo('/home/requests')"
           class="group relative bg-white hover:bg-slate-50/50 p-6 rounded-3xl border border-slate-200/80 hover:border-amber-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
         >
           <div>
@@ -155,7 +156,7 @@
           </div>
 
           <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-600 group-hover:text-amber-700">
-            <span>Consulter les dossiers</span>
+            <span>Suivre l'avancement</span>
             <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
@@ -426,6 +427,29 @@
                 ></div>
               </div>
             </div>
+
+            <!-- Montants à payer prochainement (Arabe & Soutien Scolaire) -->
+            <div v-if="hasUpcomingAmounts" class="mt-4 p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-amber-900">
+                <span class="flex items-center gap-1.5">
+                  <CalendarDaysIcon class="w-3.5 h-3.5 text-amber-600" />
+                  Prochains montants à régler
+                </span>
+                <span class="text-sm font-black text-amber-900">
+                  {{ formatCurrency(upcomingTotal) }}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-white p-2.5 rounded-xl border border-amber-100 flex items-center justify-between">
+                  <span class="text-slate-600 text-[11px] font-medium">Langue Arabe</span>
+                  <span class="font-bold text-slate-900">{{ formatCurrency(upcomingArabic) }}</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-amber-100 flex items-center justify-between">
+                  <span class="text-slate-600 text-[11px] font-medium">Soutien Scolaire</span>
+                  <span class="font-bold text-slate-900">{{ formatCurrency(upcomingSoutien) }}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-600 group-hover:text-teal-700">
@@ -508,6 +532,128 @@
         </div>
       </div>
     </template>
+
+    <!-- REGISTRATION CHOICE MODAL -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showRegistrationChoice"
+          class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6"
+          @click.self="showRegistrationChoice = false"
+        >
+          <div
+            class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 space-y-6 overflow-hidden transform transition-all"
+            role="dialog"
+            aria-modal="true"
+          >
+            <!-- Close Button -->
+            <button
+              type="button"
+              @click="showRegistrationChoice = false"
+              class="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Fermer"
+            >
+              <XIcon class="w-5 h-5" />
+            </button>
+
+            <!-- Header -->
+            <div class="space-y-1 pr-8">
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
+                <SparklesIcon class="w-3.5 h-3.5 text-emerald-600" />
+                <span>Nouvelle inscription</span>
+              </span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Choisir le programme
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-500">
+                Sélectionnez le service d'enseignement auquel vous souhaitez inscrire votre enfant :
+              </p>
+            </div>
+
+            <!-- Choice Options Cards -->
+            <div class="space-y-3.5">
+              <!-- Option 1: Soutien Scolaire -->
+              <div
+                @click="chooseRegistration('/inscription-soutien-scolaire')"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+              >
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                  <GraduationCapIcon class="w-6 h-6" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-base font-black text-slate-900 group-hover:text-emerald-800 transition-colors">
+                      Soutien Scolaire
+                    </h3>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
+                      Primaire à Lycée
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Mathématiques, Français, Physique, Anglais... Accompagnement individualisé et renforcement des acquis scolaires.
+                  </p>
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+                    <span>30 € / an par matière</span>
+                    <span class="inline-flex items-center gap-1">
+                      Choisir ce service
+                      <ArrowRightIcon class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Option 2: Langue Arabe & Éducation -->
+              <div
+                @click="chooseRegistration('/inscription')"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-indigo-500 bg-white hover:bg-indigo-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+              >
+                <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                  <BookOpenIcon class="w-6 h-6" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-base font-black text-slate-900 group-hover:text-indigo-800 transition-colors">
+                      Langue Arabe & Éducation
+                    </h3>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
+                      Niveaux N1 à N6
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Apprentissage de la lecture, de l'écriture arabe, mémorisation du Coran et éducation éthique islamique.
+                  </p>
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                    <span>Semaine & Week-end</span>
+                    <span class="inline-flex items-center gap-1">
+                      Choisir ce service
+                      <ArrowRightIcon class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="pt-2 flex justify-end">
+              <button
+                type="button"
+                @click="showRegistrationChoice = false"
+                class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -525,12 +671,21 @@ import {
   RefreshCwIcon,
   CheckCircle2Icon,
   WalletIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  XIcon,
+  SparklesIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
 import { getParentDashboard } from '@/services/parentApi.js'
 
 const router = useRouter()
+
+const showRegistrationChoice = ref(false)
+
+const chooseRegistration = (path) => {
+  showRegistrationChoice.value = false
+  router.push(path)
+}
 
 const isLoading = ref(true)
 const error = ref('')
@@ -612,6 +767,25 @@ const paymentProgressRate = computed(() => {
   return 100
 })
 
+const upcomingArabic = computed(() => {
+  return dashboardData.value.amountDue?.amountDueArabic ?? dashboardData.value.amountDueArabic ?? 0
+})
+
+const upcomingSoutien = computed(() => {
+  return dashboardData.value.amountDue?.amountDueSoutien ?? dashboardData.value.amountDueSoutien ?? 0
+})
+
+const upcomingTotal = computed(() => {
+  if (dashboardData.value.amountDue?.total !== undefined) {
+    return dashboardData.value.amountDue.total
+  }
+  return upcomingArabic.value + upcomingSoutien.value
+})
+
+const hasUpcomingAmounts = computed(() => {
+  return upcomingTotal.value > 0 || upcomingArabic.value > 0 || upcomingSoutien.value > 0
+})
+
 const formatCurrency = (val, currency = 'EUR') => {
   const num = Number(val) || 0
   return new Intl.NumberFormat('fr-FR', {
@@ -636,6 +810,14 @@ const fetchDashboardData = async () => {
         children: data.children || { total: 0 },
         classes: data.classes || { total: 0, arabe: 0, soutienScolaire: 0 },
         pendingRequests: data.pendingRequests || { total: 0, arabe: 0, soutienScolaire: 0 },
+        amountDueArabic: data.amountDueArabic ?? data.amountDue?.amountDueArabic ?? 0,
+        amountDueSoutien: data.amountDueSoutien ?? data.amountDue?.amountDueSoutien ?? 0,
+        amountDue: data.amountDue || {
+          amountDueArabic: data.amountDueArabic ?? 0,
+          amountDueSoutien: data.amountDueSoutien ?? 0,
+          total: (data.amountDueArabic ?? 0) + (data.amountDueSoutien ?? 0),
+          currency: 'EUR'
+        },
         attendance: data.attendance || {
           arabe: { total: 0, present: 0, absent: 0, notMarked: 0 },
           soutienScolaire: { total: 0, present: 0, absent: 0, notMarked: 0 }

@@ -802,9 +802,9 @@
     display: none;
   }
 
-  .home-view__user {
-    padding-left: 0;
-    border-left: 0;
+  .home-view__user,
+  .home-view__topbar-actions {
+    display: none !important;
   }
 
   .home-view__topbar-left {

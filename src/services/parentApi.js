@@ -70,3 +70,10 @@ export async function sendParentComplaint(data) {
     const response = await apiClient.post("/api/parent/complaints", data);
     return response.data;
 }
+
+// REQUESTS / SUIVI DES DEMANDES
+export async function getParentRequests(params = {}) {
+    const response = await apiClient.get("/api/parent/requests", { params });
+    return response.data;
+}
+
