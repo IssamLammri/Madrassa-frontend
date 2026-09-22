@@ -38,8 +38,13 @@ const routes = [
     {
         path: '/home',
         component: () => import('@/views/HomeView.vue'),
-        redirect: '/home/children',
+        redirect: '/home/dashboard',
         children: [
+            {
+                path: 'dashboard',
+                name: 'Dashboard',
+                component: () => import('@/views/Dashboard.vue')
+            },
             {
                 path: 'profile',
                 name: 'Profile',

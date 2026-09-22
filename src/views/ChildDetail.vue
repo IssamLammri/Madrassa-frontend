@@ -54,150 +54,91 @@
 
       <!-- Classes Tab -->
       <div v-if="activeTab === 'classes'">
-        <div v-if="!child.classes || child.classes.length === 0" class="bg-white p-8 rounded-2xl text-center shadow-sm border border-slate-100">
-          <p class="text-slate-600">Aucune classe associée à cet enfant pour le moment.</p>
+        <div v-if="!child.classes || child.classes.length === 0" class="bg-white p-12 rounded-2xl text-center shadow-sm border border-slate-100">
+          <CalendarXIcon class="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <p class="text-slate-600 font-medium">Aucune classe associée à cet enfant pour le moment.</p>
         </div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- We can assume child.classes exists, or fetch them if they are returned by getChild -->
-          <BaseCard v-for="c in child.classes" :key="c.id" class="p-6">
-            <h3 class="font-bold text-lg text-slate-800 mb-2">{{ c.name || 'Classe sans nom' }}</h3>
-            <div class="space-y-2 text-sm text-slate-600">
-              <p><strong>Niveau:</strong> {{ c.level }}</p>
-              <p v-if="c.teacher"><strong>Enseignant:</strong> {{ c.teacher.fullName }}</p>
-              <p v-if="c.room"><strong>Salle:</strong> {{ c.room.name }}</p>
-              <p><strong>Horaires:</strong> {{ c.day }} de {{ c.startTime }} à {{ c.endTime }}</p>
+        <div v-else class="space-y-6">
+          <!-- View switcher between Planning de la semaine and Cartes -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-xs sm:text-sm font-bold text-slate-700 px-1">Mode d'affichage :</span>
+              <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/60">
+                <button
+                  type="button"
+                  @click="classesDisplayMode = 'planning'"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
+                  :class="classesDisplayMode === 'planning' 
+                    ? 'bg-emerald-600 text-white shadow-xs' 
+                    : 'text-slate-600 hover:text-slate-900'"
+                >
+                  <CalendarDaysIcon class="w-4 h-4" />
+                  <span>Planning de la semaine</span>
+                </button>
+                <button
+                  type="button"
+                  @click="classesDisplayMode = 'cards'"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
+                  :class="classesDisplayMode === 'cards' 
+                    ? 'bg-emerald-600 text-white shadow-xs' 
+                    : 'text-slate-600 hover:text-slate-900'"
+                >
+                  <LayoutGridIcon class="w-4 h-4" />
+                  <span>Cartes des cours</span>
+                </button>
+              </div>
             </div>
-          </BaseCard>
+
+            <div class="text-xs text-slate-500 px-2 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>{{ child.classes.length }} cours programmé{{ child.classes.length > 1 ? 's' : '' }}</span>
+            </div>
+          </div>
+
+          <!-- Weekly Schedule Component -->
+          <WeeklySchedule
+            v-if="classesDisplayMode === 'planning'"
+            :classes="child.classes"
+          />
+
+          <!-- Classic Cards Grid -->
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <BaseCard v-for="c in child.classes" :key="c.id" class="p-6">
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <h3 class="font-bold text-lg text-slate-800">{{ c.name || 'Classe sans nom' }}</h3>
+                <span v-if="c.level" class="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg whitespace-nowrap">
+                  {{ c.level }}
+                </span>
+              </div>
+              <div class="space-y-2.5 text-sm text-slate-600 border-t border-slate-100 pt-3">
+                <p v-if="c.teacher" class="flex items-center gap-2">
+                  <UserIcon class="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <span><strong>Enseignant :</strong> {{ c.teacher.fullName || c.teacher }}</span>
+                </p>
+                <p v-if="c.room" class="flex items-center gap-2">
+                  <MapPinIcon class="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <span><strong>Salle :</strong> {{ c.room.name || c.room }}</span>
+                </p>
+                <p class="flex items-center gap-2">
+                  <ClockIcon class="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span><strong>Horaires :</strong> {{ c.day }} de {{ c.startTime }} à {{ c.endTime }}</span>
+                </p>
+              </div>
+            </BaseCard>
+          </div>
         </div>
       </div>
 
       <!-- Attendance Tab -->
       <div v-if="activeTab === 'attendance'">
-        <!-- Filters -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6 flex flex-wrap gap-4 items-end">
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1">Du</label>
-            <input type="date" v-model="attendanceFilters.from" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1">Au</label>
-            <input type="date" v-model="attendanceFilters.to" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
-          </div>
-          <BaseButton @click="fetchAttendance(1)" variant="secondary" size="sm">Filtrer</BaseButton>
-        </div>
-
-        <div v-if="isLoadingAttendance" class="flex justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-        </div>
-        
-        <div v-else-if="attendanceData">
-          <!-- Stats -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white p-4 rounded-xl border border-slate-100 text-center">
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Total</p>
-              <p class="text-2xl font-bold text-slate-800">{{ attendanceData.summary?.total || 0 }}</p>
-            </div>
-            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
-              <p class="text-xs text-emerald-600 uppercase font-bold mb-1">Présent</p>
-              <p class="text-2xl font-bold text-emerald-700">{{ attendanceData.summary?.present || 0 }}</p>
-            </div>
-            <div class="bg-red-50 p-4 rounded-xl border border-red-100 text-center">
-              <p class="text-xs text-red-600 uppercase font-bold mb-1">Absent</p>
-              <p class="text-2xl font-bold text-red-700">{{ attendanceData.summary?.absent || 0 }}</p>
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
-              <p class="text-xs text-slate-500 uppercase font-bold mb-1">Non noté</p>
-              <p class="text-2xl font-bold text-slate-700">{{ attendanceData.summary?.notMarked || 0 }}</p>
-            </div>
-          </div>
-
-          <!-- List -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <!-- Desktop Table -->
-            <table class="w-full text-left text-sm hidden sm:table">
-              <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                <tr>
-                  <th class="px-6 py-4">Date et heure</th>
-                  <th class="px-6 py-4">Classe</th>
-                  <th class="px-6 py-4">Statut</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                <tr v-if="attendanceData.items?.length === 0">
-                  <td colspan="3" class="px-6 py-8 text-center text-slate-500">Aucune séance trouvée.</td>
-                </tr>
-                <tr v-for="item in attendanceData.items" :key="item.id" class="hover:bg-slate-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    {{ formatDateTime(item.session?.startTime) }} - {{ formatTime(item.session?.endTime) }}
-                  </td>
-                  <td class="px-6 py-4">
-                    {{ item.session?.class?.name || 'Classe' }}
-                  </td>
-                  <td class="px-6 py-4">
-                    <span v-if="item.status === 'present'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                      Présent
-                    </span>
-                    <span v-else-if="item.status === 'absent'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      Absent
-                    </span>
-                    <span v-else class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                      Non renseigné
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!-- Mobile List -->
-            <div class="sm:hidden divide-y divide-slate-100">
-              <div v-if="attendanceData.items?.length === 0" class="px-4 py-8 text-center text-slate-500 text-sm">
-                Aucune séance trouvée.
-              </div>
-              <div v-for="item in attendanceData.items" :key="'mob-'+item.id" class="p-4">
-                <div class="flex justify-between items-start mb-2">
-                  <div class="font-medium text-slate-800 text-sm">
-                    {{ item.session?.class?.name || 'Classe' }}
-                  </div>
-                  <span v-if="item.status === 'present'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                    Présent
-                  </span>
-                  <span v-else-if="item.status === 'absent'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    Absent
-                  </span>
-                  <span v-else class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
-                    Non renseigné
-                  </span>
-                </div>
-                <div class="text-xs text-slate-500">
-                  {{ formatDateTime(item.session?.startTime) }} - {{ formatTime(item.session?.endTime) }}
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Pagination -->
-          <div class="flex justify-between items-center mt-6" v-if="attendanceData.pagination && attendanceData.pagination.pages > 1">
-            <BaseButton 
-              variant="secondary" 
-              size="sm" 
-              :disabled="attendanceData.pagination.page === 1"
-              @click="fetchAttendance(attendanceData.pagination.page - 1)"
-            >
-              Précédent
-            </BaseButton>
-            <span class="text-sm text-slate-600">
-              Page {{ attendanceData.pagination.page }} sur {{ attendanceData.pagination.pages }}
-            </span>
-            <BaseButton 
-              variant="secondary" 
-              size="sm" 
-              :disabled="attendanceData.pagination.page === attendanceData.pagination.pages"
-              @click="fetchAttendance(attendanceData.pagination.page + 1)"
-            >
-              Suivant
-            </BaseButton>
-          </div>
-        </div>
+        <AttendanceViewer
+          :attendanceData="attendanceData"
+          :isLoading="isLoadingAttendance"
+          :filters="attendanceFilters"
+          @update:filters="val => { attendanceFilters = val }"
+          @filter="page => fetchAttendance(page)"
+          @page-change="page => fetchAttendance(page)"
+        />
       </div>
     </div>
   </div>
@@ -206,11 +147,21 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeftIcon, MapPinIcon } from 'lucide-vue-next'
+import { 
+  ArrowLeftIcon, 
+  MapPinIcon, 
+  CalendarDaysIcon, 
+  CalendarXIcon, 
+  LayoutGridIcon, 
+  ClockIcon, 
+  UserIcon 
+} from 'lucide-vue-next'
 import BaseCard from '@/shared/ui/base/BaseCard.vue'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
 import BaseBadge from '@/shared/ui/base/BaseBadge.vue'
 import BaseButton from '@/shared/ui/base/BaseButton.vue'
+import WeeklySchedule from '@/shared/ui/WeeklySchedule.vue'
+import AttendanceViewer from '@/shared/ui/AttendanceViewer.vue'
 import { getChild, getChildSessions } from '@/services/parentApi.js'
 
 const route = useRoute()
@@ -222,6 +173,7 @@ const error = ref('')
 const child = ref(null)
 
 const activeTab = ref('classes')
+const classesDisplayMode = ref('planning') // 'planning' | 'cards'
 
 // Attendance state
 const isLoadingAttendance = ref(false)

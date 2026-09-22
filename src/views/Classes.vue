@@ -1,25 +1,55 @@
 <template>
   <div class="max-w-5xl mx-auto w-full">
-    <div class="mb-8 flex justify-between items-center">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-slate-800">Classes</h1>
-        <p class="text-slate-600 mt-1">Consultez les classes de vos enfants.</p>
+        <p class="text-slate-600 mt-1">Consultez les classes et l'emploi du temps de vos enfants.</p>
       </div>
-      <div class="flex items-center gap-2 text-sm bg-white border border-slate-200 rounded-lg p-1">
-        <button 
-          @click="setActiveFilter(true)" 
-          class="px-4 py-1.5 rounded-md transition-colors"
-          :class="isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
-        >
-          Actives
-        </button>
-        <button 
-          @click="setActiveFilter(false)" 
-          class="px-4 py-1.5 rounded-md transition-colors"
-          :class="!isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
-        >
-          Anciennes
-        </button>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- View mode toggle: Planning vs List -->
+        <div class="inline-flex p-1 bg-white border border-slate-200 rounded-xl shadow-2xs">
+          <button
+            type="button"
+            @click="viewType = 'planning'"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
+            :class="viewType === 'planning' 
+              ? 'bg-emerald-600 text-white shadow-xs' 
+              : 'text-slate-600 hover:text-slate-900'"
+          >
+            <CalendarDaysIcon class="w-4 h-4" />
+            <span>Planning</span>
+          </button>
+          <button
+            type="button"
+            @click="viewType = 'cards'"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
+            :class="viewType === 'cards' 
+              ? 'bg-emerald-600 text-white shadow-xs' 
+              : 'text-slate-600 hover:text-slate-900'"
+          >
+            <LayoutGridIcon class="w-4 h-4" />
+            <span>Liste</span>
+          </button>
+        </div>
+
+        <!-- Active/Past Filter -->
+        <div class="flex items-center gap-1 text-sm bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
+          <button 
+            @click="setActiveFilter(true)" 
+            class="px-3.5 py-1.5 rounded-lg transition-colors text-xs sm:text-sm"
+            :class="isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
+          >
+            Actives
+          </button>
+          <button 
+            @click="setActiveFilter(false)" 
+            class="px-3.5 py-1.5 rounded-lg transition-colors text-xs sm:text-sm"
+            :class="!isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
+          >
+            Anciennes
+          </button>
+        </div>
       </div>
     </div>
 
@@ -36,6 +66,14 @@
       <p class="text-slate-600">Aucune inscription ne correspond à ce filtre.</p>
     </div>
 
+    <!-- Planning Mode -->
+    <WeeklySchedule 
+      v-else-if="viewType === 'planning'"
+      :classes="classes"
+      :showChildName="true"
+    />
+
+    <!-- Cards Mode -->
     <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <BaseCard v-for="item in classes" :key="item.registrationId" class="p-6">
         <div class="flex justify-between items-start mb-4">
@@ -81,15 +119,18 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { CalendarDaysIcon, LayoutGridIcon } from 'lucide-vue-next'
 import BaseCard from '@/shared/ui/base/BaseCard.vue'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
 import BaseBadge from '@/shared/ui/base/BaseBadge.vue'
+import WeeklySchedule from '@/shared/ui/WeeklySchedule.vue'
 import { getClasses } from '@/services/parentApi.js'
 
 const isLoading = ref(true)
 const error = ref('')
 const classes = ref([])
 const isActiveFilter = ref(true)
+const viewType = ref('planning') // 'planning' | 'cards'
 
 const fetchClasses = async () => {
   isLoading.value = true

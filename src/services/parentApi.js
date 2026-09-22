@@ -1,5 +1,11 @@
 import apiClient from "./apiClient.js";
 
+// DASHBOARD
+export async function getParentDashboard() {
+    const response = await apiClient.get("/api/parent/dashboard");
+    return response.data;
+}
+
 // PROFILE
 export async function getParentProfile() {
     const response = await apiClient.get("/api/parent/me");
@@ -56,5 +62,11 @@ export async function downloadInvoicePdf(id) {
 
 export async function sendInvoiceEmail(id, data = {}) {
     const response = await apiClient.post(`/api/parent/invoices/${id}/send-email`, data);
+    return response.data;
+}
+
+// COMPLAINTS & DEMANDES
+export async function sendParentComplaint(data) {
+    const response = await apiClient.post("/api/parent/complaints", data);
     return response.data;
 }

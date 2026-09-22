@@ -69,6 +69,9 @@
         <router-view />
       </div>
     </main>
+
+    <!-- Floating Action Button & Modal for Demandes, Réclamations et Remerciements -->
+    <ParentComplaintModal />
   </div>
 </template>
 
@@ -80,6 +83,7 @@ import {
   BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users, Menu, X
 } from 'lucide-vue-next'
 import logoUrl from '@/assets/icons/logoccib38.jpg'
+import ParentComplaintModal from '@/shared/ui/ParentComplaintModal.vue'
 import { logout } from '@/services/authApi.js'
 import { getParentProfile } from '@/services/parentApi.js'
 
@@ -111,6 +115,7 @@ const userInitials = computed(() => {
 })
 
 const navigationItems = [
+  { key: 'dashboard', labelKey: 'Tableau de bord', label: 'Tableau de bord', icon: LayoutDashboard, to: '/home/dashboard' },
   { key: 'children', labelKey: 'Mes enfants', label: 'Mes enfants', icon: Users, to: '/home/children' },
   { key: 'classes', labelKey: 'Classes', label: 'Classes', icon: BookOpen, to: '/home/classes' },
   { key: 'invoices', labelKey: 'Mes factures', label: 'Mes factures', icon: FileText, to: '/home/invoices' },
