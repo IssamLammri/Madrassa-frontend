@@ -156,7 +156,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { register } from "@/services/authApi.js";
-import logoUrl from '@/assets/icons/logoccib38.jpg'
+import logoUrl from '@/assets/icons/ccib38_logo.jpg'
 
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
 import BaseButton from '@/shared/ui/base/BaseButton.vue'

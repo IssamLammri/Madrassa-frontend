@@ -462,9 +462,12 @@ const setYearFilter = async (currentYear) => {
   await fetchRequests()
 }
 
+const debugInfo = ref(null)
+
 const fetchRequests = async () => {
   isLoading.value = true
   error.value = ''
+  debugInfo.value = null
 
   try {
     const params = {}
@@ -472,21 +475,55 @@ const fetchRequests = async () => {
       params.currentYear = false
     }
 
+    console.log('[ParentRequests] Envoi de la requête GET /api/parent/requests avec params:', params)
     const response = await getParentRequests(params)
+    console.log('[ParentRequests] Réponse brute reçue du backend:', response)
     
-    // Normalisation flexible du retour API
+    // Normalisation ultra-flexible de tous les formats de réponse backend possibles
+    let items = []
     if (Array.isArray(response)) {
-      requests.value = response
-    } else if (response && Array.isArray(response.data)) {
-      requests.value = response.data
-    } else if (response && Array.isArray(response.requests)) {
-      requests.value = response.requests
-    } else {
-      requests.value = []
+      items = response
+    } else if (response && typeof response === 'object') {
+      if (Array.isArray(response.data)) {
+        items = response.data
+      } else if (Array.isArray(response.requests)) {
+        items = response.requests
+      } else if (Array.isArray(response.demandes)) {
+        items = response.demandes
+      } else if (response.data && Array.isArray(response.data.requests)) {
+        items = response.data.requests
+      } else if (response.data && Array.isArray(response.data.demandes)) {
+        items = response.data.demandes
+      } else if (response.data && Array.isArray(response.data.items)) {
+        items = response.data.items
+      } else if (Array.isArray(response.items)) {
+        items = response.items
+      } else if (Array.isArray(response.pendingRequests)) {
+        items = response.pendingRequests
+      } else if (response.data && typeof response.data === 'object') {
+        // Au cas où les demandes sont renvoyées sous forme d'objet indexé par ID
+        items = Object.values(response.data).filter(v => typeof v === 'object' && v !== null)
+      }
+    }
+
+    requests.value = items
+    debugInfo.value = {
+      status: 'success',
+      receivedCount: items.length,
+      keys: response && typeof response === 'object' ? Object.keys(response) : []
     }
   } catch (err) {
-    console.error('Erreur chargement des demandes:', err)
-    error.value = "Impossible de récupérer la liste des demandes pour le moment."
+    console.error('[ParentRequests] Erreur lors de l\'appel GET /api/parent/requests:', err)
+    const status = err.response?.status
+    const message = err.response?.data?.message || err.response?.statusText || err.message
+    error.value = `Erreur lors de l'appel à /api/parent/requests (Code ${status || 'inconnu'} : ${message}).`
+    debugInfo.value = {
+      status: 'error',
+      httpStatus: status,
+      url: err.config?.url,
+      method: err.config?.method,
+      errorMessage: message
+    }
     requests.value = []
   } finally {
     isLoading.value = false
