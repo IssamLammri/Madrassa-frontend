@@ -27,6 +27,18 @@
           </div>
           
           <div class="flex flex-wrap gap-3">
+            <a
+              v-if="invoice.amountPayable > 0 && parentPaymentUrl"
+              :href="parentPaymentUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <CreditCardIcon class="w-4 h-4" />
+              <span>Procéder au règlement</span>
+              <ExternalLinkIcon class="w-4 h-4 ml-0.5" />
+            </a>
+
             <BaseButton @click="downloadPdf" variant="secondary" class="flex items-center gap-2" :disabled="isDownloading">
               <DownloadIcon class="w-4 h-4" />
               <span v-if="isDownloading">Téléchargement...</span>
@@ -127,11 +139,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeftIcon, DownloadIcon, MailIcon } from 'lucide-vue-next'
+import { ArrowLeftIcon, DownloadIcon, MailIcon, CreditCardIcon, ExternalLinkIcon } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
 import BaseButton from '@/shared/ui/base/BaseButton.vue'
 import BaseBadge from '@/shared/ui/base/BaseBadge.vue'
-import { getInvoice, downloadInvoicePdf, sendInvoiceEmail } from '@/services/parentApi.js'
+import { getInvoice, downloadInvoicePdf, sendInvoiceEmail, getParentPaymentUrl } from '@/services/parentApi.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -141,6 +153,7 @@ const isLoading = ref(true)
 const error = ref('')
 const successMessage = ref('')
 const invoice = ref(null)
+const parentPaymentUrl = ref(localStorage.getItem('parent_payment_token') ? `https://ecole.ccib38.fr/paiement-famille/${localStorage.getItem('parent_payment_token')}` : '')
 
 const isDownloading = ref(false)
 const showEmailModal = ref(false)
@@ -149,7 +162,18 @@ const emailToSend = ref('')
 
 onMounted(async () => {
   try {
-    invoice.value = await getInvoice(invoiceId)
+    const [inv, payUrl] = await Promise.allSettled([
+      getInvoice(invoiceId),
+      getParentPaymentUrl()
+    ])
+    if (inv.status === 'fulfilled') {
+      invoice.value = inv.value
+    } else {
+      throw inv.reason
+    }
+    if (payUrl.status === 'fulfilled' && payUrl.value) {
+      parentPaymentUrl.value = payUrl.value
+    }
   } catch (e) {
     console.error(e)
     error.value = "Impossible de charger les détails de la facture."

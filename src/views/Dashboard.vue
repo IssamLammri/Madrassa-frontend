@@ -432,7 +432,7 @@
             </div>
 
             <!-- Montants à payer prochainement (Arabe & Soutien Scolaire) -->
-            <div v-if="hasUpcomingAmounts" class="mt-4 p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 space-y-2">
+            <div v-if="hasUpcomingAmounts" class="mt-4 p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 space-y-2.5">
               <div class="flex items-center justify-between text-xs font-bold text-amber-900">
                 <span class="flex items-center gap-1.5">
                   <CalendarDaysIcon class="w-3.5 h-3.5 text-amber-600" />
@@ -451,6 +451,19 @@
                   <span class="text-slate-600 text-[11px] font-medium">Soutien Scolaire</span>
                   <span class="font-bold text-slate-900">{{ formatCurrency(upcomingSoutien) }}</span>
                 </div>
+              </div>
+              <div v-if="parentPaymentUrl" class="pt-1">
+                <a
+                  :href="parentPaymentUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  @click.stop
+                  class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <WalletIcon class="w-3.5 h-3.5" />
+                  <span>Procéder au règlement</span>
+                  <ExternalLinkIcon class="w-3.5 h-3.5 ml-0.5" />
+                </a>
               </div>
             </div>
           </div>
@@ -676,14 +689,16 @@ import {
   WalletIcon,
   BookOpenIcon,
   XIcon,
-  SparklesIcon
+  SparklesIcon,
+  ExternalLinkIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
-import { getParentDashboard } from '@/services/parentApi.js'
+import { getParentDashboard, getParentPaymentUrl } from '@/services/parentApi.js'
 
 const router = useRouter()
 
 const showRegistrationChoice = ref(false)
+const parentPaymentUrl = ref(localStorage.getItem('parent_payment_token') ? `https://ecole.ccib38.fr/paiement-famille/${localStorage.getItem('parent_payment_token')}` : '')
 
 const chooseRegistration = (path) => {
   showRegistrationChoice.value = false
@@ -877,7 +892,15 @@ const fetchDashboardData = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   fetchDashboardData()
+  try {
+    const payUrl = await getParentPaymentUrl()
+    if (payUrl) {
+      parentPaymentUrl.value = payUrl
+    }
+  } catch (err) {
+    console.error('Erreur chargement payment url:', err)
+  }
 })
 </script>

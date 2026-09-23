@@ -9,7 +9,31 @@ export async function getParentDashboard() {
 // PROFILE
 export async function getParentProfile() {
     const response = await apiClient.get("/api/parent/me");
+    if (response.data) {
+        const token = response.data?.parent?.token || response.data?.token;
+        if (token) {
+            localStorage.setItem("parent_payment_token", token);
+        }
+    }
     return response.data;
+}
+
+export async function getParentPaymentUrl() {
+    const cached = localStorage.getItem("parent_payment_token");
+    if (cached) {
+        return `https://ecole.ccib38.fr/paiement-famille/${cached}`;
+    }
+    try {
+        const data = await getParentProfile();
+        const token = data?.parent?.token || data?.token;
+        if (token) {
+            localStorage.setItem("parent_payment_token", token);
+            return `https://ecole.ccib38.fr/paiement-famille/${token}`;
+        }
+    } catch (err) {
+        console.error("Erreur récupération URL paiement:", err);
+    }
+    return null;
 }
 
 export async function updateParentProfile(data) {

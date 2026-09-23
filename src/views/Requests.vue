@@ -229,14 +229,17 @@
 
           <!-- Call to action button -->
           <div class="flex items-center gap-2">
-            <router-link
+            <a
               v-if="isPaymentRequired(req)"
-              to="/home/invoices"
-              class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs inline-flex items-center gap-1.5"
+              :href="getPaymentUrl(req)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
             >
               <WalletIcon class="w-3.5 h-3.5" />
               <span>Procéder au règlement</span>
-            </router-link>
+              <ExternalLinkIcon class="w-3.5 h-3.5 ml-0.5" />
+            </a>
 
             <button
               v-if="req.childId || (req.child && req.child.id)"
@@ -422,10 +425,11 @@ import {
   ArrowRightIcon,
   InboxIcon,
   XIcon,
-  SparklesIcon
+  SparklesIcon,
+  ExternalLinkIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
-import { getParentRequests } from '@/services/parentApi.js'
+import { getParentRequests, getParentProfile } from '@/services/parentApi.js'
 
 const router = useRouter()
 
@@ -435,6 +439,28 @@ const requests = ref([])
 const isCurrentYearOnly = ref(true)
 const selectedServiceTab = ref('all')
 const showRegistrationModal = ref(false)
+const parentPaymentToken = ref(localStorage.getItem('parent_payment_token') || '')
+
+const getPaymentUrl = (req) => {
+  const token = req?.token || req?.parentToken || req?.parent?.token || parentPaymentToken.value || localStorage.getItem('parent_payment_token')
+  if (token) {
+    return `https://ecole.ccib38.fr/paiement-famille/${token}`
+  }
+  return 'https://ecole.ccib38.fr'
+}
+
+const loadParentToken = async () => {
+  try {
+    const profile = await getParentProfile()
+    const token = profile?.parent?.token || profile?.token
+    if (token) {
+      parentPaymentToken.value = token
+      localStorage.setItem('parent_payment_token', token)
+    }
+  } catch (err) {
+    console.error('Erreur chargement profil parent pour token paiement:', err)
+  }
+}
 
 const serviceTabs = [
   { id: 'all', label: 'Toutes les demandes' },
@@ -656,5 +682,6 @@ const paymentCount = computed(() => {
 
 onMounted(() => {
   fetchRequests()
+  loadParentToken()
 })
 </script>

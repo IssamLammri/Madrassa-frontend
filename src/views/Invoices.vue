@@ -200,7 +200,19 @@
           Vous pouvez effectuer le règlement en ligne ou transmettre vos justificatifs de paiement au secrétariat.
         </p>
 
+        <a
+          v-if="parentPaymentUrl"
+          :href="parentPaymentUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-colors cursor-pointer flex-shrink-0"
+        >
+          <CreditCardIcon class="w-4 h-4" />
+          <span>Procéder au règlement en ligne</span>
+          <ExternalLinkIcon class="w-4 h-4 ml-0.5" />
+        </a>
         <button
+          v-else
           type="button"
           @click="goToRequests"
           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-colors cursor-pointer flex-shrink-0"
@@ -495,10 +507,11 @@ import {
   CalendarIcon,
   HistoryIcon,
   ChevronRightIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  ExternalLinkIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
-import { getInvoices, downloadInvoicePdf, getParentDashboard } from '@/services/parentApi.js'
+import { getInvoices, downloadInvoicePdf, getParentDashboard, getParentPaymentUrl } from '@/services/parentApi.js'
 
 const router = useRouter()
 const isLoading = ref(true)
@@ -509,6 +522,7 @@ const pagination = ref(null)
 const activeTab = ref('current') // 'current' | 'archive' | 'all'
 const downloadingId = ref(null)
 const dashboardData = ref(null)
+const parentPaymentUrl = ref(localStorage.getItem('parent_payment_token') ? `https://ecole.ccib38.fr/paiement-famille/${localStorage.getItem('parent_payment_token')}` : '')
 
 // Calculate true remaining amount for an invoice
 const getRemainingAmount = (invoice) => {
@@ -703,10 +717,15 @@ const fetchInvoices = async (page = 1) => {
   isLoading.value = true
   error.value = ''
   try {
-    const [invoicesRes, dashRes] = await Promise.allSettled([
+    const [invoicesRes, dashRes, payUrlRes] = await Promise.allSettled([
       getInvoices({ page, limit: 20 }),
-      getParentDashboard()
+      getParentDashboard(),
+      getParentPaymentUrl()
     ])
+
+    if (payUrlRes.status === 'fulfilled' && payUrlRes.value) {
+      parentPaymentUrl.value = payUrlRes.value
+    }
 
     if (dashRes.status === 'fulfilled' && dashRes.value) {
       dashboardData.value = dashRes.value
