@@ -174,12 +174,12 @@
               </div>
             </div>
             <div class="flex items-baseline gap-2">
-              <span class="text-2xl sm:text-3xl font-black" :class="(dashboardData.invoices?.outstandingAmount ?? 0) > 0 ? 'text-amber-600' : 'text-emerald-600'">
-                {{ formatCurrency(dashboardData.invoices?.outstandingAmount ?? 0) }}
+              <span class="text-2xl sm:text-3xl font-black" :class="actualOutstandingAmount > 0 ? 'text-amber-600' : 'text-emerald-600'">
+                {{ formatCurrency(actualOutstandingAmount) }}
               </span>
             </div>
             <p class="text-xs font-medium text-slate-500 mt-1">
-              <span v-if="(dashboardData.invoices?.outstandingAmount ?? 0) > 0" class="text-amber-700 font-semibold">
+              <span v-if="actualOutstandingAmount > 0" class="text-amber-700 font-semibold">
                 Reste à régler
               </span>
               <span v-else class="text-emerald-600 font-semibold">
@@ -386,9 +386,9 @@
 
               <span 
                 class="px-3 py-1 rounded-full text-xs font-bold"
-                :class="(dashboardData.invoices?.outstandingAmount ?? 0) === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'"
+                :class="actualOutstandingAmount === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'"
               >
-                {{ (dashboardData.invoices?.outstandingAmount ?? 0) === 0 ? 'Dossier à jour' : 'Solde en attente' }}
+                {{ actualOutstandingAmount === 0 ? 'Dossier à jour' : 'Solde en attente' }}
               </span>
             </div>
 
@@ -408,8 +408,11 @@
               </div>
               <div class="bg-amber-50/70 p-3.5 rounded-2xl">
                 <span class="text-[11px] font-semibold text-amber-700 uppercase tracking-wider block mb-1">Reste dû</span>
-                <span class="text-base sm:text-lg font-black text-amber-800">
-                  {{ formatCurrency(dashboardData.invoices?.outstandingAmount ?? 0) }}
+                <span 
+                  class="text-base sm:text-lg font-black"
+                  :class="actualOutstandingAmount === 0 ? 'text-emerald-700' : 'text-amber-800'"
+                >
+                  {{ formatCurrency(actualOutstandingAmount) }}
                 </span>
               </div>
             </div>
@@ -757,12 +760,45 @@ const overallAttendanceRate = computed(() => {
   return 100
 })
 
+// Actual outstanding / remaining due amount (safe calculation)
+const actualOutstandingAmount = computed(() => {
+  const inv = dashboardData.value.invoices
+  if (!inv) return 0
+
+  // 1. If all invoices are paid (e.g. 2/2 payées)
+  const total = Number(inv.total) || 0
+  const paid = Number(inv.paid) || 0
+  if (total > 0 && paid >= total) {
+    return 0
+  }
+
+  // 2. If invoicedAmount and paidAmount are specified and fully settled
+  const invoiced = Number(inv.invoicedAmount) || 0
+  const paidAmount = Number(inv.paidAmount) || 0
+  if (invoiced > 0 && paidAmount >= invoiced) {
+    return 0
+  }
+
+  // 3. If there is a real unpaid difference
+  if (invoiced > 0 && invoiced > paidAmount) {
+    return invoiced - paidAmount
+  }
+
+  // 4. Fallback to outstandingAmount
+  return Number(inv.outstandingAmount) || 0
+})
+
 // Financial Payment Progress Rate %
 const paymentProgressRate = computed(() => {
-  const invoiced = dashboardData.value.invoices?.invoicedAmount || 0
-  const paid = dashboardData.value.invoices?.paidAmount || 0
+  const invoiced = Number(dashboardData.value.invoices?.invoicedAmount) || 0
+  const paid = Number(dashboardData.value.invoices?.paidAmount) || 0
   if (invoiced > 0) {
     return Math.min(100, Math.round((paid / invoiced) * 100))
+  }
+  const total = Number(dashboardData.value.invoices?.total) || 0
+  const paidCount = Number(dashboardData.value.invoices?.paid) || 0
+  if (total > 0) {
+    return Math.min(100, Math.round((paidCount / total) * 100))
   }
   return 100
 })
@@ -783,6 +819,7 @@ const upcomingTotal = computed(() => {
 })
 
 const hasUpcomingAmounts = computed(() => {
+  if (actualOutstandingAmount.value === 0) return false
   return upcomingTotal.value > 0 || upcomingArabic.value > 0 || upcomingSoutien.value > 0
 })
 
