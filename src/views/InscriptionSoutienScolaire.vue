@@ -32,7 +32,11 @@
           </div>
         </div>
 
-        <form v-else @submit.prevent="submitForm" class="space-y-8">
+        <form v-else @submit.prevent="submitForm" novalidate class="space-y-8">
+
+          <p class="text-sm text-slate-600">
+            Les champs marqués <span class="font-bold text-red-500">*</span> sont obligatoires. Les coordonnées doivent contenir au moins un numéro de téléphone.
+          </p>
           
           <div v-if="submitError" class="bg-red-50 border border-red-200 text-red-700 px-4 sm:px-6 py-4 rounded-2xl flex items-start shadow-sm mb-6">
             <AlertCircle class="w-6 h-6 mr-3 flex-shrink-0 mt-0.5 text-red-500" />
@@ -81,12 +85,12 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2">Nom de l'enfant <span class="text-red-500">*</span></label>
-                  <input v-model="form.childLastName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                  <input v-model="form.childLastName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                   <p v-if="validationErrors.childLastName" class="text-red-500 text-xs mt-1">{{ validationErrors.childLastName[0] }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold text-slate-700 mb-2">Prénom de l'enfant <span class="text-red-500">*</span></label>
-                  <input v-model="form.childFirstName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                  <input v-model="form.childFirstName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                   <p v-if="validationErrors.childFirstName" class="text-red-500 text-xs mt-1">{{ validationErrors.childFirstName[0] }}</p>
                 </div>
               </div>
@@ -127,23 +131,24 @@
             <!-- STEP 2: Parents -->
             <div v-show="currentStep === 2" class="space-y-8">
               <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Informations des parents</h2>
+              <p class="text-sm text-slate-600">Les nom et prénom de la mère ou du tuteur 1 sont obligatoires. Renseignez au moins un téléphone <span class="font-bold text-red-500">*</span> pour pouvoir être recontacté.</p>
               
               <div class="space-y-6">
                 <h3 class="text-lg font-bold text-slate-800">Mère / Tuteur 1</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Nom <span class="text-red-500">*</span></label>
-                    <input v-model="form.motherLastName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                    <input v-model="form.motherLastName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                     <p v-if="validationErrors.motherLastName" class="text-red-500 text-xs mt-1">{{ validationErrors.motherLastName[0] }}</p>
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Prénom <span class="text-red-500">*</span></label>
-                    <input v-model="form.motherFirstName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                    <input v-model="form.motherFirstName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                     <p v-if="validationErrors.motherFirstName" class="text-red-500 text-xs mt-1">{{ validationErrors.motherFirstName[0] }}</p>
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Téléphone</label>
-                    <input v-model="form.motherPhone" type="tel" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                    <input v-model="form.motherPhone" type="tel" maxlength="20" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
                     <p v-if="validationErrors.motherPhone" class="text-red-500 text-xs mt-1">{{ validationErrors.motherPhone[0] }}</p>
                   </div>
                 </div>
@@ -154,18 +159,20 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Nom</label>
-                    <input v-model="form.fatherLastName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                    <input v-model="form.fatherLastName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Prénom</label>
-                    <input v-model="form.fatherFirstName" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                    <input v-model="form.fatherFirstName" type="text" maxlength="100" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
                   </div>
                   <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Téléphone</label>
-                    <input v-model="form.fatherPhone" type="tel" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                    <input v-model="form.fatherPhone" type="tel" maxlength="20" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" />
+                    <p v-if="validationErrors.fatherPhone" class="text-red-500 text-xs mt-1">{{ validationErrors.fatherPhone[0] }}</p>
                   </div>
                 </div>
               </div>
+              <p v-if="validationErrors.phone" class="text-red-500 text-xs mt-1">{{ validationErrors.phone[0] }}</p>
 
             </div>
 
@@ -175,25 +182,25 @@
               
               <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Email principal <span class="text-red-500">*</span></label>
-                <input v-model="form.contactEmail" type="email" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                <input v-model="form.contactEmail" type="email" maxlength="150" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                 <p v-if="validationErrors.contactEmail" class="text-red-500 text-xs mt-1">{{ validationErrors.contactEmail[0] }}</p>
               </div>
 
               <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Adresse postale <span class="text-red-500">*</span></label>
-                <input v-model="form.address" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                <input v-model="form.address" type="text" maxlength="255" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                 <p v-if="validationErrors.address" class="text-red-500 text-xs mt-1">{{ validationErrors.address[0] }}</p>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label class="block text-sm font-bold text-slate-700 mb-2">Code Postal <span class="text-red-500">*</span></label>
-                  <input v-model="form.postalCode" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                  <input v-model="form.postalCode" type="text" inputmode="numeric" maxlength="5" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                   <p v-if="validationErrors.postalCode" class="text-red-500 text-xs mt-1">{{ validationErrors.postalCode[0] }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-bold text-slate-700 mb-2">Ville <span class="text-red-500">*</span></label>
-                  <input v-model="form.city" type="text" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
+                  <input v-model="form.city" type="text" maxlength="150" class="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required />
                   <p v-if="validationErrors.city" class="text-red-500 text-xs mt-1">{{ validationErrors.city[0] }}</p>
                 </div>
               </div>
@@ -201,7 +208,7 @@
 
             <!-- STEP 4: Level -->
             <div v-show="currentStep === 4" class="space-y-6">
-              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Niveau Scolaire</h2>
+              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Niveau scolaire <span class="text-red-500">*</span></h2>
               <div v-if="isLoadingLevels" class="flex justify-center py-8">
                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
               </div>
@@ -222,7 +229,7 @@
 
             <!-- STEP 5: Subject -->
             <div v-show="currentStep === 5" class="space-y-6">
-              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Matière</h2>
+              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Matière <span class="text-red-500">*</span></h2>
               <div v-if="isLoadingSubjects" class="flex justify-center py-8">
                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
               </div>
@@ -246,7 +253,7 @@
 
             <!-- STEP 6: Class/Creneau -->
             <div v-show="currentStep === 6" class="space-y-6">
-              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Choix du Créneau</h2>
+              <h2 class="text-2xl font-bold text-slate-800 border-b border-slate-100 pb-4">Choix du créneau <span class="text-red-500">*</span></h2>
               <div v-if="isLoadingClasses" class="flex justify-center py-8">
                  <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
               </div>
@@ -300,7 +307,7 @@
 
               <label class="flex items-start gap-3 cursor-pointer group">
                 <div class="relative flex items-center pt-1">
-                  <input type="checkbox" v-model="form.acceptedPaymentTerms" class="peer sr-only" required />
+                  <input type="checkbox" v-model="form.acceptedPaymentTerms" class="peer sr-only" />
                   <div class="w-5 h-5 border-2 border-slate-300 rounded peer-checked:bg-emerald-500 peer-checked:border-emerald-500 transition-all flex items-center justify-center">
                     <Check class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100" />
                   </div>
@@ -339,7 +346,7 @@
                 v-else
                 type="submit" 
                 class="px-8 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 shadow-md transition-colors flex items-center disabled:opacity-50"
-                :disabled="isSubmitting || !form.acceptedPaymentTerms"
+                :disabled="isSubmitting"
               >
                 <div v-if="isSubmitting" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                 <Send v-else class="w-4 h-4 mr-2" />
@@ -429,7 +436,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { Check, AlertCircle, Send, Plus, X, Calendar, User, ArrowRight, Search } from 'lucide-vue-next'
@@ -563,39 +570,69 @@ const selectClass = (classId) => {
   form.selectedClassId = classId
 }
 
-const validateStep = () => {
+const validateStep = (step = currentStep.value) => {
   validationErrors.value = {}
   let isValid = true
-  
-  if (currentStep.value === 0) {
-    if (!form.childFirstName) { validationErrors.value.childFirstName = ["Prénom requis"]; isValid = false }
-    if (!form.childLastName) { validationErrors.value.childLastName = ["Nom requis"]; isValid = false }
-  } else if (currentStep.value === 1) {
-    if (!form.childDob) { validationErrors.value.childDob = ["Date de naissance requise"]; isValid = false }
-    if (!form.childGender) { validationErrors.value.childGender = ["Genre requis"]; isValid = false }
 
-  } else if (currentStep.value === 2) {
-    if (!form.motherLastName && !form.fatherLastName) { 
-      validationErrors.value.motherLastName = ["Un nom (Mère ou Père) est requis"]
-      isValid = false 
+  if (step === 0) {
+    if (!form.childFirstName.trim()) { validationErrors.value.childFirstName = ["Prénom requis"]; isValid = false }
+    if (!form.childLastName.trim()) { validationErrors.value.childLastName = ["Nom requis"]; isValid = false }
+  } else if (step === 1) {
+    const birthDate = form.childDob ? new Date(`${form.childDob}T00:00:00`) : null
+    if (!birthDate || Number.isNaN(birthDate.getTime())) {
+      validationErrors.value.childDob = ["Date de naissance requise"]
+      isValid = false
+    } else if (birthDate > new Date(new Date().toDateString())) {
+      validationErrors.value.childDob = ["La date de naissance ne peut pas être dans le futur"]
+      isValid = false
     }
-    if (!form.motherFirstName && !form.fatherFirstName) { 
-      validationErrors.value.motherFirstName = ["Un prénom (Mère ou Père) est requis"]
-      isValid = false 
+    if (!form.childGender) { validationErrors.value.childGender = ["Veuillez choisir le sexe de l'enfant"]; isValid = false }
+
+  } else if (step === 2) {
+    if (!form.motherLastName.trim()) { validationErrors.value.motherLastName = ["Nom obligatoire"]; isValid = false }
+    if (!form.motherFirstName.trim()) { validationErrors.value.motherFirstName = ["Prénom obligatoire"]; isValid = false }
+
+    const fatherPhoneHasDigits = /\d/.test(form.fatherPhone)
+    const motherPhoneHasDigits = /\d/.test(form.motherPhone)
+    if (form.fatherPhone.trim() && !fatherPhoneHasDigits) {
+      validationErrors.value.fatherPhone = ["Le téléphone est invalide"]
+      isValid = false
     }
-  } else if (currentStep.value === 3) {
-    if (!form.contactEmail) { validationErrors.value.contactEmail = ["Email requis"]; isValid = false }
-    if (!form.address) { validationErrors.value.address = ["Adresse requise"]; isValid = false }
-    if (!form.postalCode) { validationErrors.value.postalCode = ["Code postal requis"]; isValid = false }
-    if (!form.city) { validationErrors.value.city = ["Ville requise"]; isValid = false }
-  } else if (currentStep.value === 4) {
+    if (form.motherPhone.trim() && !motherPhoneHasDigits) {
+      validationErrors.value.motherPhone = ["Le téléphone est invalide"]
+      isValid = false
+    }
+    if (!fatherPhoneHasDigits && !motherPhoneHasDigits) {
+      validationErrors.value.phone = ["Renseignez au moins un numéro de téléphone valide"]
+      isValid = false
+    }
+  } else if (step === 3) {
+    if (!form.contactEmail.trim()) {
+      validationErrors.value.contactEmail = ["Email requis"]
+      isValid = false
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contactEmail.trim())) {
+      validationErrors.value.contactEmail = ["L'adresse email est invalide"]
+      isValid = false
+    }
+    if (!form.address.trim()) { validationErrors.value.address = ["Adresse requise"]; isValid = false }
+    if (!/^\d{5}$/.test(form.postalCode.trim())) {
+      validationErrors.value.postalCode = ["Le code postal doit contenir 5 chiffres"]
+      isValid = false
+    }
+    if (!form.city.trim()) { validationErrors.value.city = ["Ville requise"]; isValid = false }
+  } else if (step === 4) {
     if (!form.schoolLevel) { validationErrors.value.schoolLevel = ["Veuillez choisir un niveau"]; isValid = false }
-  } else if (currentStep.value === 5) {
+  } else if (step === 5) {
     if (!form.subject) { validationErrors.value.subject = ["Veuillez choisir une matière"]; isValid = false }
-  } else if (currentStep.value === 6) {
+  } else if (step === 6) {
     if (!form.selectedClassId) { validationErrors.value.selectedClassId = ["Veuillez choisir un créneau"]; isValid = false }
+  } else if (step === 7) {
+    if (!form.acceptedPaymentTerms) {
+      validationErrors.value.acceptedPaymentTerms = ["Vous devez accepter les conditions d'inscription et de règlement"]
+      isValid = false
+    }
   }
-  
+
   return isValid
 }
 
@@ -760,7 +797,13 @@ const resetForm = () => {
 }
 
 const submitForm = async () => {
-  if (!validateStep()) return
+  for (let step = 0; step <= 7; step += 1) {
+    currentStep.value = step
+    if (!validateStep(step)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+  }
   
   isSubmitting.value = true
   submitError.value = ''
@@ -785,7 +828,7 @@ const submitForm = async () => {
       address: (form.address || '').trim(),
       postalCode: (form.postalCode || '').trim(),
       city: (form.city || '').trim(),
-      acceptedPaymentTerms: true
+      acceptedPaymentTerms: form.acceptedPaymentTerms
     }
     
     // Clean up empty fields
@@ -810,11 +853,54 @@ const submitForm = async () => {
     }
   } catch (error) {
     console.error("Erreur d'inscription:", error)
+    const responseErrors = error.response?.data?.errors
+    if (responseErrors && typeof responseErrors === 'object') {
+      const fieldAliases = {
+        studentBirthDate: 'childDob',
+        email: 'contactEmail'
+      }
+      const fieldSteps = {
+        childFirstName: 0,
+        childLastName: 0,
+        childDob: 1,
+        childGender: 1,
+        motherFirstName: 2,
+        motherLastName: 2,
+        fatherFirstName: 2,
+        fatherLastName: 2,
+        fatherPhone: 2,
+        motherPhone: 2,
+        phone: 2,
+        contactEmail: 3,
+        address: 3,
+        postalCode: 3,
+        city: 3,
+        schoolLevel: 4,
+        subject: 5,
+        selectedClassId: 6,
+        acceptedPaymentTerms: 7
+      }
+      const mappedErrors = {}
+      let firstInvalidStep = null
+
+      Object.entries(responseErrors).forEach(([field, messages]) => {
+        const formField = fieldAliases[field] || field
+        mappedErrors[formField] = Array.isArray(messages) ? messages : [String(messages)]
+        const step = fieldSteps[formField]
+        if (step !== undefined && (firstInvalidStep === null || step < firstInvalidStep)) {
+          firstInvalidStep = step
+        }
+      })
+
+      validationErrors.value = mappedErrors
+      if (firstInvalidStep !== null) currentStep.value = firstInvalidStep
+    }
     if (error.response && error.response.data && error.response.data.message) {
       submitError.value = error.response.data.message
     } else {
       submitError.value = 'Impossible de contacter le serveur. Veuillez réessayer plus tard.'
     }
+    if (responseErrors) await nextTick()
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } finally {
     isSubmitting.value = false
