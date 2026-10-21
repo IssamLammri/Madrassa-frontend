@@ -21,6 +21,11 @@ const routes = [
         component: () => import('@/views/ResetPassword.vue')
     },
     {
+        path: '/whatsapp/:token_parent',
+        name: 'PublicParentWhatsappGroups',
+        component: () => import('@/views/PublicParentWhatsappGroups.vue')
+    },
+    {
         path: '/register',
         name: 'RegisterPage',
         component: () => import('@/views/Register.vue')
