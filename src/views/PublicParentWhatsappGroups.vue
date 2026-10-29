@@ -1,5 +1,5 @@
 <template>
-  <main class="whatsapp-page" lang="fr">
+  <main class="whatsapp-page" :class="{ 'whatsapp-page--connected': !token }" lang="fr">
     <div class="whatsapp-page__container">
       <header class="whatsapp-header">
         <div class="whatsapp-header__icon" aria-hidden="true">✳</div>
@@ -16,8 +16,8 @@
       </section>
 
       <section v-else-if="isInvalid" class="whatsapp-state whatsapp-state--error" role="status">
-        <h2>Ce lien n’est pas valide</h2>
-        <p>Vérifiez l’adresse reçue par e-mail ou contactez l’équipe du CCIB38 pour obtenir un nouveau lien.</p>
+        <h2>{{ token ? 'Ce lien n’est pas valide' : 'Dossier parent introuvable' }}</h2>
+        <p>{{ token ? 'Vérifiez l’adresse reçue par e-mail ou contactez l’équipe du CCIB38 pour obtenir un nouveau lien.' : 'Contactez l’équipe du CCIB38 pour associer votre compte à votre dossier parent.' }}</p>
       </section>
 
       <section v-else-if="hasError" class="whatsapp-state whatsapp-state--error" role="status">
@@ -74,6 +74,7 @@
 
 <script setup>
 import axios from 'axios'
+import apiClient from '@/services/apiClient.js'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -93,13 +94,13 @@ async function loadGroups() {
   groups.value = []
 
   try {
-    const response = await axios.get(
+    const response = token.value ? await axios.get(
       `${apiHost}/api/public/parents/whatsapp-groups/${encodeURIComponent(token.value)}`,
       {
         headers: { Accept: 'application/json' },
         withCredentials: false,
       },
-    )
+    ) : await apiClient.get('/api/parent/whatsapp-groups')
     groups.value = Array.isArray(response.data?.groups) ? response.data.groups : []
   } catch (error) {
     if ([401, 404].includes(error.response?.status)) {
@@ -132,6 +133,7 @@ watch(token, loadGroups, { immediate: true })
 <style scoped>
 .whatsapp-page{min-height:100vh;box-sizing:border-box;padding:48px 20px 28px;background:radial-gradient(circle at top,#e4f5ec 0,#f7faf8 36%,#f3f6f8 100%);color:#263a32}
 .whatsapp-page__container{width:min(100%,760px);margin:0 auto}
+.whatsapp-page--connected{min-height:auto;border-radius:22px}
 .whatsapp-header{text-align:center;margin:0 auto 30px;max-width:650px}
 .whatsapp-header__icon{display:grid;place-items:center;width:54px;height:54px;margin:0 auto 16px;border-radius:18px;background:#e0f5eb;color:#087453;font-size:27px}
 .whatsapp-eyebrow{margin:0 0 8px;color:#087453;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}

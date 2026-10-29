@@ -46,6 +46,11 @@ const routes = [
         redirect: '/home/dashboard',
         children: [
             {
+                path: 'whatsapp',
+                name: 'ParentWhatsappGroups',
+                component: () => import('@/views/PublicParentWhatsappGroups.vue')
+            },
+            {
                 path: 'dashboard',
                 name: 'Dashboard',
                 component: () => import('@/views/Dashboard.vue')

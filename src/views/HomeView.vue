@@ -80,7 +80,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users, Menu, X, ClipboardList
+  BookOpen, LayoutDashboard, LogOut, FileText, UserCircle, Users, Menu, X, ClipboardList, MessageCircle, PanelLeftOpen, PanelLeftClose
 } from 'lucide-vue-next'
 import logoUrl from '@/assets/icons/ccib38_logo.png'
 import ParentComplaintModal from '@/shared/ui/ParentComplaintModal.vue'
@@ -118,6 +118,7 @@ const navigationItems = [
   { key: 'dashboard', labelKey: 'Tableau de bord', label: 'Tableau de bord', icon: LayoutDashboard, to: '/home/dashboard' },
   { key: 'children', labelKey: 'Mes enfants', label: 'Mes enfants', icon: Users, to: '/home/children' },
   { key: 'classes', labelKey: 'Classes', label: 'Classes', icon: BookOpen, to: '/home/classes' },
+  { key: 'whatsapp', label: 'Groupes WhatsApp', icon: MessageCircle, to: '/home/whatsapp' },
   { key: 'requests', labelKey: 'Mes demandes', label: 'Mes demandes', icon: ClipboardList, to: '/home/requests' },
   { key: 'invoices', labelKey: 'Mes factures', label: 'Mes factures', icon: FileText, to: '/home/invoices' },
   { key: 'profile', labelKey: 'Mon profil', label: 'Mon profil', icon: UserCircle, to: '/home/profile' }
