@@ -1,9 +1,9 @@
 <template>
-  <div class="max-w-6xl mx-auto w-full space-y-6">
+  <div class="portal-page space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="page-heading">
       <div>
-        <h1 class="text-2xl font-bold text-slate-800">Classes</h1>
+        <h1 class="text-2xl font-medium text-slate-800">Classes</h1>
         <p class="text-slate-600 mt-1">Consultez les classes et l'emploi du temps de vos enfants.</p>
       </div>
 
@@ -13,9 +13,9 @@
           <button
             type="button"
             @click="viewType = 'planning'"
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
-            :class="viewType === 'planning' 
-              ? 'bg-emerald-600 text-white shadow-xs' 
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors"
+            :class="viewType === 'planning'
+              ? 'bg-emerald-600 text-white shadow-xs'
               : 'text-slate-600 hover:text-slate-900'"
           >
             <CalendarDaysIcon class="w-4 h-4" />
@@ -24,9 +24,9 @@
           <button
             type="button"
             @click="viewType = 'cards'"
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all"
-            :class="viewType === 'cards' 
-              ? 'bg-emerald-600 text-white shadow-xs' 
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors"
+            :class="viewType === 'cards'
+              ? 'bg-emerald-600 text-white shadow-xs'
               : 'text-slate-600 hover:text-slate-900'"
           >
             <LayoutGridIcon class="w-4 h-4" />
@@ -36,15 +36,15 @@
 
         <!-- Active/Past Filter -->
         <div class="flex items-center gap-1 text-sm bg-white border border-slate-200 rounded-xl p-1 shadow-2xs">
-          <button 
-            @click="setActiveFilter(true)" 
+          <button
+            @click="setActiveFilter(true)"
             class="px-3.5 py-1.5 rounded-lg transition-colors text-xs sm:text-sm"
             :class="isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
           >
             Actives
           </button>
-          <button 
-            @click="setActiveFilter(false)" 
+          <button
+            @click="setActiveFilter(false)"
             class="px-3.5 py-1.5 rounded-lg transition-colors text-xs sm:text-sm"
             :class="!isActiveFilter ? 'bg-slate-100 font-semibold text-slate-800' : 'text-slate-500 hover:text-slate-700'"
           >
@@ -55,11 +55,11 @@
     </div>
 
     <!-- Child Filter Toolbar (if parent has multiple children) -->
-    <div 
-      v-if="availableChildren.length > 1" 
+    <div
+      v-if="availableChildren.length > 1"
       class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs flex flex-wrap items-center gap-2"
     >
-      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1 flex items-center gap-1.5">
+      <span class="text-xs font-medium text-slate-500   mr-1 flex items-center gap-1.5">
         <UsersIcon class="w-4 h-4 text-emerald-600" />
         Filtrer par enfant :
       </span>
@@ -68,14 +68,14 @@
       <button
         type="button"
         @click="selectedChildId = 'all'"
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all"
-        :class="selectedChildId === 'all' 
-          ? 'bg-slate-900 text-white shadow-xs' 
+        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
+        :class="selectedChildId === 'all'
+          ? 'bg-slate-900 text-white shadow-xs'
           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
       >
         <span>Tous les enfants</span>
-        <span 
-          class="text-[11px] px-1.5 py-0.2 rounded-full font-bold"
+        <span
+          class="text-xs px-1.5 py-0.2 rounded-full font-medium"
           :class="selectedChildId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'"
         >
           {{ classes.length }}
@@ -88,15 +88,15 @@
         :key="child.id"
         type="button"
         @click="selectedChildId = child.id"
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all"
-        :class="selectedChildId === child.id 
-          ? 'bg-emerald-600 text-white shadow-xs' 
+        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
+        :class="selectedChildId === child.id
+          ? 'bg-emerald-600 text-white shadow-xs'
           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
       >
         <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" :class="child.dotClass"></span>
         <span>{{ child.fullName }}</span>
-        <span 
-          class="text-[11px] px-1.5 py-0.2 rounded-full font-bold"
+        <span
+          class="text-xs px-1.5 py-0.2 rounded-full font-medium"
           :class="selectedChildId === child.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'"
         >
           {{ child.count }}
@@ -116,12 +116,12 @@
 
     <!-- Empty State -->
     <div v-else-if="filteredClasses.length === 0" class="bg-white rounded-2xl p-12 text-center shadow-sm border border-slate-100">
-      <h3 class="text-lg font-bold text-slate-800 mb-2">Aucune classe trouvée</h3>
+      <h3 class="text-lg font-medium text-slate-800 mb-2">Aucune classe trouvée</h3>
       <p class="text-slate-600">Aucune inscription ne correspond à cette sélection.</p>
     </div>
 
     <!-- 1. Planning Mode -->
-    <WeeklySchedule 
+    <WeeklySchedule
       v-else-if="viewType === 'planning'"
       :classes="filteredClasses"
       :showChildName="true"
@@ -129,15 +129,15 @@
 
     <!-- 2. Cards / Liste Mode -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <BaseCard 
-        v-for="item in filteredClasses" 
-        :key="item.registrationId || item.id" 
+      <BaseCard
+        v-for="item in filteredClasses"
+        :key="item.registrationId || item.id"
         class="p-6 flex flex-col justify-between hover:shadow-md transition-shadow border-slate-200/80"
       >
         <div>
           <!-- Header: Child name + status badge -->
           <div class="flex justify-between items-start gap-2 mb-3">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-800">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-800">
               <span class="w-2 h-2 rounded-full" :class="getChildDotClass(item.child?.id)"></span>
               {{ item.child?.fullName || 'Élève' }}
             </span>
@@ -147,7 +147,7 @@
           </div>
 
           <!-- Class Title -->
-          <h3 class="font-bold text-xl text-slate-900 mb-1">
+          <h3 class="font-medium text-xl text-slate-900 mb-1">
             {{ item.class?.name || item.name || 'Classe sans nom' }}
           </h3>
 
@@ -159,25 +159,25 @@
           <!-- Details Grid -->
           <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50/80 p-3.5 rounded-xl border border-slate-100 mb-4">
             <div>
-              <p class="text-slate-400 font-semibold uppercase text-[10px] mb-0.5">Niveau</p>
-              <p class="text-slate-800 font-bold">{{ item.class?.level || '-' }}</p>
+              <p class="text-slate-400 font-semibold  text-xs mb-0.5">Niveau</p>
+              <p class="text-slate-800 font-medium">{{ item.class?.level || '-' }}</p>
             </div>
             <div>
-              <p class="text-slate-400 font-semibold uppercase text-[10px] mb-0.5">Jour & Heure</p>
-              <p class="text-slate-800 font-bold flex items-center gap-1">
+              <p class="text-slate-400 font-semibold  text-xs mb-0.5">Jour & Heure</p>
+              <p class="text-slate-800 font-medium flex items-center gap-1">
                 <ClockIcon class="w-3 h-3 text-slate-500" />
                 {{ item.class?.day }} {{ item.class?.startTime }}-{{ item.class?.endTime }}
               </p>
             </div>
             <div>
-              <p class="text-slate-400 font-semibold uppercase text-[10px] mb-0.5">Salle</p>
+              <p class="text-slate-400 font-semibold  text-xs mb-0.5">Salle</p>
               <p class="text-slate-800 font-medium flex items-center gap-1">
                 <MapPinIcon class="w-3 h-3 text-slate-400" />
                 {{ item.class?.room?.name || 'Non assignée' }}
               </p>
             </div>
             <div>
-              <p class="text-slate-400 font-semibold uppercase text-[10px] mb-0.5">Enseignant</p>
+              <p class="text-slate-400 font-semibold  text-xs mb-0.5">Enseignant</p>
               <p class="text-slate-800 font-medium flex items-center gap-1 truncate">
                 <UserIcon class="w-3 h-3 text-slate-400" />
                 <span class="truncate">{{ item.class?.teacher?.fullName || 'Non assigné' }}</span>

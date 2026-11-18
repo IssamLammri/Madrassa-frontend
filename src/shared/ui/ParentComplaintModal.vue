@@ -5,14 +5,14 @@
       type="button"
       id="parent-support-fab"
       @click="openModal"
-      class="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-white/20 group cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-500/30"
+      class="parent-support-trigger"
       aria-label="Faire une demande, réclamation ou remerciement"
     >
       <div class="relative flex items-center justify-center">
-        <MessageSquareTextIcon class="w-5 h-5 group-hover:rotate-6 transition-transform" />
-        <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-emerald-600 animate-pulse"></span>
+        <MessageSquareTextIcon class="w-5 h-5  transition-transform" />
+
       </div>
-      <span class="font-bold text-xs sm:text-sm tracking-wide hidden sm:inline-block">
+      <span class="font-medium text-xs sm:text-sm  hidden sm:inline-block">
         Faire une demande
       </span>
     </button>
@@ -33,7 +33,8 @@
           @click.self="closeModal"
         >
           <div
-            class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all"
+            class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-colors"
+            ref="dialogPanel"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
@@ -50,11 +51,11 @@
 
             <!-- SUCCESS STATE -->
             <div v-if="isSubmitted" class="p-8 sm:p-10 text-center space-y-4">
-              <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner animate-bounce">
+              <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner ">
                 <CheckCircle2Icon class="w-9 h-9" />
               </div>
               <div class="space-y-1.5">
-                <h3 class="text-xl sm:text-2xl font-black text-slate-900">Message envoyé !</h3>
+                <h3 class="text-xl sm:text-2xl font-semibold text-slate-900">Message envoyé</h3>
                 <p class="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
                   Votre {{ selectedCategoryLabel.toLowerCase() }} a bien été transmise à l'administration de l'établissement. Nous la traiterons avec attention dans les plus brefs délais.
                 </p>
@@ -64,14 +65,14 @@
                 <button
                   type="button"
                   @click="resetFormAndClose"
-                  class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors shadow-xs"
+                  class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-colors shadow-xs"
                 >
                   Fermer
                 </button>
                 <button
                   type="button"
                   @click="resetForm"
-                  class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-xl transition-colors"
+                  class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition-colors"
                 >
                   Envoyer un autre message
                 </button>
@@ -82,11 +83,11 @@
             <div v-else class="p-6 sm:p-8 space-y-5">
               <!-- Header -->
               <div class="space-y-1 pr-8">
-                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
+                <div class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
                   <HeartHandshakeIcon class="w-3.5 h-3.5" />
                   <span>Contact & Administration</span>
                 </div>
-                <h2 id="modal-title" class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                <h2 id="modal-title" class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
                   Envoyer un message
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-500">
@@ -96,7 +97,7 @@
 
               <!-- Category Pills -->
               <div class="space-y-1.5">
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                <label class="block text-xs font-medium   text-slate-500">
                   Type de message
                 </label>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -105,9 +106,9 @@
                     :key="cat.id"
                     type="button"
                     @click="selectCategory(cat)"
-                    class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-bold border transition-all text-center"
-                    :class="selectedCategory === cat.id 
-                      ? `${cat.activeBg} ${cat.activeText} ${cat.activeBorder} shadow-2xs scale-[1.02]` 
+                    class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-medium border transition-colors text-center"
+                    :class="selectedCategory === cat.id
+                      ? `${cat.activeBg} ${cat.activeText} ${cat.activeBorder} shadow-2xs scale-[1.02]`
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200/80'"
                   >
                     <component :is="cat.icon" class="w-3.5 h-3.5 flex-shrink-0" />
@@ -118,13 +119,13 @@
 
               <!-- Quick suggestions -->
               <div v-if="currentSuggestions.length > 0" class="flex flex-wrap items-center gap-1.5">
-                <span class="text-[11px] text-slate-400 font-medium">Suggestions :</span>
+                <span class="text-xs text-slate-400 font-medium">Suggestions :</span>
                 <button
                   v-for="sug in currentSuggestions"
                   :key="sug"
                   type="button"
                   @click="applySuggestion(sug)"
-                  class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                  class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
                 >
                   {{ sug }}
                 </button>
@@ -139,7 +140,7 @@
               <form @submit.prevent="handleSubmit" class="space-y-4">
                 <!-- Titre Input -->
                 <div class="space-y-1">
-                  <label for="complaint-title" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                  <label for="complaint-title" class="block text-xs font-medium   text-slate-600">
                     Titre du message <span class="text-rose-500">*</span>
                   </label>
                   <input
@@ -155,10 +156,10 @@
                 <!-- Contenu Textarea -->
                 <div class="space-y-1">
                   <div class="flex justify-between items-center">
-                    <label for="complaint-content" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <label for="complaint-content" class="block text-xs font-medium   text-slate-600">
                       Votre message <span class="text-rose-500">*</span>
                     </label>
-                    <span class="text-[11px] text-slate-400">
+                    <span class="text-xs text-slate-400">
                       {{ form.content.length }} car.
                     </span>
                   </div>
@@ -173,7 +174,7 @@
                 </div>
 
                 <!-- Parent Info Footer preview -->
-                <div v-if="parentName" class="text-[11px] text-slate-500 bg-slate-50 px-3 py-2 rounded-xl flex items-center justify-between border border-slate-100">
+                <div v-if="parentName" class="text-xs text-slate-500 bg-slate-50 px-3 py-2 rounded-xl flex items-center justify-between border border-slate-100">
                   <span>Expéditeur : <strong class="text-slate-800">{{ parentName }}</strong></span>
                   <span v-if="parentId" class="text-slate-400">ID Dossier : #{{ parentId }}</span>
                 </div>
@@ -183,14 +184,14 @@
                   <button
                     type="button"
                     @click="closeModal"
-                    class="px-4 py-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                    class="px-4 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
                     :disabled="isSubmitting || !form.title.trim() || !form.content.trim()"
-                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-medium rounded-xl transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <SendIcon v-if="!isSubmitting" class="w-4 h-4" />
                     <div v-else class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -207,6 +208,7 @@
 </template>
 
 <script setup>
+import { useDialogFocus } from '@/shared/useDialogFocus.js'
 import { ref, reactive, computed, onMounted } from 'vue'
 import {
   MessageSquareTextIcon,
@@ -224,6 +226,8 @@ import { sendParentComplaint, getParentProfile } from '@/services/parentApi.js'
 import { getToken } from '@/services/apiClient.js'
 
 const isOpen = ref(false)
+const dialogPanel = ref(null)
+useDialogFocus(isOpen, dialogPanel, () => closeModal())
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
 const error = ref('')
@@ -401,3 +405,9 @@ onMounted(() => {
   loadParentContext()
 })
 </script>
+
+<style scoped>
+.parent-support-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 8px; background: white; color: var(--color-body); cursor: pointer; transition: background-color 160ms, border-color 160ms; }
+.parent-support-trigger:hover { background: var(--color-slate-50); border-color: #bdc8c0; }
+@media (max-width: 640px) { .parent-support-trigger { width: 44px; height: 44px; padding: 0; } }
+</style>

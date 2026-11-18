@@ -1,60 +1,27 @@
 <template>
-  <div class="dashboard-view max-w-6xl mx-auto w-full space-y-8 pb-12">
-    <!-- 1. HEADER & ACTIVE SCHOOL YEAR BANNER -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs">
-      <div class="space-y-1.5">
-        <div class="flex items-center gap-2.5">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-            <CalendarDaysIcon class="w-3.5 h-3.5 text-emerald-600" />
-            <span>Année scolaire {{ schoolYear }}</span>
-          </span>
-          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            En direct
-          </span>
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Tableau de bord
-        </h1>
-        <p class="text-sm text-slate-500 max-w-xl">
-          Synthèse globale de la scolarité de vos enfants, de leurs cours, présences et facturation.
-        </p>
+  <div class="dashboard-view portal-page space-y-6 pb-8">
+    <header class="page-heading">
+      <div>
+        <div class="page-heading__context">Année scolaire {{ schoolYear }}</div>
+        <h1>Tableau de bord</h1>
+        <p>La scolarité de vos enfants, leurs cours et vos démarches au même endroit.</p>
       </div>
-
-      <!-- Quick Actions -->
-      <div class="flex flex-wrap items-center gap-2.5">
-        <button
-          type="button"
-          @click="fetchDashboardData"
-          :disabled="isLoading"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/70 transition-colors disabled:opacity-50 cursor-pointer"
-          title="Actualiser les indicateurs"
-        >
-          <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />
-          <span>Actualiser</span>
-        </button>
-
-        <button
-          type="button"
-          @click="showRegistrationChoice = true"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
-        >
-          <PlusCircleIcon class="w-4 h-4" />
-          <span>Inscrire un enfant</span>
-        </button>
+      <div class="page-heading__actions">
+        <button type="button" class="custom-btn btn-tertiary" :disabled="isLoading" @click="fetchDashboardData"><RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />Actualiser</button>
+        <button type="button" class="custom-btn btn-primary" @click="showRegistrationChoice = true"><PlusCircleIcon class="w-4 h-4" />Inscrire un enfant</button>
       </div>
-    </div>
+    </header>
 
     <!-- Error Alert -->
     <BaseAlert v-if="error" type="error" class="shadow-xs">
       <div class="flex items-center justify-between gap-4">
         <span>{{ error }}</span>
-        <button @click="fetchDashboardData" class="underline font-bold text-xs">Réessayer</button>
+        <button @click="fetchDashboardData" class="underline font-medium text-xs">Réessayer</button>
       </div>
     </BaseAlert>
 
     <!-- Loading Skeleton / Spinner -->
-    <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100">
+    <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-100">
       <div class="animate-spin rounded-full h-12 w-12 border-3 border-emerald-600 border-t-transparent mb-4"></div>
       <p class="text-sm font-semibold text-slate-600">Chargement de votre tableau de bord...</p>
       <p class="text-xs text-slate-400 mt-1">Récupération des indicateurs en cours</p>
@@ -62,146 +29,39 @@
 
     <!-- MAIN DASHBOARD CONTENT -->
     <template v-else>
-      <!-- 2. FOUR KEY METRIC TILES (CLICKABLE NAVIGATION) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <!-- 2.1 ENFANTS RATTACHÉS -->
-        <div
-          @click="navigateTo('/home/children')"
-          class="group relative bg-white hover:bg-slate-50/50 p-6 rounded-3xl border border-slate-200/80 hover:border-slate-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
-        >
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Enfants rattachés</span>
-              <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <UsersIcon class="w-5 h-5" />
-              </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-              <span class="text-3xl sm:text-4xl font-black text-slate-900">{{ dashboardData.children?.total ?? 0 }}</span>
-              <span class="text-xs font-medium text-slate-500">enfant{{ (dashboardData.children?.total ?? 0) > 1 ? 's' : '' }}</span>
-            </div>
-            <p class="text-xs text-slate-500 mt-1">
-              Dossiers scolaires actifs
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600 group-hover:text-blue-700">
-            <span>Gérer les enfants</span>
-            <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-          </div>
-        </div>
-
-        <!-- 2.2 CLASSES ACTIVES -->
-        <div
-          @click="navigateTo('/home/classes')"
-          class="group relative bg-white hover:bg-slate-50/50 p-6 rounded-3xl border border-slate-200/80 hover:border-emerald-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
-        >
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Classes inscrites</span>
-              <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <GraduationCapIcon class="w-5 h-5" />
-              </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-              <span class="text-3xl sm:text-4xl font-black text-slate-900">{{ dashboardData.classes?.total ?? 0 }}</span>
-              <span class="text-xs font-medium text-slate-500">cours actif{{ (dashboardData.classes?.total ?? 0) > 1 ? 's' : '' }}</span>
-            </div>
-            <div class="flex items-center gap-2 text-xs text-slate-600 mt-2">
-              <span class="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
-                {{ dashboardData.classes?.arabe ?? 0 }} Arabe
-              </span>
-              <span class="inline-flex items-center gap-1 font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
-                {{ dashboardData.classes?.soutienScolaire ?? 0 }} Soutien
-              </span>
-            </div>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
-            <span>Voir l'emploi du temps</span>
-            <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-          </div>
-        </div>
-
-        <!-- 2.3 DEMANDES EN COURS -->
-        <div
-          @click="navigateTo('/home/requests')"
-          class="group relative bg-white hover:bg-slate-50/50 p-6 rounded-3xl border border-slate-200/80 hover:border-amber-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
-        >
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Demandes en cours</span>
-              <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <ClipboardListIcon class="w-5 h-5" />
-              </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-              <span class="text-3xl sm:text-4xl font-black text-slate-900">{{ dashboardData.pendingRequests?.total ?? 0 }}</span>
-              <span class="text-xs font-medium text-slate-500">en attente</span>
-            </div>
-            <div class="flex items-center gap-2 text-xs text-slate-600 mt-2">
-              <span v-if="(dashboardData.pendingRequests?.total ?? 0) === 0" class="text-emerald-600 font-semibold flex items-center gap-1">
-                <CheckCircle2Icon class="w-3.5 h-3.5" />
-                Aucune attente
-              </span>
-              <template v-else>
-                <span v-if="dashboardData.pendingRequests?.arabe > 0" class="font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
-                  {{ dashboardData.pendingRequests.arabe }} Arabe
-                </span>
-                <span v-if="dashboardData.pendingRequests?.soutienScolaire > 0" class="font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
-                  {{ dashboardData.pendingRequests.soutienScolaire }} Soutien
-                </span>
-              </template>
-            </div>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-600 group-hover:text-amber-700">
-            <span>Suivre l'avancement</span>
-            <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-          </div>
-        </div>
-
-        <!-- 2.4 FACTURES & RESTE DÛ -->
-        <div
-          @click="navigateTo('/home/invoices')"
-          class="group relative bg-white hover:bg-slate-50/50 p-6 rounded-3xl border border-slate-200/80 hover:border-teal-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
-        >
-          <div>
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Paiement & Factures</span>
-              <div class="w-11 h-11 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <ReceiptIcon class="w-5 h-5" />
-              </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-              <span class="text-2xl sm:text-3xl font-black" :class="actualOutstandingAmount > 0 ? 'text-amber-600' : 'text-emerald-600'">
-                {{ formatCurrency(actualOutstandingAmount) }}
-              </span>
-            </div>
-            <p class="text-xs font-medium text-slate-500 mt-1">
-              <span v-if="actualOutstandingAmount > 0" class="text-amber-700 font-semibold">
-                Reste à régler
-              </span>
-              <span v-else class="text-emerald-600 font-semibold">
-                Tout est à jour
-              </span>
-              • {{ dashboardData.invoices?.paid ?? 0 }}/{{ dashboardData.invoices?.total ?? 0 }} payée{{ (dashboardData.invoices?.total ?? 0) > 1 ? 's' : '' }}
-            </p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-600 group-hover:text-teal-700">
-            <span>Accéder aux factures</span>
-            <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-          </div>
-        </div>
+      <div class="metric-grid">
+        <button type="button" class="metric-card metric-card--action" @click="navigateTo('/home/children')">
+          <span class="metric-card__label">Enfants rattachés</span>
+          <span class="metric-card__value">{{ dashboardData.children?.total ?? 0 }}</span>
+          <p class="metric-card__meta">Dossiers scolaires actifs</p>
+          <span class="metric-card__link">Mes enfants <ArrowRightIcon class="w-4 h-4" /></span>
+        </button>
+        <button type="button" class="metric-card metric-card--action" @click="navigateTo('/home/classes')">
+          <span class="metric-card__label">Cours suivis</span>
+          <span class="metric-card__value">{{ dashboardData.classes?.total ?? 0 }}</span>
+          <p class="metric-card__meta">{{ dashboardData.classes?.arabe ?? 0 }} arabe · {{ dashboardData.classes?.soutienScolaire ?? 0 }} soutien scolaire</p>
+          <span class="metric-card__link">Emploi du temps <ArrowRightIcon class="w-4 h-4" /></span>
+        </button>
+        <button type="button" class="metric-card metric-card--action" @click="navigateTo('/home/requests')">
+          <span class="metric-card__label">Demandes en cours</span>
+          <span class="metric-card__value">{{ dashboardData.pendingRequests?.total ?? 0 }}</span>
+          <p class="metric-card__meta">{{ dashboardData.pendingRequests?.arabe ?? 0 }} arabe · {{ dashboardData.pendingRequests?.soutienScolaire ?? 0 }} soutien scolaire</p>
+          <span class="metric-card__link">Suivre mes demandes <ArrowRightIcon class="w-4 h-4" /></span>
+        </button>
+        <button type="button" class="metric-card metric-card--action" :class="{ 'metric-card--attention': actualOutstandingAmount > 0 }" @click="navigateTo('/home/invoices')">
+          <span class="metric-card__label">Reste à régler</span>
+          <span class="metric-card__value">{{ formatCurrency(actualOutstandingAmount) }}</span>
+          <p class="metric-card__meta">{{ dashboardData.invoices?.paid ?? 0 }} / {{ dashboardData.invoices?.total ?? 0 }} factures payées</p>
+          <span class="metric-card__link">Factures et règlements <ArrowRightIcon class="w-4 h-4" /></span>
+        </button>
       </div>
 
       <!-- 3. DETAILED ASSIDUITÉ & PRÉSENCES PAR SERVICE -->
-      <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-6">
+      <div class="attendance-panel bg-white rounded-2xl p-6 sm:p-6 border border-slate-200/80 shadow-xs space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-lg sm:text-xl font-bold text-slate-900">
+            <div class="flex flex-wrap items-center gap-2">
+              <h2 class="text-lg sm:text-xl font-medium text-slate-900">
                 Assiduité et présence par service
               </h2>
               <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
@@ -215,8 +75,9 @@
 
           <button
             type="button"
+            role="link" tabindex="0" @keydown.enter="navigateTo('/home/classes')"
             @click="navigateTo('/home/classes')"
-            class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700 self-start sm:self-auto"
+            class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 self-start sm:self-auto"
           >
             <span>Voir l'emploi du temps complet</span>
             <ArrowRightIcon class="w-3.5 h-3.5" />
@@ -226,15 +87,16 @@
         <!-- Service Cards Grid: Arabe & Soutien Scolaire -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- 3.1 SERVICE LANGUE ARABE -->
-          <div 
+          <div
+            role="link" tabindex="0" @keydown.enter="navigateTo('/home/classes')"
             @click="navigateTo('/home/classes')"
-            class="group p-5 sm:p-6 rounded-2xl border border-slate-200/80 hover:border-emerald-300 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer shadow-2xs"
+            class="attendance-service group p-5 sm:p-6 rounded-2xl border border-slate-200/80 hover:border-emerald-300 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer shadow-2xs"
           >
             <div class="flex items-start justify-between gap-4 mb-4">
               <div>
                 <div class="flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  <h3 class="font-bold text-base text-slate-900 group-hover:text-emerald-700 transition-colors">
+                  <h3 class="font-medium text-base text-slate-900 group-hover:text-emerald-700 transition-colors">
                     Langue Arabe
                   </h3>
                 </div>
@@ -244,29 +106,29 @@
               </div>
 
               <!-- Rate Pill -->
-              <span 
-                class="px-2.5 py-1 rounded-xl text-xs font-extrabold"
+              <span
+                class="attendance-rate px-2.5 py-1 rounded-xl text-xs font-semibold"
                 :class="arabeRate >= 80 ? 'bg-emerald-100 text-emerald-800' : (arabeRate >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')"
               >
-                {{ arabeRate }}% d'assiduité
+                {{ arabeRate }}% <span>d’assiduité</span>
               </span>
             </div>
 
             <!-- Segmented Progress Bar -->
             <div class="h-2 w-full bg-slate-200/80 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-4">
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.arabe?.present ?? 0) > 0"
-                class="h-full bg-emerald-500 rounded-full transition-all"
+                class="h-full bg-emerald-500 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.arabe?.present ?? 0) / Math.max(1, (dashboardData.attendance?.arabe?.total ?? 1))) * 100}%` }"
               ></div>
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.arabe?.absent ?? 0) > 0"
-                class="h-full bg-rose-500 rounded-full transition-all"
+                class="h-full bg-rose-500 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.arabe?.absent ?? 0) / Math.max(1, (dashboardData.attendance?.arabe?.total ?? 1))) * 100}%` }"
               ></div>
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.arabe?.notMarked ?? 0) > 0"
-                class="h-full bg-slate-300 rounded-full transition-all"
+                class="h-full bg-slate-300 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.arabe?.notMarked ?? 0) / Math.max(1, (dashboardData.attendance?.arabe?.total ?? 1))) * 100}%` }"
               ></div>
             </div>
@@ -274,16 +136,16 @@
             <!-- Detailed counts -->
             <div class="grid grid-cols-3 gap-2 text-center text-xs">
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-emerald-600 block">Présents</span>
-                <span class="text-base font-black text-emerald-700">{{ dashboardData.attendance?.arabe?.present ?? 0 }}</span>
+                <span class="text-xs  font-medium text-emerald-600 block">Présents</span>
+                <span class="text-base font-semibold text-emerald-700">{{ dashboardData.attendance?.arabe?.present ?? 0 }}</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-rose-600 block">Absents</span>
-                <span class="text-base font-black text-rose-700">{{ dashboardData.attendance?.arabe?.absent ?? 0 }}</span>
+                <span class="text-xs  font-medium text-rose-600 block">Absents</span>
+                <span class="text-base font-semibold text-rose-700">{{ dashboardData.attendance?.arabe?.absent ?? 0 }}</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-slate-500 block">En attente</span>
-                <span class="text-base font-black text-slate-700">{{ dashboardData.attendance?.arabe?.notMarked ?? 0 }}</span>
+                <span class="text-xs  font-medium text-slate-500 block">En attente</span>
+                <span class="text-base font-semibold text-slate-700">{{ dashboardData.attendance?.arabe?.notMarked ?? 0 }}</span>
               </div>
             </div>
 
@@ -294,15 +156,16 @@
           </div>
 
           <!-- 3.2 SERVICE SOUTIEN SCOLAIRE -->
-          <div 
+          <div
+            role="link" tabindex="0" @keydown.enter="navigateTo('/home/classes')"
             @click="navigateTo('/home/classes')"
-            class="group p-5 sm:p-6 rounded-2xl border border-slate-200/80 hover:border-indigo-300 bg-slate-50/50 hover:bg-slate-50 transition-all cursor-pointer shadow-2xs"
+            class="attendance-service group p-5 sm:p-6 rounded-2xl border border-slate-200/80 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer shadow-2xs"
           >
             <div class="flex items-start justify-between gap-4 mb-4">
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
-                  <h3 class="font-bold text-base text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                  <h3 class="font-medium text-base text-slate-900 group-hover:text-slate-700 transition-colors">
                     Soutien Scolaire
                   </h3>
                 </div>
@@ -312,29 +175,29 @@
               </div>
 
               <!-- Rate Pill -->
-              <span 
-                class="px-2.5 py-1 rounded-xl text-xs font-extrabold"
-                :class="soutienRate >= 80 ? 'bg-indigo-100 text-indigo-800' : (soutienRate >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')"
+              <span
+                class="attendance-rate px-2.5 py-1 rounded-xl text-xs font-semibold"
+                :class="soutienRate >= 80 ? 'bg-slate-100 text-slate-800' : (soutienRate >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')"
               >
-                {{ soutienRate }}% d'assiduité
+                {{ soutienRate }}% <span>d’assiduité</span>
               </span>
             </div>
 
             <!-- Segmented Progress Bar -->
             <div class="h-2 w-full bg-slate-200/80 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-4">
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.soutienScolaire?.present ?? 0) > 0"
-                class="h-full bg-emerald-500 rounded-full transition-all"
+                class="h-full bg-emerald-500 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.soutienScolaire?.present ?? 0) / Math.max(1, (dashboardData.attendance?.soutienScolaire?.total ?? 1))) * 100}%` }"
               ></div>
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.soutienScolaire?.absent ?? 0) > 0"
-                class="h-full bg-rose-500 rounded-full transition-all"
+                class="h-full bg-rose-500 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.soutienScolaire?.absent ?? 0) / Math.max(1, (dashboardData.attendance?.soutienScolaire?.total ?? 1))) * 100}%` }"
               ></div>
-              <div 
+              <div
                 v-if="(dashboardData.attendance?.soutienScolaire?.notMarked ?? 0) > 0"
-                class="h-full bg-slate-300 rounded-full transition-all"
+                class="h-full bg-slate-300 rounded-full transition-colors"
                 :style="{ width: `${((dashboardData.attendance?.soutienScolaire?.notMarked ?? 0) / Math.max(1, (dashboardData.attendance?.soutienScolaire?.total ?? 1))) * 100}%` }"
               ></div>
             </div>
@@ -342,20 +205,20 @@
             <!-- Detailed counts -->
             <div class="grid grid-cols-3 gap-2 text-center text-xs">
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-emerald-600 block">Présents</span>
-                <span class="text-base font-black text-emerald-700">{{ dashboardData.attendance?.soutienScolaire?.present ?? 0 }}</span>
+                <span class="text-xs  font-medium text-emerald-600 block">Présents</span>
+                <span class="text-base font-semibold text-emerald-700">{{ dashboardData.attendance?.soutienScolaire?.present ?? 0 }}</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-rose-600 block">Absents</span>
-                <span class="text-base font-black text-rose-700">{{ dashboardData.attendance?.soutienScolaire?.absent ?? 0 }}</span>
+                <span class="text-xs  font-medium text-rose-600 block">Absents</span>
+                <span class="text-base font-semibold text-rose-700">{{ dashboardData.attendance?.soutienScolaire?.absent ?? 0 }}</span>
               </div>
               <div class="bg-white p-2.5 rounded-xl border border-slate-100">
-                <span class="text-[10px] uppercase font-bold text-slate-500 block">En attente</span>
-                <span class="text-base font-black text-slate-700">{{ dashboardData.attendance?.soutienScolaire?.notMarked ?? 0 }}</span>
+                <span class="text-xs  font-medium text-slate-500 block">En attente</span>
+                <span class="text-base font-semibold text-slate-700">{{ dashboardData.attendance?.soutienScolaire?.notMarked ?? 0 }}</span>
               </div>
             </div>
 
-            <div class="mt-3 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-400 group-hover:text-indigo-600 font-semibold">
+            <div class="mt-3 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-400 group-hover:text-slate-600 font-semibold">
               <span>Consulter les détails du Soutien Scolaire</span>
               <ArrowRightIcon class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
@@ -366,26 +229,26 @@
       <!-- 4. BOTTOM DUAL PANELS: FINANCES & INSCRIPTIONS -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- 4.1 SYNTHÈSE FINANCIÈRE -->
-        <div 
+        <div
           @click="navigateTo('/home/invoices')"
-          class="group bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 hover:border-teal-300 transition-all cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
+          class="group bg-white rounded-2xl p-6 sm:p-6 border border-slate-200/80 hover:border-teal-300 transition-colors cursor-pointer shadow-xs hover:shadow-md flex flex-col justify-between"
         >
           <div>
             <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-2xl bg-slate-50 text-emerald-600 flex items-center justify-center">
                   <WalletIcon class="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 class="font-bold text-lg text-slate-900 group-hover:text-teal-700 transition-colors">
+                  <h3 class="font-medium text-lg text-slate-900 group-hover:text-teal-700 transition-colors">
                     Synthèse financière
                   </h3>
                   <p class="text-xs text-slate-500">Règlements & état de facturation</p>
                 </div>
               </div>
 
-              <span 
-                class="px-3 py-1 rounded-full text-xs font-bold"
+              <span
+                class="px-3 py-1 rounded-full text-xs font-medium"
                 :class="actualOutstandingAmount === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'"
               >
                 {{ actualOutstandingAmount === 0 ? 'Dossier à jour' : 'Solde en attente' }}
@@ -393,23 +256,23 @@
             </div>
 
             <!-- Financial KPIs -->
-            <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="financial-totals grid grid-cols-3 gap-3 mb-5">
               <div class="bg-slate-50 p-3.5 rounded-2xl">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Total facturé</span>
-                <span class="text-base sm:text-lg font-black text-slate-900">
+                <span class="text-xs font-semibold text-slate-500   block mb-1">Total facturé</span>
+                <span class="text-base sm:text-lg font-semibold text-slate-900">
                   {{ formatCurrency(dashboardData.invoices?.invoicedAmount ?? 0) }}
                 </span>
               </div>
               <div class="bg-emerald-50/70 p-3.5 rounded-2xl">
-                <span class="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider block mb-1">Montant payé</span>
-                <span class="text-base sm:text-lg font-black text-emerald-700">
+                <span class="text-xs font-semibold text-emerald-700   block mb-1">Montant payé</span>
+                <span class="text-base sm:text-lg font-semibold text-emerald-700">
                   {{ formatCurrency(dashboardData.invoices?.paidAmount ?? 0) }}
                 </span>
               </div>
               <div class="bg-amber-50/70 p-3.5 rounded-2xl">
-                <span class="text-[11px] font-semibold text-amber-700 uppercase tracking-wider block mb-1">Reste dû</span>
-                <span 
-                  class="text-base sm:text-lg font-black"
+                <span class="text-xs font-semibold text-amber-700   block mb-1">Reste dû</span>
+                <span
+                  class="text-base sm:text-lg font-semibold"
                   :class="actualOutstandingAmount === 0 ? 'text-emerald-700' : 'text-amber-800'"
                 >
                   {{ formatCurrency(actualOutstandingAmount) }}
@@ -424,8 +287,8 @@
                 <span>{{ paymentProgressRate }}% réglé ({{ dashboardData.invoices?.paid ?? 0 }} / {{ dashboardData.invoices?.total ?? 0 }} factures)</span>
               </div>
               <div class="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div 
-                  class="h-full bg-teal-500 rounded-full transition-all"
+                <div
+                  class="h-full bg-emerald-500 rounded-full transition-colors"
                   :style="{ width: `${paymentProgressRate}%` }"
                 ></div>
               </div>
@@ -433,23 +296,23 @@
 
             <!-- Montants à payer prochainement (Arabe & Soutien Scolaire) -->
             <div v-if="hasUpcomingAmounts" class="mt-4 p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 space-y-2.5">
-              <div class="flex items-center justify-between text-xs font-bold text-amber-900">
+              <div class="flex items-center justify-between text-xs font-medium text-amber-900">
                 <span class="flex items-center gap-1.5">
                   <CalendarDaysIcon class="w-3.5 h-3.5 text-amber-600" />
                   Prochains montants à régler
                 </span>
-                <span class="text-sm font-black text-amber-900">
+                <span class="text-sm font-semibold text-amber-900">
                   {{ formatCurrency(upcomingTotal) }}
                 </span>
               </div>
               <div class="grid grid-cols-2 gap-2 text-xs">
                 <div class="bg-white p-2.5 rounded-xl border border-amber-100 flex items-center justify-between">
-                  <span class="text-slate-600 text-[11px] font-medium">Langue Arabe</span>
-                  <span class="font-bold text-slate-900">{{ formatCurrency(upcomingArabic) }}</span>
+                  <span class="text-slate-600 text-xs font-medium">Langue Arabe</span>
+                  <span class="font-medium text-slate-900">{{ formatCurrency(upcomingArabic) }}</span>
                 </div>
                 <div class="bg-white p-2.5 rounded-xl border border-amber-100 flex items-center justify-between">
-                  <span class="text-slate-600 text-[11px] font-medium">Soutien Scolaire</span>
-                  <span class="font-bold text-slate-900">{{ formatCurrency(upcomingSoutien) }}</span>
+                  <span class="text-slate-600 text-xs font-medium">Soutien Scolaire</span>
+                  <span class="font-medium text-slate-900">{{ formatCurrency(upcomingSoutien) }}</span>
                 </div>
               </div>
               <div v-if="parentPaymentUrl" class="pt-1">
@@ -458,7 +321,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                   @click.stop
-                  class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
+                  class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs rounded-xl shadow-xs transition-colors cursor-pointer"
                 >
                   <WalletIcon class="w-3.5 h-3.5" />
                   <span>Procéder au règlement</span>
@@ -468,22 +331,22 @@
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-600 group-hover:text-teal-700">
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-emerald-600 group-hover:text-teal-700">
             <span>Consulter les factures et reçus de paiement</span>
             <ArrowRightIcon class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
 
         <!-- 4.2 INSCRIPTIONS & SERVICES CCIB38 -->
-        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+        <div class="bg-white rounded-2xl p-6 sm:p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-2xl bg-slate-50 text-slate-600 flex items-center justify-center">
                   <BookOpenIcon class="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 class="font-bold text-lg text-slate-900">
+                  <h3 class="font-medium text-lg text-slate-900">
                     Services et inscriptions
                   </h3>
                   <p class="text-xs text-slate-500">Inscrire ou ajouter une discipline</p>
@@ -496,14 +359,14 @@
               <!-- Soutien scolaire -->
               <router-link
                 to="/inscription-soutien-scolaire"
-                class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/70 hover:border-emerald-200 transition-all group"
+                class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/70 hover:border-emerald-200 transition-colors group"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-medium text-xs">
                     SS
                   </div>
                   <div>
-                    <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-800 transition-colors">
+                    <h4 class="font-medium text-sm text-slate-900 group-hover:text-emerald-800 transition-colors">
                       Inscription Soutien Scolaire
                     </h4>
                     <p class="text-xs text-slate-500">
@@ -511,20 +374,20 @@
                     </p>
                   </div>
                 </div>
-                <ArrowRightIcon class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+                <ArrowRightIcon class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-colors" />
               </router-link>
 
               <!-- Langue Arabe -->
               <router-link
                 to="/inscription"
-                class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border border-slate-200/70 hover:border-indigo-200 transition-all group"
+                class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-50/70 border border-slate-200/70 hover:border-indigo-200 transition-colors group"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">
+                  <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-medium text-xs">
                     AR
                   </div>
                   <div>
-                    <h4 class="font-bold text-sm text-slate-900 group-hover:text-indigo-800 transition-colors">
+                    <h4 class="font-medium text-sm text-slate-900 group-hover:text-slate-800 transition-colors">
                       Inscription Langue Arabe & Éducation
                     </h4>
                     <p class="text-xs text-slate-500">
@@ -532,7 +395,7 @@
                     </p>
                   </div>
                 </div>
-                <ArrowRightIcon class="w-4 h-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                <ArrowRightIcon class="w-4 h-4 text-slate-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-colors" />
               </router-link>
             </div>
           </div>
@@ -540,7 +403,7 @@
           <!-- Footer Link to Children -->
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
             <span class="text-slate-500">Besoin de modifier la fiche d'un enfant ?</span>
-            <router-link to="/home/children" class="font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+            <router-link to="/home/children" class="font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
               <span>Voir mes enfants</span>
               <ArrowRightIcon class="w-3.5 h-3.5" />
             </router-link>
@@ -565,7 +428,8 @@
           @click.self="showRegistrationChoice = false"
         >
           <div
-            class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 space-y-6 overflow-hidden transform transition-all"
+            ref="registrationDialog" aria-label="Choisir une inscription"
+            class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 sm:p-8 space-y-6 overflow-hidden transform transition-colors"
             role="dialog"
             aria-modal="true"
           >
@@ -581,11 +445,10 @@
 
             <!-- Header -->
             <div class="space-y-1 pr-8">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
-                <SparklesIcon class="w-3.5 h-3.5 text-emerald-600" />
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
                 <span>Nouvelle inscription</span>
               </span>
-              <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
                 Choisir le programme
               </h2>
               <p class="text-xs sm:text-sm text-slate-500">
@@ -598,24 +461,24 @@
               <!-- Option 1: Soutien Scolaire -->
               <div
                 @click="chooseRegistration('/inscription-soutien-scolaire')"
-                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-colors cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
               >
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0  transition-transform">
                   <GraduationCapIcon class="w-6 h-6" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-base font-black text-slate-900 group-hover:text-emerald-800 transition-colors">
+                    <h3 class="text-base font-semibold text-slate-900 group-hover:text-emerald-800 transition-colors">
                       Soutien Scolaire
                     </h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
+                    <span class="text-xs font-medium   px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
                       Primaire à Lycée
                     </span>
                   </div>
                   <p class="text-xs text-slate-500 mt-1 leading-relaxed">
                     Mathématiques, Français, Physique, Anglais... Accompagnement individualisé et renforcement des acquis scolaires.
                   </p>
-                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-medium text-emerald-600 group-hover:text-emerald-700">
                     <span>30 € / an par matière</span>
                     <span class="inline-flex items-center gap-1">
                       Choisir ce service
@@ -628,24 +491,24 @@
               <!-- Option 2: Langue Arabe & Éducation -->
               <div
                 @click="chooseRegistration('/inscription')"
-                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-indigo-500 bg-white hover:bg-indigo-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-indigo-500 bg-white hover:bg-slate-50/40 transition-colors cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
               >
-                <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0  transition-transform">
                   <BookOpenIcon class="w-6 h-6" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-base font-black text-slate-900 group-hover:text-indigo-800 transition-colors">
+                    <h3 class="text-base font-semibold text-slate-900 group-hover:text-slate-800 transition-colors">
                       Langue Arabe & Éducation
                     </h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
+                    <span class="text-xs font-medium   px-2 py-0.5 rounded-md bg-slate-100 text-slate-800">
                       Niveaux N1 à N6
                     </span>
                   </div>
                   <p class="text-xs text-slate-500 mt-1 leading-relaxed">
                     Apprentissage de la lecture, de l'écriture arabe, mémorisation du Coran et éducation éthique islamique.
                   </p>
-                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-medium text-slate-600 group-hover:text-slate-700">
                     <span>Semaine & Week-end</span>
                     <span class="inline-flex items-center gap-1">
                       Choisir ce service
@@ -661,7 +524,7 @@
               <button
                 type="button"
                 @click="showRegistrationChoice = false"
-                class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                class="px-4 py-2 text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               >
                 Fermer
               </button>
@@ -674,6 +537,7 @@
 </template>
 
 <script setup>
+import { useDialogFocus } from '@/shared/useDialogFocus.js'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import {
@@ -689,7 +553,6 @@ import {
   WalletIcon,
   BookOpenIcon,
   XIcon,
-  SparklesIcon,
   ExternalLinkIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
@@ -698,6 +561,8 @@ import { getParentDashboard, getParentPaymentUrl } from '@/services/parentApi.js
 const router = useRouter()
 
 const showRegistrationChoice = ref(false)
+const registrationDialog = ref(null)
+useDialogFocus(showRegistrationChoice, registrationDialog, () => { showRegistrationChoice.value = false })
 const parentPaymentUrl = ref(localStorage.getItem('parent_payment_token') ? `https://ecole.ccib38.fr/paiement-famille/${localStorage.getItem('parent_payment_token')}` : '')
 
 const chooseRegistration = (path) => {
@@ -904,3 +769,13 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.attendance-service { padding: 0; border: 0; background: transparent; box-shadow: none; border-radius: 0; }
+.attendance-service + .attendance-service { border-inline-start: 1px solid var(--color-border); padding-inline-start: 24px; }
+.attendance-service .grid.grid-cols-3 > div { padding: 8px 0; border: 0; background: transparent; }
+.attendance-rate { padding: 0; background: transparent; font-size: 24px; line-height: 1.2; font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.attendance-rate span { display: block; margin-top: 4px; font-size: 12px; font-weight: 400; color: var(--color-body); }
+@media (max-width: 767px) { .attendance-service + .attendance-service { padding-inline-start: 0; padding-top: 24px; border-inline-start: 0; border-top: 1px solid var(--color-border); } }
+@media (max-width: 480px) { .financial-totals { grid-template-columns: 1fr; gap: 0; } .financial-totals > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--color-border); border-radius: 0; background: transparent; } .financial-totals > div > span { margin: 0; } }
+</style>

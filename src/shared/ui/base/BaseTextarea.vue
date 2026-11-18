@@ -1,4 +1,9 @@
 <script setup>
+import { computed, useAttrs, useId } from 'vue';
+defineOptions({ inheritAttrs: false });
+const attrs = useAttrs();
+const generatedId = useId();
+const controlId = computed(() => attrs.id || generatedId);
 defineProps({
   modelValue: {
     type: String,
@@ -23,11 +28,13 @@ const emit = defineEmits(['update:modelValue']);
 
 <template>
   <div class="base-textarea">
-    <label v-if="label" class="base-textarea__label">
+    <label v-if="label" :for="controlId" class="base-textarea__label">
       {{ label }}
     </label>
 
     <textarea
+        v-bind="attrs"
+        :id="controlId"
         :rows="rows"
         :value="modelValue"
         :placeholder="placeholder"
@@ -37,50 +44,12 @@ const emit = defineEmits(['update:modelValue']);
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-textarea {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-
-  &__label {
-    margin-left: 0.25rem;
-    color: var(--color-body);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    line-height: 1.2;
-  }
-
-  &__field {
-    width: 100%;
-    padding: 0.875rem 1.25rem;
-    border: 2px solid transparent;
-    border-radius: var(--radius-input);
-    background-color: var(--color-input-bg);
-    color: var(--color-heading);
-    font-size: var(--text-body-sm);
-    font-weight: 500;
-    line-height: 1.5;
-    outline: none;
-    resize: none;
-    transition:
-        background-color var(--duration-fast) var(--ease-standard),
-        border-color var(--duration-fast) var(--ease-standard),
-        box-shadow var(--duration-fast) var(--ease-standard),
-        color var(--duration-fast) var(--ease-standard);
-
-    &::placeholder {
-      color: var(--color-body-ultra-faint);
-    }
-
-    &:focus {
-      background-color: var(--color-white);
-      border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 5%, transparent);
-    }
-  }
-}
+<style scoped>
+.base-textarea { display: flex; flex-direction: column; gap: 8px; width: 100%; min-width: 0; }
+.base-textarea__label { color: var(--color-heading); font-size: 13px; font-weight: 500; }
+.base-textarea__control { position: relative; width: 100%; }
+.base-textarea__field { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-input-bg); color: var(--color-heading); font-size: 15px; line-height: 1.5; transition: background-color 160ms, border-color 160ms; }
+.base-textarea__field:focus { background: white; border-color: var(--color-primary); outline: 2px solid #c4ddcd; outline-offset: 1px; }
+.base-textarea__field::placeholder { color: var(--color-body-ultra-faint); }
+.base-textarea__field { resize: vertical; }
 </style>

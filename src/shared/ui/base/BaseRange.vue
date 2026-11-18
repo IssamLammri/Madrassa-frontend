@@ -60,10 +60,10 @@ const emit = defineEmits(['update:modelValue']);
   &__label {
     margin-left: 0.25rem;
     color: var(--color-body);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
   }
 
   &__body {
@@ -163,10 +163,10 @@ const emit = defineEmits(['update:modelValue']);
   }
 
   &__value {
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
     line-height: 1.2;
 
     &--muted {

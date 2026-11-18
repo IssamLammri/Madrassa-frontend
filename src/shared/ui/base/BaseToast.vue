@@ -108,10 +108,10 @@ const toastClasses = computed(() => [
     margin: 0 0 0.25rem;
     color: var(--color-white);
     font-size: var(--text-body-sm);
-    font-weight: 900;
+    font-weight: 500;
     line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    text-transform: none;
+    letter-spacing: 0;
   }
 
   &__description {

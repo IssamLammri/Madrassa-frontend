@@ -1,69 +1,37 @@
 <template>
-  <div class="requests-view max-w-6xl mx-auto w-full space-y-8 pb-12">
-    <!-- 1. HEADER SECTION -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs">
-      <div class="space-y-1.5">
-        <div class="flex items-center gap-2.5">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
-            <ClipboardListIcon class="w-3.5 h-3.5 text-amber-600" />
-            <span>Suivi des dossiers</span>
-          </span>
-          <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-            {{ isCurrentYearOnly ? 'Année scolaire en cours' : 'Toutes les années' }}
-          </span>
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          Mes demandes & inscriptions
-        </h1>
-        <p class="text-sm text-slate-500 max-w-xl">
-          Consultez l'état d'avancement de vos demandes d'inscription en langue arabe et soutien scolaire.
-        </p>
+  <div class="requests-view portal-page space-y-6 pb-8">
+    <header class="page-heading">
+      <div>
+        <div class="page-heading__context">{{ isCurrentYearOnly ? 'Année scolaire en cours' : 'Toutes les années' }}</div>
+        <h1>Mes demandes et inscriptions</h1>
+        <p>Suivez vos dossiers de cours d’arabe et de soutien scolaire.</p>
       </div>
-
-      <!-- Quick Actions -->
-      <div class="flex flex-wrap items-center gap-2.5">
-        <button
-          type="button"
-          @click="fetchRequests"
-          :disabled="isLoading"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/70 transition-colors disabled:opacity-50 cursor-pointer"
-          title="Actualiser la liste"
-        >
-          <RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />
-          <span>Actualiser</span>
-        </button>
-
-        <button
-          type="button"
-          @click="showRegistrationModal = true"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
-        >
-          <PlusCircleIcon class="w-4 h-4" />
-          <span>Nouvelle inscription</span>
-        </button>
+      <div class="page-heading__actions">
+        <button type="button" class="custom-btn btn-tertiary" :disabled="isLoading" @click="fetchRequests"><RefreshCwIcon class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />Actualiser</button>
+        <button type="button" class="custom-btn btn-primary" @click="showRegistrationModal = true"><PlusCircleIcon class="w-4 h-4" />Nouvelle inscription</button>
       </div>
-    </div>
+    </header>
 
     <!-- 2. SUMMARY COUNTERS -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Total demandes</span>
-        <span class="text-2xl sm:text-3xl font-black text-slate-900">{{ requests.length }}</span>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <span class="text-xs font-medium   text-slate-400 block mb-1">Total demandes</span>
+        <span class="text-2xl sm:text-3xl font-semibold text-slate-900">{{ requests.length }}</span>
       </div>
 
-      <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-600 block mb-1">En cours / Attente</span>
-        <span class="text-2xl sm:text-3xl font-black text-amber-700">{{ pendingCount }}</span>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <span class="text-xs font-medium   text-amber-600 block mb-1">En cours / Attente</span>
+        <span class="text-2xl sm:text-3xl font-semibold text-amber-700">{{ pendingCount }}</span>
       </div>
 
-      <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
-        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">Validées</span>
-        <span class="text-2xl sm:text-3xl font-black text-emerald-700">{{ validatedCount }}</span>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <span class="text-xs font-medium   text-emerald-600 block mb-1">Validées</span>
+        <span class="text-2xl sm:text-3xl font-semibold text-emerald-700">{{ validatedCount }}</span>
       </div>
 
-      <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
-        <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 block mb-1">Paiement requis</span>
-        <span class="text-2xl sm:text-3xl font-black text-indigo-700">{{ paymentCount }}</span>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+        <span class="text-xs font-medium   text-indigo-600 block mb-1">Paiement requis</span>
+        <span class="text-2xl sm:text-3xl font-semibold text-indigo-700">{{ paymentCount }}</span>
       </div>
     </div>
 
@@ -76,20 +44,20 @@
           :key="tab.id"
           type="button"
           @click="selectedServiceTab = tab.id"
-          class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer"
+          class="px-3.5 py-1.5 rounded-xl text-xs font-medium transition-colors whitespace-nowrap cursor-pointer"
           :class="selectedServiceTab === tab.id
             ? 'bg-slate-900 text-white shadow-xs'
             : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'"
         >
           {{ tab.label }}
-          <span class="ml-1 text-[11px] opacity-75">({{ getTabCount(tab.id) }})</span>
+          <span class="ml-1 text-xs opacity-75">({{ getTabCount(tab.id) }})</span>
         </button>
       </div>
 
       <!-- Year Toggle (currentYear=true vs currentYear=false) -->
       <div class="flex items-center gap-2 self-start sm:self-auto">
         <span class="text-xs font-semibold text-slate-500">Période :</span>
-        <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/60 text-xs font-bold">
+        <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200/60 text-xs font-medium">
           <button
             type="button"
             @click="setYearFilter(true)"
@@ -114,12 +82,12 @@
     <BaseAlert v-if="error" type="error" class="shadow-xs">
       <div class="flex items-center justify-between gap-4">
         <span>{{ error }}</span>
-        <button @click="fetchRequests" class="underline font-bold text-xs">Réessayer</button>
+        <button @click="fetchRequests" class="underline font-medium text-xs">Réessayer</button>
       </div>
     </BaseAlert>
 
     <!-- 4. LOADING STATE -->
-    <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100">
+    <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-slate-100">
       <div class="animate-spin rounded-full h-12 w-12 border-3 border-emerald-600 border-t-transparent mb-4"></div>
       <p class="text-sm font-semibold text-slate-600">Chargement de vos demandes...</p>
       <p class="text-xs text-slate-400 mt-1">Interrogation des dossiers auprès de l'administration</p>
@@ -130,14 +98,14 @@
       <div
         v-for="(req, index) in filteredRequests"
         :key="req.id || index"
-        class="bg-white rounded-3xl p-6 border border-slate-200/80 hover:border-slate-300 shadow-xs transition-all space-y-5"
+        class="bg-white rounded-2xl p-6 border border-slate-200/80 hover:border-slate-300 shadow-xs transition-colors space-y-5"
       >
         <!-- Top bar of the card -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div class="flex items-start sm:items-center gap-3.5">
             <!-- Service Icon -->
             <div
-              class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-black text-sm"
+              class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-semibold text-sm"
               :class="isArabe(req.type) ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'"
             >
               <component :is="isArabe(req.type) ? BookOpenIcon : GraduationCapIcon" class="w-6 h-6" />
@@ -145,12 +113,12 @@
 
             <div>
               <div class="flex flex-wrap items-center gap-2">
-                <h3 class="text-base sm:text-lg font-black text-slate-900">
+                <h3 class="text-base sm:text-lg font-semibold text-slate-900">
                   {{ getChildName(req) }}
                 </h3>
                 <!-- Service Badge -->
                 <span
-                  class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                  class="px-2.5 py-0.5 rounded-full text-xs font-medium"
                   :class="isArabe(req.type) ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/60' : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'"
                 >
                   {{ isArabe(req.type) ? 'Langue Arabe' : 'Soutien Scolaire' }}
@@ -176,7 +144,7 @@
           <!-- Status badge -->
           <div class="flex items-center gap-2 self-start sm:self-auto">
             <span
-              class="px-3.5 py-1.5 rounded-xl text-xs font-black inline-flex items-center gap-1.5"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5"
               :class="getStatusBadgeClass(req)"
             >
               <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(req)"></span>
@@ -189,10 +157,10 @@
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2.5">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
             <div class="flex items-center gap-2">
-              <span class="text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Étape actuelle :</span>
-              <span class="font-bold text-slate-800">{{ getStepLabel(req) }}</span>
+              <span class="text-slate-500 font-semibold   text-xs">Étape actuelle :</span>
+              <span class="font-medium text-slate-800">{{ getStepLabel(req) }}</span>
             </div>
-            <div class="flex items-center gap-1.5 font-bold">
+            <div class="flex items-center gap-1.5 font-medium">
               <span class="text-slate-400">Avancement :</span>
               <span :class="getProgressTextClass(getProgressPercent(req))">
                 {{ getProgressPercent(req) }}%
@@ -203,7 +171,7 @@
           <!-- Progress Bar visual -->
           <div class="h-3 w-full bg-slate-200/80 rounded-full overflow-hidden p-0.5">
             <div
-              class="h-full rounded-full transition-all duration-500"
+              class="h-full rounded-full transition-colors duration-500"
               :class="getProgressBarColor(req)"
               :style="{ width: `${Math.min(Math.max(getProgressPercent(req), 5), 100)}%` }"
             ></div>
@@ -213,11 +181,11 @@
         <!-- Action / Note Footer -->
         <div class="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs">
           <div class="text-slate-500">
-            <span v-if="isPaymentRequired(req)" class="text-amber-700 font-bold flex items-center gap-1.5">
+            <span v-if="isPaymentRequired(req)" class="text-amber-700 font-medium flex items-center gap-1.5">
               <AlertCircleIcon class="w-4 h-4 text-amber-600" />
               L'inscription sera validée définitivement dès réception du règlement.
             </span>
-            <span v-else-if="isCompleted(req)" class="text-emerald-700 font-bold flex items-center gap-1.5">
+            <span v-else-if="isCompleted(req)" class="text-emerald-700 font-medium flex items-center gap-1.5">
               <CheckCircle2Icon class="w-4 h-4 text-emerald-600" />
               Dossier validé et inscription confirmée.
             </span>
@@ -234,7 +202,7 @@
               :href="getPaymentUrl(req)"
               target="_blank"
               rel="noopener noreferrer"
-              class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
+              class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-xs transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
             >
               <WalletIcon class="w-3.5 h-3.5" />
               <span>Procéder au règlement</span>
@@ -256,12 +224,12 @@
     </div>
 
     <!-- 6. EMPTY STATE -->
-    <div v-else class="bg-white rounded-3xl p-12 text-center border border-slate-200/80 shadow-xs space-y-4">
+    <div v-else class="bg-white rounded-2xl p-12 text-center border border-slate-200/80 shadow-xs space-y-4">
       <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
         <InboxIcon class="w-8 h-8" />
       </div>
       <div class="space-y-1">
-        <h3 class="text-lg font-bold text-slate-800">Aucune demande trouvée</h3>
+        <h3 class="text-lg font-medium text-slate-800">Aucune demande trouvée</h3>
         <p class="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
           {{ isCurrentYearOnly ? 'Aucune demande active enregistrée pour l\'année scolaire en cours.' : 'Vous n\'avez aucune demande d\'inscription enregistrée.' }}
         </p>
@@ -271,14 +239,14 @@
           v-if="isCurrentYearOnly"
           type="button"
           @click="setYearFilter(false)"
-          class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+          class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs transition-colors cursor-pointer"
         >
           Voir toutes les années
         </button>
         <button
           type="button"
           @click="showRegistrationModal = true"
-          class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+          class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs transition-colors shadow-xs cursor-pointer inline-flex items-center gap-1.5"
         >
           <PlusCircleIcon class="w-4 h-4" />
           <span>Faire une nouvelle inscription</span>
@@ -302,7 +270,8 @@
           @click.self="showRegistrationModal = false"
         >
           <div
-            class="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 space-y-6 overflow-hidden transform transition-all"
+            ref="registrationDialog" aria-label="Choisir une inscription"
+            class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 sm:p-8 space-y-6 overflow-hidden transform transition-colors"
             role="dialog"
             aria-modal="true"
           >
@@ -317,11 +286,10 @@
 
             <!-- Header -->
             <div class="space-y-1 pr-8">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
-                <SparklesIcon class="w-3.5 h-3.5 text-emerald-600" />
+              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full mb-1">
                 <span>Nouvelle inscription</span>
               </span>
-              <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
                 Choisir le programme
               </h2>
               <p class="text-xs sm:text-sm text-slate-500">
@@ -334,24 +302,24 @@
               <!-- Option 1: Soutien Scolaire -->
               <div
                 @click="chooseRegistration('/inscription-soutien-scolaire')"
-                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-emerald-500 bg-white hover:bg-emerald-50/40 transition-colors cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
               >
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0  transition-transform">
                   <GraduationCapIcon class="w-6 h-6" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-base font-black text-slate-900 group-hover:text-emerald-800 transition-colors">
+                    <h3 class="text-base font-semibold text-slate-900 group-hover:text-emerald-800 transition-colors">
                       Soutien Scolaire
                     </h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
+                    <span class="text-xs font-medium   px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
                       Primaire à Lycée
                     </span>
                   </div>
                   <p class="text-xs text-slate-500 mt-1 leading-relaxed">
                     Mathématiques, Français, Physique, Anglais... Accompagnement individualisé et renforcement des acquis scolaires.
                   </p>
-                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-medium text-emerald-600 group-hover:text-emerald-700">
                     <span>30 € / an par matière</span>
                     <span class="inline-flex items-center gap-1">
                       Choisir ce service
@@ -364,24 +332,24 @@
               <!-- Option 2: Langue Arabe & Éducation -->
               <div
                 @click="chooseRegistration('/inscription')"
-                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-indigo-500 bg-white hover:bg-indigo-50/40 transition-all cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
+                class="group p-4 sm:p-5 rounded-2xl border-2 border-slate-200/80 hover:border-indigo-500 bg-white hover:bg-indigo-50/40 transition-colors cursor-pointer shadow-xs hover:shadow-md flex items-start gap-4"
               >
-                <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0  transition-transform">
                   <BookOpenIcon class="w-6 h-6" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-base font-black text-slate-900 group-hover:text-indigo-800 transition-colors">
+                    <h3 class="text-base font-semibold text-slate-900 group-hover:text-indigo-800 transition-colors">
                       Langue Arabe & Éducation
                     </h3>
-                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
+                    <span class="text-xs font-medium   px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800">
                       Niveaux N1 à N6
                     </span>
                   </div>
                   <p class="text-xs text-slate-500 mt-1 leading-relaxed">
                     Apprentissage de la lecture, de l'écriture arabe, mémorisation du Coran et éducation éthique islamique.
                   </p>
-                  <div class="mt-2.5 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+                  <div class="mt-2.5 flex items-center justify-between text-xs font-medium text-indigo-600 group-hover:text-indigo-700">
                     <span>Semaine & Week-end</span>
                     <span class="inline-flex items-center gap-1">
                       Choisir ce service
@@ -397,7 +365,7 @@
               <button
                 type="button"
                 @click="showRegistrationModal = false"
-                class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                class="px-4 py-2 text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               >
                 Fermer
               </button>
@@ -410,6 +378,7 @@
 </template>
 
 <script setup>
+import { useDialogFocus } from '@/shared/useDialogFocus.js'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import {
@@ -425,7 +394,6 @@ import {
   ArrowRightIcon,
   InboxIcon,
   XIcon,
-  SparklesIcon,
   ExternalLinkIcon
 } from 'lucide-vue-next'
 import BaseAlert from '@/shared/ui/base/BaseAlert.vue'
@@ -439,6 +407,8 @@ const requests = ref([])
 const isCurrentYearOnly = ref(true)
 const selectedServiceTab = ref('all')
 const showRegistrationModal = ref(false)
+const registrationDialog = ref(null)
+useDialogFocus(showRegistrationModal, registrationDialog, () => { showRegistrationModal.value = false })
 const parentPaymentToken = ref(localStorage.getItem('parent_payment_token') || '')
 
 const getPaymentUrl = (req) => {
@@ -504,7 +474,7 @@ const fetchRequests = async () => {
     console.log('[ParentRequests] Envoi de la requête GET /api/parent/requests avec params:', params)
     const response = await getParentRequests(params)
     console.log('[ParentRequests] Réponse brute reçue du backend:', response)
-    
+
     // Normalisation ultra-flexible de tous les formats de réponse backend possibles
     let items = []
     if (Array.isArray(response)) {
@@ -635,11 +605,11 @@ const getStatusBadgeClass = (req) => {
 }
 
 const getStatusDotClass = (req) => {
-  if (isPaymentRequired(req)) return 'bg-amber-500 animate-pulse'
+  if (isPaymentRequired(req)) return 'bg-amber-500 '
   if (isCompleted(req)) return 'bg-emerald-500'
   const s = String(req.status || '').toLowerCase()
   if (s === 'rejected' || s === 'refused') return 'bg-rose-500'
-  return 'bg-blue-500 animate-pulse'
+  return 'bg-blue-500 '
 }
 
 const getProgressBarColor = (req) => {

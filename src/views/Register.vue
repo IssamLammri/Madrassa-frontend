@@ -1,14 +1,8 @@
 <template>
   <div class="register-page">
-    <div class="register-page__deco" aria-hidden="true">
-      <div class="register-page__blob register-page__blob--primary"></div>
-      <div class="register-page__blob register-page__blob--accent"></div>
-      <div class="register-page__blob register-page__blob--soft"></div>
-      <div class="register-page__dot-grid"></div>
-      <div class="register-page__line-deco"></div>
-    </div>
+    <AuthContext />
 
-    <BaseCard class="register-page__card">
+    <BaseCard class="register-page__card" padding="xl">
       <div class="register-page__logo-wrap">
         <img :src="logoUrl" alt="CCIB38 Logo" class="register-page__logo"/>
       </div>
@@ -152,6 +146,7 @@
 </template>
 
 <script setup>
+import AuthContext from '@/shared/ui/AuthContext.vue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

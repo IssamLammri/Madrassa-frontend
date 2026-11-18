@@ -58,12 +58,7 @@ defineProps({
     gap: 1rem;
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--color-border);
-    background:
-        linear-gradient(
-            to bottom,
-            color-mix(in srgb, var(--color-bg-cream) 65%, var(--color-white)),
-            var(--color-white)
-        );
+    background: var(--color-white);
   }
 
   &__title {
@@ -71,7 +66,7 @@ defineProps({
     min-width: 0;
     color: var(--color-heading);
     font-size: var(--text-h3);
-    font-weight: 900;
+    font-weight: 500;
     line-height: 1.15;
     letter-spacing: -0.02em;
     white-space: nowrap;
@@ -95,13 +90,13 @@ defineProps({
   }
 
   &__head-cell {
-    padding: 1rem 2rem;
+    padding: 12px 20px;
     color: var(--color-body-faint);
-    font-size: 10px;
-    font-weight: 900;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.2;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
     white-space: nowrap;
 
     &--right {
@@ -120,7 +115,7 @@ defineProps({
     }
 
     :deep(td) {
-      padding: 1.25rem 2rem;
+      padding: 16px 20px;
       color: var(--color-heading);
       font-size: var(--text-body-sm);
       font-weight: 500;

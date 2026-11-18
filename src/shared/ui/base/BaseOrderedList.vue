@@ -51,8 +51,8 @@ defineProps({
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-pill);
-    font-size: 10px;
-    font-weight: 900;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1;
     color: var(--color-primary);
     background-color: var(--color-success-bg);

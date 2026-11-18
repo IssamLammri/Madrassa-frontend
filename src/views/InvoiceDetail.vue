@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-5xl mx-auto w-full">
+  <div class="portal-page">
     <!-- Breadcrumb -->
     <button @click="router.push('/home/invoices')" class="flex items-center text-sm text-slate-500 hover:text-emerald-600 mb-6 transition-colors">
       <ArrowLeftIcon class="w-4 h-4 mr-1" />
@@ -22,17 +22,17 @@
         <!-- Header -->
         <div class="p-6 sm:p-8 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 class="text-2xl font-bold text-slate-800">Facture #{{ invoice.id }}</h1>
+            <h1 class="text-2xl font-medium text-slate-800">Facture #{{ invoice.id }}</h1>
             <p class="text-slate-500 mt-1">Date : {{ formatDate(invoice.date) }}</p>
           </div>
-          
+
           <div class="flex flex-wrap gap-3">
             <a
               v-if="invoice.amountPayable > 0 && parentPaymentUrl"
               :href="parentPaymentUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
+              class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl text-xs sm:text-sm transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
             >
               <CreditCardIcon class="w-4 h-4" />
               <span>Procéder au règlement</span>
@@ -44,7 +44,7 @@
               <span v-if="isDownloading">Téléchargement...</span>
               <span v-else>Télécharger PDF</span>
             </BaseButton>
-            
+
             <BaseButton @click="showEmailModal = true" variant="primary" class="flex items-center gap-2" :disabled="isSendingEmail">
               <MailIcon class="w-4 h-4" />
               Envoyer par email
@@ -55,24 +55,24 @@
         <!-- Résumé -->
         <div class="p-6 sm:p-8 bg-slate-50 grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
-            <p class="text-sm text-slate-500 font-semibold mb-1 uppercase">Statut</p>
-            <span v-if="invoice.status === 'paid'" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-emerald-100 text-emerald-800">
+            <p class="text-sm text-slate-500 font-semibold mb-1 ">Statut</p>
+            <span v-if="invoice.status === 'paid'" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
               Payée
             </span>
-            <span v-else-if="invoice.status === 'partial'" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-800">
+            <span v-else-if="invoice.status === 'partial'" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
               Paiement partiel
             </span>
-            <span v-else class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-800">
+            <span v-else class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
               Non payée
             </span>
           </div>
           <div>
-            <p class="text-sm text-slate-500 font-semibold mb-1 uppercase">Montant total</p>
-            <p class="text-2xl font-bold text-slate-800">{{ formatCurrency(invoice.totalAmount, invoice.currency) }}</p>
+            <p class="text-sm text-slate-500 font-semibold mb-1 ">Montant total</p>
+            <p class="text-2xl font-medium text-slate-800">{{ formatCurrency(invoice.totalAmount, invoice.currency) }}</p>
           </div>
           <div>
-            <p class="text-sm text-slate-500 font-semibold mb-1 uppercase">Restant à payer</p>
-            <p class="text-2xl font-bold" :class="invoice.amountPayable > 0 ? 'text-red-600' : 'text-slate-800'">
+            <p class="text-sm text-slate-500 font-semibold mb-1 ">Restant à payer</p>
+            <p class="text-2xl font-medium" :class="invoice.amountPayable > 0 ? 'text-red-600' : 'text-slate-800'">
               {{ formatCurrency(invoice.amountPayable, invoice.currency) }}
             </p>
           </div>
@@ -80,8 +80,8 @@
 
         <!-- Détail des paiements -->
         <div class="p-6 sm:p-8">
-          <h3 class="text-lg font-bold text-slate-800 mb-4">Détail des paiements</h3>
-          
+          <h3 class="text-lg font-medium text-slate-800 mb-4">Détail des paiements</h3>
+
           <div v-if="!invoice.payments || invoice.payments.length === 0" class="text-slate-500 italic">
             Aucun paiement enregistré pour cette facture.
           </div>
@@ -103,7 +103,7 @@
                     <BaseBadge variant="neutral">{{ payment.method }}</BaseBadge>
                   </td>
                   <td class="px-4 py-3">
-                    {{ payment.serviceType }} 
+                    {{ payment.serviceType }}
                     <span v-if="payment.child" class="text-slate-500"> - {{ payment.child.fullName }}</span>
                   </td>
                 </tr>
@@ -117,13 +117,13 @@
     <!-- Email Modal -->
     <div v-if="showEmailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
-        <h3 class="text-xl font-bold text-slate-800 mb-4">Envoyer par email</h3>
+        <h3 class="text-xl font-medium text-slate-800 mb-4">Envoyer par email</h3>
         <p class="text-slate-600 text-sm mb-4">
           Choisissez l'adresse e-mail à laquelle vous souhaitez envoyer cette facture. (Doit être une adresse enregistrée dans votre profil parent)
         </p>
-        
+
         <input v-model="emailToSend" type="email" placeholder="exemple@email.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none mb-6" />
-        
+
         <div class="flex justify-end gap-3">
           <BaseButton @click="showEmailModal = false" variant="secondary">Annuler</BaseButton>
           <BaseButton @click="sendEmail" variant="primary" :disabled="isSendingEmail">
@@ -207,7 +207,7 @@ const sendEmail = async () => {
   isSendingEmail.value = true
   error.value = ''
   successMessage.value = ''
-  
+
   try {
     const payload = emailToSend.value ? { email: emailToSend.value } : {}
     await sendInvoiceEmail(invoiceId, payload)

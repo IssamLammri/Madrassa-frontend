@@ -1,8 +1,10 @@
 <template>
-  <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-6">
-    <div class="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 max-w-md w-full">
-      <div class="text-center mb-6 sm:mb-8">
-        <h1 class="text-xl sm:text-2xl font-bold text-slate-800 mb-2">Nouveau mot de passe</h1>
+  <div class="password-page">
+    <AuthContext />
+    <div class="password-page__card bg-white rounded-2xl sm:rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 max-w-md w-full">
+      <img src="@/assets/icons/ccib38_logo.png" alt="CCIB38" class="password-page__logo" />
+      <div class="mb-6 sm:mb-8">
+        <h1 class="text-xl sm:text-2xl font-medium text-slate-800 mb-2">Nouveau mot de passe</h1>
         <p class="text-sm text-slate-600">
           Veuillez définir votre nouveau mot de passe.
         </p>
@@ -18,33 +20,33 @@
 
       <form v-if="!successMessage" @submit.prevent="submitReset">
         <div class="mb-4">
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Nouveau mot de passe</label>
+          <label class="block text-sm font-semibold text-slate-700 mb-2" for="resetpassword-field-1">Nouveau mot de passe</label>
           <input
-            v-model="password"
+ id="resetpassword-field-1"            v-model="password"
             type="password"
             required
             minlength="8"
             placeholder="8 caractères minimum"
-            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-colors"
           />
         </div>
 
         <div class="mb-6">
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Confirmer le mot de passe</label>
+          <label class="block text-sm font-semibold text-slate-700 mb-2" for="resetpassword-field-2">Confirmer le mot de passe</label>
           <input
-            v-model="confirmPassword"
+ id="resetpassword-field-2"            v-model="confirmPassword"
             type="password"
             required
             minlength="8"
             placeholder="Confirmez le mot de passe"
-            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-colors"
           />
         </div>
 
         <button
           type="submit"
           :disabled="isLoading || !isFormValid"
-          class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span v-if="isLoading">En cours...</span>
           <span v-else>Réinitialiser mon mot de passe</span>
@@ -52,13 +54,13 @@
       </form>
 
       <div v-if="successMessage" class="mt-6 text-center">
-        <router-link to="/login" class="inline-block py-3 px-6 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 shadow-md transition-colors">
+        <router-link to="/login" class="inline-block py-3 px-6 bg-emerald-600 text-white font-medium rounded-xl hover:bg-blue-500 shadow-md transition-colors">
           Aller à la connexion
         </router-link>
       </div>
 
       <div v-if="!successMessage" class="mt-6 text-center">
-        <router-link to="/login" class="text-sm text-blue-600 hover:underline font-medium">
+        <router-link to="/login" class="text-sm text-emerald-600 hover:underline font-medium">
           Retour à la connexion
         </router-link>
       </div>
@@ -67,6 +69,7 @@
 </template>
 
 <script setup>
+import AuthContext from '@/shared/ui/AuthContext.vue'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
@@ -106,14 +109,14 @@ const submitReset = async () => {
       password: password.value,
       confirmPassword: confirmPassword.value
     })
-    
+
     successMessage.value = response.data?.message || 'Votre mot de passe a été réinitialisé avec succès.'
-    
+
     // Redirect to login after a short delay
     setTimeout(() => {
       router.push('/login')
     }, 3000)
-    
+
   } catch (error) {
     console.error('Reset password error:', error)
     errorMessage.value = error.response?.data?.message || 'Le lien de réinitialisation est invalide ou a expiré.'

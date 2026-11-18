@@ -92,7 +92,7 @@ const toggle = (event) => {
   &__label {
     color: var(--color-heading);
     font-size: var(--text-body-sm);
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.4;
   }
 }

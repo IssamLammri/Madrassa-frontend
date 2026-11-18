@@ -80,10 +80,10 @@ onBeforeUnmount(() => {
     margin: 0;
     color: var(--color-heading);
     font-size: var(--text-caption);
-    font-weight: 900;
+    font-weight: 500;
     line-height: 1.2;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   &__body {

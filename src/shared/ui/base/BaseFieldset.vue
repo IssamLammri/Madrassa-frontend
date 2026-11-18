@@ -29,11 +29,11 @@ defineProps({
   &__legend {
     padding: 0 0.75rem;
     color: var(--color-body-faint);
-    font-size: 10px;
-    font-weight: 900;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
   }
 
   &__content {

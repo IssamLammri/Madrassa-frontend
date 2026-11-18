@@ -1,8 +1,8 @@
 {
   "auth": {
-    "login_title": "Welcome",
-    "login_subtitle": "back!",
-    "login_desc": "Login to continue",
+    "login_title": "Sign in",
+    "login_subtitle": "مرحبا",
+    "login_desc": "Access your CCIB38 parent portal",
     "email_label": "Email",
     "email_placeholder": "you{'@'}example.com",
     "password_label": "Password",
@@ -13,7 +13,7 @@
     "design_system": "Design System",
     "register_title": "Create an",
     "register_subtitle": "account",
-    "register_desc": "Join us to get started",
+    "register_desc": "Create your CCIB38 portal account",
     "role_label": "Role",
     "role_user": "User",
     "role_admin": "Administrator",
@@ -34,7 +34,6 @@
     "company_placeholder": "Your company name",
     "picture_url_label": "Profile picture URL",
     "picture_url_placeholder": "https://example.com/photo.jpg",
-
     "picture_upload_title": "Click or drag an image",
     "picture_upload_description": "JPG, PNG or WEBP — Max 5MB",
     "picture_upload_invalid_type": "The file must be a JPG, PNG or WEBP image.",
@@ -42,7 +41,11 @@
     "picture_upload_failed": "Unable to upload the image.",
     "picture_preview_alt": "Profile picture preview",
     "picture_uploaded": "Image uploaded",
-    "picture_remove": "Remove"
+    "picture_remove": "Remove",
+    "context_title": "A connection between school and your family",
+    "context_description": "Find your children’s classes, follow their registrations and contact the centre.",
+    "context_arabic": "Arabic classes",
+    "context_support": "Academic support"
   },
   "home": {
     "profile_title": "My profile",
@@ -125,11 +128,9 @@
   "design_system": {
     "page_title": "Design System",
     "page_description": "A complete guide to components and design principles for the CCIB38 ecosystem. This \"Low Contrast\" version prioritizes readability and visual comfort during long work sessions.",
-
     "section_colors": "1. Colors",
     "section_brand_palette": "Brand Palette",
     "section_neutrals": "Neutrals & Backgrounds",
-
     "color_primary_name": "Primary (Sage)",
     "color_primary_usage": "Used for primary actions, confirmation buttons, and active states.",
     "color_accent_name": "Accent (Rose)",
@@ -138,7 +139,6 @@
     "color_heading_usage": "Used for all headings and high-emphasis text.",
     "color_body_name": "Body (Muted)",
     "color_body_usage": "Used for reading text, descriptions, and secondary labels.",
-
     "neutral_white_name": "White",
     "neutral_white_usage": "Used for card surfaces, modals, and component backgrounds.",
     "neutral_cream_name": "Cream BG",
@@ -147,7 +147,6 @@
     "neutral_input_usage": "Background for input fields to create subtle depth.",
     "neutral_border_name": "Border",
     "neutral_border_usage": "Separators and borders for inactive components.",
-
     "section_typography": "2. Typography",
     "typography_title_scale": "Heading Scale",
     "typography_body_text": "Body Text",
@@ -155,7 +154,6 @@
     "typography_body_base": "Body Base — Used for all standard reading text in the application.",
     "typography_body_small": "Body Small — Used for helpers, secondary descriptions, and compact information.",
     "typography_overline": "Label / Overline — Used for form labels and micro-headings.",
-
     "section_actions": "3. Buttons & Actions",
     "actions_buttons": "Buttons",
     "actions_badges": "Badges, Status & Tags",
@@ -165,17 +163,14 @@
     "button_primary_help": "Main page action.",
     "button_secondary_help": "Alternative or navigation action.",
     "button_tertiary_help": "Secondary or subtle action.",
-
     "badge_active": "Active",
     "badge_pending": "Pending",
     "badge_alert": "Alert",
     "badge_draft": "Draft",
     "badge_urgent": "Urgent",
     "badge_admin": "Admin",
-
     "tag_ai": "Generative AI",
     "tag_ethics": "Ethics",
-
     "section_forms": "4. Forms & Inputs",
     "forms_text_fields": "Text Fields",
     "forms_default_state": "Default State",
@@ -204,7 +199,6 @@
     "forms_advanced_settings": "Advanced Settings",
     "forms_temperature": "Temperature",
     "forms_top_p": "Top P",
-
     "section_feedback": "5. Feedback & Toasts",
     "feedback_toasts": "Toasts (Ephemeral Notifications)",
     "feedback_trigger_toast": "Trigger a Toast",
@@ -217,7 +211,6 @@
     "feedback_warning_text": "Some settings require validation before publishing.",
     "feedback_success_title": "Success!",
     "feedback_success_text": "The action was completed successfully.",
-
     "section_cards": "6. Cards & Containers",
     "card_standard_title": "Standard Card",
     "card_standard_text": "Used for standard content modules. Provides clear separation on the cream background.",
@@ -225,7 +218,6 @@
     "card_emphasis_text": "Used to highlight premium features or critical actions.",
     "card_placeholder_title": "Placeholder Card",
     "card_placeholder_text": "Used for empty states or new content creation areas.",
-
     "section_tables": "7. Tables",
     "table_title": "Standard Table Style",
     "table_head_a": "Header A",
@@ -238,7 +230,6 @@
     "table_published": "Published",
     "table_usage_label": "Usage:",
     "table_usage_text": "use this pattern for content lists, documents, users, versions, or history.",
-
     "section_interactive": "8. Interactive Elements",
     "interactive_tooltips": "Tooltips",
     "interactive_tooltip_text": "This is contextual help",
@@ -251,23 +242,19 @@
     "interactive_alert_item_2": "New activity detected",
     "interactive_alert_time_2": "12 minutes ago",
     "interactive_lists": "Lists",
-
     "bullet_list_title": "Bullet List",
     "bullet_list_item_1": "Document analysis",
     "bullet_list_item_2": "Content generation",
     "bullet_list_item_3": "Translation and rewriting",
-
     "ordered_list_title": "Ordered List",
     "ordered_list_item_1": "Connect a source",
     "ordered_list_item_2": "Configure settings",
     "ordered_list_item_3": "Test and publish",
-
     "section_spacing": "9. Spacing & Layout",
     "spacing_grid_title": "Grid & Margins",
     "spacing_container": "Main container:",
     "spacing_padding": "Standard padding:",
     "spacing_gaps": "Grid gaps:",
-
     "spacing_effects_title": "Effects",
     "spacing_shadows": "Shadows:",
     "spacing_transitions": "Transitions:",

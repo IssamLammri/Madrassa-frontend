@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useAttrs } from 'vue';
+import { computed, useAttrs, useId, useSlots } from 'vue';
 
 defineOptions({
   inheritAttrs: false,
@@ -34,14 +34,17 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 const attrs = useAttrs();
+const slots = useSlots();
+const generatedId = useId();
+const controlId = computed(() => attrs.id || generatedId);
 
 const hasIcon = computed(() => !!props.icon && !props.error);
-const hasSuffix = computed(() => !!attrs['data-has-suffix']);
+const hasSuffix = computed(() => !!slots.suffix);
 </script>
 
 <template>
   <div class="base-input">
-    <label v-if="label" class="base-input__label">
+    <label v-if="label" :for="controlId" class="base-input__label">
       {{ label }}
     </label>
 
@@ -55,6 +58,9 @@ const hasSuffix = computed(() => !!attrs['data-has-suffix']);
     >
       <input
           v-bind="attrs"
+          :id="controlId"
+          :aria-invalid="error ? true : undefined"
+          :aria-describedby="[attrs['aria-describedby'], error ? `${controlId}-error` : null].filter(Boolean).join(' ') || undefined"
           :type="type"
           :value="modelValue"
           :placeholder="placeholder"
@@ -74,106 +80,28 @@ const hasSuffix = computed(() => !!attrs['data-has-suffix']);
       </div>
     </div>
 
-    <p v-if="error" class="base-input__error">
+    <p v-if="error" :id="`${controlId}-error`" class="base-input__error">
       {{ error }}
     </p>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-input {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-
-  &__label {
-    margin-left: 0.25rem;
-    color: var(--color-body);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  &__control {
-    position: relative;
-    width: 100%;
-  }
-
-  &__field {
-    width: 100%;
-    min-height: var(--control-height);
-    padding: 0.875rem 1.25rem;
-    border: 2px solid transparent;
-    border-radius: var(--radius-input);
-    background-color: var(--color-input-bg);
-    color: var(--color-heading);
-    font-size: var(--text-body-sm);
-    font-weight: 500;
-    line-height: 1.4;
-    outline: none;
-    transition:
-        background-color var(--duration-fast) var(--ease-standard),
-        border-color var(--duration-fast) var(--ease-standard),
-        box-shadow var(--duration-fast) var(--ease-standard),
-        color var(--duration-fast) var(--ease-standard);
-
-    &::placeholder {
-      color: var(--color-body-ultra-faint);
-    }
-
-    &:focus {
-      background-color: var(--color-white);
-      border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 5%, transparent);
-    }
-  }
-
-  &__control--with-icon .base-input__field,
-  &__control--with-suffix .base-input__field {
-    padding-right: 3.25rem;
-  }
-
-  &__icon,
-  &__suffix {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-  }
-
-  &__icon {
-    color: var(--color-body-ultra-faint);
-    pointer-events: none;
-  }
-
-  &__suffix {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__control--error {
-    .base-input__field {
-      background-color: var(--color-white);
-      border-color: var(--color-accent);
-      color: var(--color-heading);
-    }
-
-    .base-input__icon,
-    .base-input__suffix {
-      color: var(--color-accent);
-    }
-  }
-
-  &__error {
-    margin-left: 0.25rem;
-    color: var(--color-accent);
-    font-size: var(--text-overline);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
+<style scoped>
+.base-input { display: flex; flex-direction: column; gap: 8px; width: 100%; min-width: 0; }
+.base-input__label { color: var(--color-heading); font-size: 13px; font-weight: 500; }
+.base-input__control { position: relative; width: 100%; }
+.base-input__field {
+  width: 100%; min-height: var(--control-height); padding: 10px 12px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-input);
+  background: var(--color-input-bg); color: var(--color-heading); font-size: 15px;
+  line-height: 1.5; transition: background-color 160ms, border-color 160ms;
 }
+.base-input__field::placeholder { color: var(--color-body-ultra-faint); }
+.base-input__field:focus { background: white; border-color: var(--color-primary); outline: 2px solid #c4ddcd; outline-offset: 1px; }
+.base-input__control--with-icon .base-input__field, .base-input__control--with-suffix .base-input__field { padding-inline-end: 48px; }
+.base-input__icon, .base-input__suffix { position: absolute; top: 50%; inset-inline-end: 12px; transform: translateY(-50%); color: var(--color-body); }
+.base-input__icon { pointer-events: none; }
+.base-input__suffix { display: flex; align-items: center; justify-content: center; }
+.base-input__control--error .base-input__field { border-color: var(--color-accent); background: #fffafa; }
+.base-input__error { color: var(--color-accent); font-size: 13px; }
 </style>

@@ -54,7 +54,7 @@ defineProps({
     border-radius: 0.5rem;
     background-color: var(--color-heading);
     color: var(--color-white);
-    font-size: 10px;
+    font-size: 13px;
     line-height: 1.3;
     white-space: nowrap;
     box-shadow: var(--shadow-tooltip);

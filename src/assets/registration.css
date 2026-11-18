@@ -1,0 +1,24 @@
+.registration-page { background: var(--color-bg-cream); color: var(--color-heading); }
+.registration-shell { max-width: 880px; }
+.registration-brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.registration-brand img { width: 56px; height: 56px; object-fit: contain; }
+.registration-header { margin: 0 0 24px; padding: 0 0 24px; border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0; background: transparent; text-align: start; box-shadow: none; }
+.registration-header h1 { font-size: clamp(26px, 4vw, 32px); line-height: 1.25; font-weight: 500; margin: 0 0 8px; }
+.registration-header > p { color: var(--color-body); font-size: 14px; }
+.registration-form { margin-top: 24px; }
+.registration-actions { margin-top: 32px; padding-top: 24px; }
+.registration-page :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 15px; }
+.registration-page--support > header h1 { font-size: 15px; }
+@media (max-width: 640px) {
+  .registration-page { padding-top: 24px; }
+  .registration-page--support { padding-top: 0; }
+  .registration-brand { margin-bottom: 24px; }
+  .registration-header { padding-bottom: 20px; }
+  .registration-form { margin-top: 20px; }
+  .registration-form > .rounded-2xl { padding: 20px; }
+  .registration-form > .rounded-2xl .bg-slate-50 { padding: 16px; }
+  .registration-actions { margin-top: 24px; }
+  .registration-actions button:first-child:disabled { display: none; }
+}
+
+.registration-page label:has(input:focus-visible) { outline: 2px solid var(--color-primary); outline-offset: 4px; }

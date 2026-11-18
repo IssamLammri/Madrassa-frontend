@@ -119,7 +119,7 @@ const handleDragOver = (e) => {
     margin: 0;
     color: var(--color-heading);
     font-size: var(--text-body-sm);
-    font-weight: 900;
+    font-weight: 500;
   }
 
   &__description {

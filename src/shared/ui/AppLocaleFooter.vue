@@ -44,81 +44,13 @@ function switchLanguage(lang) {
   </footer>
 </template>
 
-<style scoped lang="scss">
-.app-locale-footer {
-  position: relative;
-  z-index: 2;
-  border-top: 1px solid var(--color-border);
-  background: rgba(249, 248, 246, 0.92);
-  backdrop-filter: blur(10px);
-
-  &__inner {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 1.5rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.85rem;
-    text-align: center;
-  }
-
-  &__languages {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0.45rem 0.75rem;
-  }
-
-  &__language {
-    appearance: none;
-    border: none;
-    background: transparent;
-    padding: 0.15rem 0;
-    font-size: var(--text-body-sm);
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--color-body);
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
-
-    &:hover {
-      color: var(--color-heading);
-    }
-
-    &:focus-visible {
-      outline: none;
-      text-decoration: underline;
-      text-underline-offset: 0.2rem;
-    }
-
-    &.is-active {
-      color: var(--color-primary);
-      font-weight: 700;
-    }
-  }
-
-  &__meta {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.82rem;
-    color: var(--color-body-faint);
-    text-align: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .app-locale-footer {
-    &__inner {
-      padding: 0.9rem 1rem 1rem;
-    }
-  }
-}
+<style scoped>
+.app-locale-footer { border-top: 1px solid var(--color-border); background: var(--color-bg-cream); }
+.app-locale-footer__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; max-width: 1504px; padding: 20px 32px; margin-inline: auto; }
+.app-locale-footer__languages { display: flex; align-items: center; gap: 16px; }
+.app-locale-footer__language { padding: 4px 0; border: 0; background: transparent; color: var(--color-body); font-size: 13px; cursor: pointer; }
+.app-locale-footer__language.is-active { color: var(--color-primary); text-decoration: underline; text-underline-offset: 5px; }
+.app-locale-footer__language:hover { color: var(--color-heading); }
+.app-locale-footer__meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--color-body); }
+@media (max-width: 640px) { .app-locale-footer__inner { padding: 16px; justify-content: center; } .app-locale-footer__meta { justify-content: center; } }
 </style>

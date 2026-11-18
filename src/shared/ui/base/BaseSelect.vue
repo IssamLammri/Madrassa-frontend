@@ -1,5 +1,11 @@
 <script setup>
 import { ChevronDown } from 'lucide-vue-next';
+import { computed, useAttrs, useId } from 'vue';
+
+defineOptions({ inheritAttrs: false });
+const attrs = useAttrs();
+const generatedId = useId();
+const controlId = computed(() => attrs.id || generatedId);
 
 const props = defineProps({
   modelValue: {
@@ -25,12 +31,14 @@ const handleChange = (e) => {
 
 <template>
   <div class="base-select">
-    <label v-if="label" class="base-select__label">
+    <label v-if="label" :for="controlId" class="base-select__label">
       {{ label }}
     </label>
 
     <div class="base-select__control">
       <select
+          v-bind="attrs"
+          :id="controlId"
           :value="modelValue"
           class="base-select__field"
           @change="handleChange"
@@ -49,66 +57,13 @@ const handleChange = (e) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-select {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-
-  &__label {
-    margin-left: 0.25rem;
-    color: var(--color-body);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  &__control {
-    position: relative;
-    width: 100%;
-  }
-
-  &__field {
-    width: 100%;
-    min-height: var(--control-height);
-    padding: 0.875rem 2.75rem 0.875rem 1.25rem;
-    border: 2px solid transparent;
-    border-radius: var(--radius-input);
-    background-color: var(--color-input-bg);
-    color: var(--color-heading);
-    font-size: var(--text-body-sm);
-    font-weight: 500;
-    line-height: 1.4;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-    transition:
-        background-color var(--duration-fast) var(--ease-standard),
-        border-color var(--duration-fast) var(--ease-standard),
-        box-shadow var(--duration-fast) var(--ease-standard);
-
-    &:focus {
-      background-color: var(--color-white);
-      border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 5%, transparent);
-    }
-  }
-
-  &__icon {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    transform: translateY(-50%);
-    color: var(--color-body-ultra-faint);
-    pointer-events: none;
-    transition: color var(--duration-fast) var(--ease-standard);
-  }
-
-  &:focus-within &__icon {
-    color: var(--color-primary);
-  }
-}
+<style scoped>
+.base-select { display: flex; flex-direction: column; gap: 8px; width: 100%; min-width: 0; }
+.base-select__label { color: var(--color-heading); font-size: 13px; font-weight: 500; }
+.base-select__control { position: relative; width: 100%; }
+.base-select__field { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-input-bg); color: var(--color-heading); font-size: 15px; line-height: 1.5; transition: background-color 160ms, border-color 160ms; }
+.base-select__field:focus { background: white; border-color: var(--color-primary); outline: 2px solid #c4ddcd; outline-offset: 1px; }
+.base-select__field::placeholder { color: var(--color-body-ultra-faint); }
+.base-select__field { appearance: none; padding-inline-end: 40px; cursor: pointer; }
+.base-select__icon { position: absolute; inset-inline-end: 12px; top: 50%; transform: translateY(-50%); color: var(--color-body); pointer-events: none; }
 </style>

@@ -1,22 +1,22 @@
 <template>
   <div class="attendance-viewer w-full space-y-6">
     <!-- 1. KPI & ATTENDANCE RATE HERO CARD -->
-    <div class="bg-white rounded-3xl p-6 sm:p-7 shadow-xs border border-slate-200/80">
+    <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-xs border border-slate-200/80">
       <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
         <!-- Left: Assiduité Gauge & Text -->
         <div class="flex items-center gap-5">
           <!-- Circular Score Badge -->
-          <div class="relative flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center font-bold text-white shadow-md"
+          <div class="relative flex-shrink-0 w-20 h-20 rounded-2xl flex flex-col items-center justify-center font-medium text-white shadow-md"
             :class="attendanceRate >= 90 ? 'bg-gradient-to-br from-emerald-500 to-teal-600' : (attendanceRate >= 75 ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-rose-500 to-red-600')"
           >
             <span class="text-2xl tracking-tight leading-none">{{ attendanceRate }}%</span>
-            <span class="text-[10px] uppercase font-semibold tracking-wider opacity-90 mt-0.5">Assiduité</span>
+            <span class="text-xs  font-semibold  opacity-90 mt-0.5">Assiduité</span>
           </div>
 
           <div>
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="text-xl font-bold text-slate-900">Bilan des présences</h3>
-              <span 
+              <h3 class="text-xl font-medium text-slate-900">Bilan des présences</h3>
+              <span
                 class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full"
                 :class="attendanceRate >= 90 ? 'bg-emerald-100 text-emerald-800' : (attendanceRate >= 75 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')"
               >
@@ -40,26 +40,26 @@
           </div>
           <!-- Segmented Progress Bar -->
           <div class="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5 p-0.5">
-            <div 
+            <div
               v-if="summary.present > 0"
-              class="h-full bg-emerald-500 rounded-full transition-all"
+              class="h-full bg-emerald-500 rounded-full transition-colors"
               :style="{ width: `${(summary.present / Math.max(1, summary.total)) * 100}%` }"
               title="Présences"
             ></div>
-            <div 
+            <div
               v-if="summary.absent > 0"
-              class="h-full bg-rose-500 rounded-full transition-all"
+              class="h-full bg-rose-500 rounded-full transition-colors"
               :style="{ width: `${(summary.absent / Math.max(1, summary.total)) * 100}%` }"
               title="Absences"
             ></div>
-            <div 
+            <div
               v-if="summary.notMarked > 0"
-              class="h-full bg-slate-300 rounded-full transition-all"
+              class="h-full bg-slate-300 rounded-full transition-colors"
               :style="{ width: `${(summary.notMarked / Math.max(1, summary.total)) * 100}%` }"
               title="Non noté"
             ></div>
           </div>
-          <div class="flex items-center justify-between text-[11px] text-slate-400">
+          <div class="flex items-center justify-between text-xs text-slate-400">
             <span class="flex items-center gap-1 text-emerald-700 font-medium">
               <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               {{ summary.present }} Présent{{ summary.present > 1 ? 's' : '' }}
@@ -82,68 +82,68 @@
         <button
           type="button"
           @click="statusFilter = 'all'"
-          class="text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden"
-          :class="statusFilter === 'all' 
-            ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10' 
+          class="text-left p-3.5 rounded-2xl border transition-colors cursor-pointer relative overflow-hidden"
+          :class="statusFilter === 'all'
+            ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10'
             : 'bg-slate-50/70 hover:bg-slate-100/80 border-slate-200/60 text-slate-800'"
         >
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs uppercase font-bold tracking-wider opacity-75">Total</span>
+            <span class="text-xs  font-medium  opacity-75">Total</span>
             <LayersIcon class="w-4 h-4 opacity-60" />
           </div>
-          <p class="text-2xl sm:text-3xl font-black">{{ summary.total }}</p>
-          <span class="text-[11px] opacity-70 mt-1 block">Toutes les séances</span>
+          <p class="text-2xl sm:text-3xl font-semibold">{{ summary.total }}</p>
+          <span class="text-xs opacity-70 mt-1 block">Toutes les séances</span>
         </button>
 
         <!-- PRÉSENT -->
         <button
           type="button"
           @click="statusFilter = 'present'"
-          class="text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden"
-          :class="statusFilter === 'present' 
-            ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/20' 
+          class="text-left p-3.5 rounded-2xl border transition-colors cursor-pointer relative overflow-hidden"
+          :class="statusFilter === 'present'
+            ? 'bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-600/20'
             : 'bg-emerald-50/50 hover:bg-emerald-50 border-emerald-100 text-emerald-950'"
         >
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs uppercase font-bold tracking-wider" :class="statusFilter === 'present' ? 'text-white' : 'text-emerald-700'">Présent</span>
+            <span class="text-xs  font-medium " :class="statusFilter === 'present' ? 'text-white' : 'text-emerald-700'">Présent</span>
             <CheckCircle2Icon class="w-4 h-4" :class="statusFilter === 'present' ? 'text-white' : 'text-emerald-600'" />
           </div>
-          <p class="text-2xl sm:text-3xl font-black" :class="statusFilter === 'present' ? 'text-white' : 'text-emerald-700'">{{ summary.present }}</p>
-          <span class="text-[11px] opacity-80 mt-1 block">Séances validées</span>
+          <p class="text-2xl sm:text-3xl font-semibold" :class="statusFilter === 'present' ? 'text-white' : 'text-emerald-700'">{{ summary.present }}</p>
+          <span class="text-xs opacity-80 mt-1 block">Séances validées</span>
         </button>
 
         <!-- ABSENT -->
         <button
           type="button"
           @click="statusFilter = 'absent'"
-          class="text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden"
-          :class="statusFilter === 'absent' 
-            ? 'bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-600/20' 
+          class="text-left p-3.5 rounded-2xl border transition-colors cursor-pointer relative overflow-hidden"
+          :class="statusFilter === 'absent'
+            ? 'bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-600/20'
             : 'bg-rose-50/50 hover:bg-rose-50 border-rose-100 text-rose-950'"
         >
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs uppercase font-bold tracking-wider" :class="statusFilter === 'absent' ? 'text-white' : 'text-rose-700'">Absent</span>
+            <span class="text-xs  font-medium " :class="statusFilter === 'absent' ? 'text-white' : 'text-rose-700'">Absent</span>
             <XCircleIcon class="w-4 h-4" :class="statusFilter === 'absent' ? 'text-white' : 'text-rose-600'" />
           </div>
-          <p class="text-2xl sm:text-3xl font-black" :class="statusFilter === 'absent' ? 'text-white' : 'text-rose-700'">{{ summary.absent }}</p>
-          <span class="text-[11px] opacity-80 mt-1 block">Manquées</span>
+          <p class="text-2xl sm:text-3xl font-semibold" :class="statusFilter === 'absent' ? 'text-white' : 'text-rose-700'">{{ summary.absent }}</p>
+          <span class="text-xs opacity-80 mt-1 block">Manquées</span>
         </button>
 
         <!-- NON NOTÉ -->
         <button
           type="button"
           @click="statusFilter = 'not_marked'"
-          class="text-left p-3.5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden"
-          :class="statusFilter === 'not_marked' 
-            ? 'bg-amber-600 text-white border-amber-600 shadow-md ring-2 ring-amber-600/20' 
+          class="text-left p-3.5 rounded-2xl border transition-colors cursor-pointer relative overflow-hidden"
+          :class="statusFilter === 'not_marked'
+            ? 'bg-amber-600 text-white border-amber-600 shadow-md ring-2 ring-amber-600/20'
             : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800'"
         >
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs uppercase font-bold tracking-wider" :class="statusFilter === 'not_marked' ? 'text-white' : 'text-slate-600'">En attente</span>
+            <span class="text-xs  font-medium " :class="statusFilter === 'not_marked' ? 'text-white' : 'text-slate-600'">En attente</span>
             <ClockIcon class="w-4 h-4" :class="statusFilter === 'not_marked' ? 'text-white' : 'text-slate-400'" />
           </div>
-          <p class="text-2xl sm:text-3xl font-black">{{ summary.notMarked }}</p>
-          <span class="text-[11px] opacity-70 mt-1 block">Non renseigné</span>
+          <p class="text-2xl sm:text-3xl font-semibold">{{ summary.notMarked }}</p>
+          <span class="text-xs opacity-70 mt-1 block">Non renseigné</span>
         </button>
       </div>
     </div>
@@ -154,19 +154,19 @@
         <!-- Date Pickers -->
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Du</label>
-            <input 
-              type="date" 
-              v-model="localFilters.from" 
-              class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors outline-none focus:ring-2 focus:ring-emerald-500" 
+            <label class="text-xs font-medium text-slate-500  ">Du</label>
+            <input
+              type="date"
+              v-model="localFilters.from"
+              class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           <div class="flex items-center gap-2">
-            <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Au</label>
-            <input 
-              type="date" 
-              v-model="localFilters.to" 
-              class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors outline-none focus:ring-2 focus:ring-emerald-500" 
+            <label class="text-xs font-medium text-slate-500  ">Au</label>
+            <input
+              type="date"
+              v-model="localFilters.to"
+              class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 focus:bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium transition-colors outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           <button
@@ -208,9 +208,9 @@
             <button
               type="button"
               @click="displayView = 'timeline'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 text-xs sm:text-sm font-semibold rounded-lg transition-all"
-              :class="displayView === 'timeline' 
-                ? 'bg-white text-slate-900 shadow-xs' 
+              class="inline-flex items-center gap-1.5 px-3 py-1 text-xs sm:text-sm font-semibold rounded-lg transition-colors"
+              :class="displayView === 'timeline'
+                ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'"
               title="Affichage cartes chronologiques"
             >
@@ -220,9 +220,9 @@
             <button
               type="button"
               @click="displayView = 'table'"
-              class="inline-flex items-center gap-1.5 px-3 py-1 text-xs sm:text-sm font-semibold rounded-lg transition-all"
-              :class="displayView === 'table' 
-                ? 'bg-white text-slate-900 shadow-xs' 
+              class="inline-flex items-center gap-1.5 px-3 py-1 text-xs sm:text-sm font-semibold rounded-lg transition-colors"
+              :class="displayView === 'table'
+                ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'"
               title="Affichage tableau épuré"
             >
@@ -251,24 +251,24 @@
     </div>
 
     <!-- 4. LOADING STATE -->
-    <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-slate-100">
+    <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-slate-100">
       <div class="animate-spin rounded-full h-10 w-10 border-3 border-emerald-600 border-t-transparent mb-3"></div>
       <p class="text-sm font-medium text-slate-500">Chargement des séances...</p>
     </div>
 
     <!-- 5. EMPTY STATE -->
-    <div v-else-if="filteredItems.length === 0" class="bg-white p-12 rounded-3xl text-center shadow-xs border border-slate-100">
+    <div v-else-if="filteredItems.length === 0" class="bg-white p-12 rounded-2xl text-center shadow-xs border border-slate-100">
       <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-3">
         <CalendarX2Icon class="w-7 h-7" />
       </div>
-      <h3 class="text-base font-bold text-slate-800 mb-1">Aucune séance trouvée</h3>
+      <h3 class="text-base font-medium text-slate-800 mb-1">Aucune séance trouvée</h3>
       <p class="text-sm text-slate-500 max-w-md mx-auto">
         Aucun enregistrement ne correspond aux critères sélectionnés. Essayez de réinitialiser vos filtres.
       </p>
       <button
         type="button"
         @click="resetAllFilters"
-        class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors"
+        class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition-colors"
       >
         Réinitialiser les filtres
       </button>
@@ -276,16 +276,16 @@
 
     <!-- 6. DISPLAY VIEW: TIMELINE / CHRONOLOGIE GROUPÉE PAR MOIS -->
     <div v-else-if="displayView === 'timeline'" class="space-y-6">
-      <div 
-        v-for="group in groupedSessionsByMonth" 
+      <div
+        v-for="group in groupedSessionsByMonth"
         :key="group.monthKey"
-        class="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-200/80"
+        class="bg-white rounded-2xl p-5 sm:p-7 shadow-xs border border-slate-200/80"
       >
         <!-- Month Group Header -->
         <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
           <div class="flex items-center gap-2.5">
             <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-            <h4 class="font-bold text-lg text-slate-800 capitalize">{{ group.monthLabel }}</h4>
+            <h4 class="font-medium text-lg text-slate-800 capitalize">{{ group.monthLabel }}</h4>
           </div>
           <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
             {{ group.items.length }} séance{{ group.items.length > 1 ? 's' : '' }}
@@ -297,22 +297,22 @@
           <div
             v-for="item in group.items"
             :key="item.id"
-            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-all hover:shadow-sm"
+            class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-colors hover:shadow-sm"
             :class="getItemBorderBgClass(item.status)"
           >
             <!-- Left: Date block + Class details -->
             <div class="flex items-start sm:items-center gap-4">
               <!-- Date Badge Box -->
               <div class="w-14 h-14 rounded-2xl bg-white border border-slate-200/80 flex flex-col items-center justify-center flex-shrink-0 shadow-2xs">
-                <span class="text-[10px] uppercase font-bold text-slate-400 leading-none">{{ formatDayName(item.session?.startTime) }}</span>
-                <span class="text-lg font-black text-slate-800 leading-tight">{{ formatDayNumber(item.session?.startTime) }}</span>
+                <span class="text-xs  font-medium text-slate-400 leading-none">{{ formatDayName(item.session?.startTime) }}</span>
+                <span class="text-lg font-semibold text-slate-800 leading-tight">{{ formatDayNumber(item.session?.startTime) }}</span>
               </div>
 
               <!-- Class Name & Time -->
               <div class="space-y-1">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <h5 class="font-bold text-base text-slate-900">{{ item.session?.class?.name || 'Classe' }}</h5>
-                  <span v-if="item.session?.class?.level" class="text-[11px] font-semibold px-2 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-md">
+                  <h5 class="font-medium text-base text-slate-900">{{ item.session?.class?.name || 'Classe' }}</h5>
+                  <span v-if="item.session?.class?.level" class="text-xs font-semibold px-2 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-md">
                     {{ item.session.class.level }}
                   </span>
                 </div>
@@ -330,27 +330,27 @@
             <!-- Right: Status Badge -->
             <div class="mt-3 sm:mt-0 flex items-center gap-2">
               <!-- PRESENT -->
-              <div 
+              <div
                 v-if="item.status === 'present'"
-                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200/80 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200/80 shadow-2xs"
               >
                 <CheckCircle2Icon class="w-4 h-4 text-emerald-600" />
                 <span>Présent</span>
               </div>
 
               <!-- ABSENT -->
-              <div 
+              <div
                 v-else-if="item.status === 'absent'"
-                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200/80 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 border border-rose-200/80 shadow-2xs"
               >
                 <XCircleIcon class="w-4 h-4 text-rose-600" />
                 <span>Absent</span>
               </div>
 
               <!-- NOT MARKED -->
-              <div 
+              <div
                 v-else
-                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs"
               >
                 <ClockIcon class="w-4 h-4 text-slate-400" />
                 <span>Non renseigné</span>
@@ -362,10 +362,10 @@
     </div>
 
     <!-- 7. DISPLAY VIEW: TABLEAU MODERNE -->
-    <div v-else class="bg-white rounded-3xl shadow-xs border border-slate-200/80 overflow-hidden">
+    <div v-else class="bg-white rounded-2xl shadow-xs border border-slate-200/80 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
-          <thead class="bg-slate-50/80 text-slate-600 font-semibold border-b border-slate-200 text-xs uppercase tracking-wider">
+          <thead class="bg-slate-50/80 text-slate-600 font-semibold border-b border-slate-200 text-xs  ">
             <tr>
               <th class="px-6 py-4">Date</th>
               <th class="px-6 py-4">Horaires</th>
@@ -374,19 +374,19 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
-            <tr 
-              v-for="item in filteredItems" 
-              :key="'tbl-' + item.id" 
+            <tr
+              v-for="item in filteredItems"
+              :key="'tbl-' + item.id"
               class="hover:bg-slate-50/80 transition-colors"
             >
               <!-- Date with Day of Week -->
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex flex-col items-center justify-center font-bold text-xs">
+                  <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex flex-col items-center justify-center font-medium text-xs">
                     {{ formatDayNumber(item.session?.startTime) }}
                   </div>
                   <div>
-                    <p class="font-bold text-slate-900 capitalize">{{ formatDayName(item.session?.startTime) }}</p>
+                    <p class="font-medium text-slate-900 capitalize">{{ formatDayName(item.session?.startTime) }}</p>
                     <p class="text-xs text-slate-500">{{ formatMonthYear(item.session?.startTime) }}</p>
                   </div>
                 </div>
@@ -402,7 +402,7 @@
 
               <!-- Class -->
               <td class="px-6 py-4">
-                <div class="font-bold text-slate-800">
+                <div class="font-medium text-slate-800">
                   {{ item.session?.class?.name || 'Classe' }}
                 </div>
                 <div v-if="item.session?.class?.level" class="text-xs text-slate-500">
@@ -412,21 +412,21 @@
 
               <!-- Status -->
               <td class="px-6 py-4 whitespace-nowrap text-right">
-                <span 
+                <span
                   v-if="item.status === 'present'"
-                  class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200/60"
+                  class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200/60"
                 >
                   <CheckCircle2Icon class="w-3.5 h-3.5 text-emerald-600" />
                   Présent
                 </span>
-                <span 
+                <span
                   v-else-if="item.status === 'absent'"
-                  class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200/60"
+                  class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-800 border border-rose-200/60"
                 >
                   <XCircleIcon class="w-3.5 h-3.5 text-rose-600" />
                   Absent
                 </span>
-                <span 
+                <span
                   v-else
                   class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200"
                 >
@@ -441,27 +441,27 @@
     </div>
 
     <!-- 8. PAGINATION -->
-    <div 
-      v-if="pagination && pagination.pages > 1" 
+    <div
+      v-if="pagination && pagination.pages > 1"
       class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white px-6 py-4 rounded-2xl border border-slate-200/80 shadow-2xs"
     >
       <span class="text-xs sm:text-sm text-slate-600 font-medium">
         Page <strong class="text-slate-900">{{ pagination.page }}</strong> sur <strong class="text-slate-900">{{ pagination.pages }}</strong> ({{ pagination.total }} séances au total)
       </span>
       <div class="flex items-center gap-2">
-        <button 
+        <button
           type="button"
           :disabled="pagination.page === 1"
           @click="$emit('page-change', pagination.page - 1)"
-          class="px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+          class="px-4 py-2 rounded-xl text-xs font-medium border border-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
         >
           Précédent
         </button>
-        <button 
+        <button
           type="button"
           :disabled="pagination.page === pagination.pages"
           @click="$emit('page-change', pagination.page + 1)"
-          class="px-4 py-2 rounded-xl text-xs font-bold border border-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
+          class="px-4 py-2 rounded-xl text-xs font-medium border border-slate-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 text-slate-700"
         >
           Suivant
         </button>

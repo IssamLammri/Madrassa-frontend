@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-5xl mx-auto w-full">
-    <div class="mb-8 flex justify-between items-center">
+  <div class="portal-page">
+    <div class="page-heading">
       <div>
-        <h1 class="text-2xl font-bold text-slate-800">Mes enfants</h1>
+        <h1 class="text-2xl font-medium text-slate-800">Mes enfants</h1>
         <p class="text-slate-600 mt-1">Gérez les inscriptions et suivez la scolarité de vos enfants.</p>
       </div>
     </div>
@@ -19,37 +19,37 @@
       <div class="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
         <UsersIcon class="w-10 h-10 text-slate-400" />
       </div>
-      <h3 class="text-lg font-bold text-slate-800 mb-2">Aucun enfant trouvé</h3>
+      <h3 class="text-lg font-medium text-slate-800 mb-2">Aucun enfant trouvé</h3>
       <p class="text-slate-600">Vous n'avez pas encore d'enfants inscrits ou associés à votre compte.</p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <BaseCard 
-        v-for="child in children" 
-        :key="child.id" 
-        class="hover:shadow-md transition-shadow cursor-pointer"
+      <BaseCard
+        v-for="child in children"
+        :key="child.id"
+        class="child-card" role="link" tabindex="0" @keydown.enter="goToChild(child.id)"
         @click="goToChild(child.id)"
       >
-        <div class="p-6">
+        <div>
           <div class="flex items-center gap-4 mb-4">
-            <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-xl">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-medium text-xl">
               {{ getInitials(child.fullName) }}
             </div>
             <div>
-              <h3 class="font-bold text-lg text-slate-800">{{ child.fullName }}</h3>
+              <h3 class="font-medium text-lg text-slate-800">{{ child.fullName }}</h3>
               <p class="text-sm text-slate-500">{{ formatDate(child.birthDate) }}</p>
             </div>
           </div>
-          
+
           <div class="space-y-3">
             <div class="flex justify-between items-center py-2 border-t border-slate-100">
               <span class="text-sm text-slate-500">Niveau actuel</span>
               <BaseBadge>{{ child.levelLabel || 'Non assigné' }}</BaseBadge>
             </div>
           </div>
-          
+
           <div class="mt-6 pt-4 border-t border-slate-100">
-            <div class="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+            <div class="text-emerald-600 text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-colors">
               Voir le dossier détaillé
               <ArrowRightIcon class="w-4 h-4" />
             </div>
@@ -106,3 +106,8 @@ const goToChild = (id) => {
   router.push(`/home/children/${id}`)
 }
 </script>
+
+<style scoped>
+.child-card { cursor: pointer; transition: border-color 160ms, background-color 160ms; }
+.child-card:hover { background: #fafbf9; border-color: #9bc3ac; }
+</style>

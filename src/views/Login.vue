@@ -1,12 +1,6 @@
 <template>
   <div class="login-page">
-    <div class="login-page__deco" aria-hidden="true">
-      <div class="login-page__blob login-page__blob--primary"></div>
-      <div class="login-page__blob login-page__blob--accent"></div>
-      <div class="login-page__blob login-page__blob--soft"></div>
-      <div class="login-page__dot-grid"></div>
-      <div class="login-page__line-deco"></div>
-    </div>
+    <AuthContext />
 
     <BaseCard class="login-page__card" padding="xl">
       <div class="login-page__logo-wrap">
@@ -14,11 +8,8 @@
       </div>
 
       <div class="login-page__header">
-        <h1 class="login-page__title">
-          {{ $t('auth.login_title') }}<br>
-          {{ subtitleFirstWord }}
-          <em>{{ subtitleRest }}</em>
-        </h1>
+        <p class="login-page__greeting" lang="ar" dir="rtl">{{ subtitleFirstWord }} {{ subtitleRest }}</p>
+        <h1 class="login-page__title">{{ $t('auth.login_title') }}</h1>
 
         <p class="login-page__subtitle">
           {{ $t('auth.login_desc') }}
@@ -59,7 +50,7 @@
 
         <BaseAlert
             v-if="error"
-            variant="warning"
+            variant="error"
             :title="$t('auth.login_error_title', 'Connexion impossible')"
             :description="error"
             :icon="TriangleAlert"
@@ -95,6 +86,7 @@
 </template>
 
 <script setup>
+import AuthContext from '@/shared/ui/AuthContext.vue'
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Eye, EyeOff, TriangleAlert } from 'lucide-vue-next';
@@ -138,7 +130,7 @@ async function handleLogin() {
   error.value = null;
   isLoading.value = true;
 
-  console.log("Login request:", form.value);
+
 
   try {
     const { data } = await login(form.value);

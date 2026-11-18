@@ -34,8 +34,8 @@ defineProps({
   border-radius: 0.5rem;
   background-color: var(--color-bg-cream);
   color: var(--color-body);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
 

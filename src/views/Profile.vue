@@ -1,12 +1,12 @@
 <template>
-  <div class="profile-view">
+  <div class="profile-view portal-page">
     <div class="profile-view__container">
       <section class="profile-view__hero">
         <BaseCard class="profile-view__hero-card">
           <div class="profile-view__hero-content">
             <div class="profile-view__identity">
               <div class="profile-view__avatar-wrap">
-                <div class="profile-view__avatar-initials" style="width: 120px; height: 120px; border-radius: 50%; background-color: #e2e8f0; color: #475569; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 40px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+                <div class="profile-view__avatar-initials">
                   {{ userInitials }}
                 </div>
               </div>
@@ -39,26 +39,26 @@
             <form @submit.prevent="handleSaveProfile" class="profile-view__form space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="profile-view__field">
-                  <label class="profile-view__label">Prénom</label>
-                  <input v-model="form.firstName" type="text" class="profile-view__input" />
+                  <label class="profile-view__label" for="profile-field-1">Prénom</label>
+                  <input id="profile-field-1" v-model="form.firstName" type="text" class="profile-view__input" />
                   <span v-if="formErrors.firstName" class="text-sm text-red-500 mt-1">{{ formErrors.firstName }}</span>
                 </div>
                 <div class="profile-view__field">
-                  <label class="profile-view__label">Nom</label>
-                  <input v-model="form.lastName" type="text" class="profile-view__input" />
+                  <label class="profile-view__label" for="profile-field-2">Nom</label>
+                  <input id="profile-field-2" v-model="form.lastName" type="text" class="profile-view__input" />
                   <span v-if="formErrors.lastName" class="text-sm text-red-500 mt-1">{{ formErrors.lastName }}</span>
                 </div>
               </div>
 
               <div class="profile-view__field">
-                <label class="profile-view__label">Adresse E-mail</label>
-                <input v-model="form.email" type="email" class="profile-view__input" required />
+                <label class="profile-view__label" for="profile-field-3">Adresse E-mail</label>
+                <input id="profile-field-3" v-model="form.email" type="email" class="profile-view__input" required />
                 <span v-if="formErrors.email" class="text-sm text-red-500 mt-1">{{ formErrors.email }}</span>
               </div>
 
               <div class="profile-view__field">
-                <label class="profile-view__label">Statut familial</label>
-                <select v-model="form.familyStatus" class="profile-view__input">
+                <label class="profile-view__label" for="profile-field-4">Statut familial</label>
+                <select id="profile-field-4" v-model="form.familyStatus" class="profile-view__input">
                   <option value="married">Marié(e)</option>
                   <option value="divorced">Divorcé(e)</option>
                 </select>
@@ -68,50 +68,50 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <!-- Père -->
                 <div class="space-y-4">
-                  <h3 class="font-bold text-slate-700">Informations du père</h3>
+                  <h3 class="font-medium text-slate-700">Informations du père</h3>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Prénom</label>
-                    <input v-model="form.fatherFirstName" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-5">Prénom</label>
+                    <input id="profile-field-5" v-model="form.fatherFirstName" type="text" class="profile-view__input" />
                     <span v-if="formErrors.fatherFirstName" class="text-sm text-red-500 mt-1">{{ formErrors.fatherFirstName }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Nom</label>
-                    <input v-model="form.fatherLastName" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-6">Nom</label>
+                    <input id="profile-field-6" v-model="form.fatherLastName" type="text" class="profile-view__input" />
                     <span v-if="formErrors.fatherLastName" class="text-sm text-red-500 mt-1">{{ formErrors.fatherLastName }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Email</label>
-                    <input v-model="form.fatherEmail" type="email" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-7">Email</label>
+                    <input id="profile-field-7" v-model="form.fatherEmail" type="email" class="profile-view__input" />
                     <span v-if="formErrors.fatherEmail" class="text-sm text-red-500 mt-1">{{ formErrors.fatherEmail }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Téléphone</label>
-                    <input v-model="form.fatherPhone" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-8">Téléphone</label>
+                    <input id="profile-field-8" v-model="form.fatherPhone" type="text" class="profile-view__input" />
                     <span v-if="formErrors.fatherPhone" class="text-sm text-red-500 mt-1">{{ formErrors.fatherPhone }}</span>
                   </div>
                 </div>
 
                 <!-- Mère -->
                 <div class="space-y-4">
-                  <h3 class="font-bold text-slate-700">Informations de la mère</h3>
+                  <h3 class="font-medium text-slate-700">Informations de la mère</h3>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Prénom</label>
-                    <input v-model="form.motherFirstName" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-9">Prénom</label>
+                    <input id="profile-field-9" v-model="form.motherFirstName" type="text" class="profile-view__input" />
                     <span v-if="formErrors.motherFirstName" class="text-sm text-red-500 mt-1">{{ formErrors.motherFirstName }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Nom</label>
-                    <input v-model="form.motherLastName" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-10">Nom</label>
+                    <input id="profile-field-10" v-model="form.motherLastName" type="text" class="profile-view__input" />
                     <span v-if="formErrors.motherLastName" class="text-sm text-red-500 mt-1">{{ formErrors.motherLastName }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Email</label>
-                    <input v-model="form.motherEmail" type="email" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-11">Email</label>
+                    <input id="profile-field-11" v-model="form.motherEmail" type="email" class="profile-view__input" />
                     <span v-if="formErrors.motherEmail" class="text-sm text-red-500 mt-1">{{ formErrors.motherEmail }}</span>
                   </div>
                   <div class="profile-view__field">
-                    <label class="profile-view__label">Téléphone</label>
-                    <input v-model="form.motherPhone" type="text" class="profile-view__input" />
+                    <label class="profile-view__label" for="profile-field-12">Téléphone</label>
+                    <input id="profile-field-12" v-model="form.motherPhone" type="text" class="profile-view__input" />
                     <span v-if="formErrors.motherPhone" class="text-sm text-red-500 mt-1">{{ formErrors.motherPhone }}</span>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
           <BaseCard class="profile-view__section-card">
             <h2 class="profile-view__section-title">Sécurité</h2>
             <p class="profile-view__section-subtitle">Modifier votre mot de passe</p>
-            
+
             <BaseAlert v-if="pwdSuccessMessage" type="success" class="mb-6">
               {{ pwdSuccessMessage }}
             </BaseAlert>
@@ -142,19 +142,19 @@
 
             <form @submit.prevent="handleSavePassword" class="profile-view__form space-y-6">
               <div class="profile-view__field">
-                <label class="profile-view__label">Mot de passe actuel</label>
-                <input v-model="pwdForm.currentPassword" type="password" class="profile-view__input" required />
+                <label class="profile-view__label" for="profile-field-13">Mot de passe actuel</label>
+                <input id="profile-field-13" v-model="pwdForm.currentPassword" type="password" class="profile-view__input" required />
                 <span v-if="pwdFormErrors.currentPassword" class="text-sm text-red-500 mt-1">{{ pwdFormErrors.currentPassword }}</span>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="profile-view__field">
-                  <label class="profile-view__label">Nouveau mot de passe</label>
-                  <input v-model="pwdForm.password" type="password" class="profile-view__input" required minlength="8" />
+                  <label class="profile-view__label" for="profile-field-14">Nouveau mot de passe</label>
+                  <input id="profile-field-14" v-model="pwdForm.password" type="password" class="profile-view__input" required minlength="8" />
                   <span v-if="pwdFormErrors.password" class="text-sm text-red-500 mt-1">{{ pwdFormErrors.password }}</span>
                 </div>
                 <div class="profile-view__field">
-                  <label class="profile-view__label">Confirmer le mot de passe</label>
-                  <input v-model="pwdForm.confirmPassword" type="password" class="profile-view__input" required minlength="8" />
+                  <label class="profile-view__label" for="profile-field-15">Confirmer le mot de passe</label>
+                  <input id="profile-field-15" v-model="pwdForm.confirmPassword" type="password" class="profile-view__input" required minlength="8" />
                   <span v-if="pwdFormErrors.confirmPassword" class="text-sm text-red-500 mt-1">{{ pwdFormErrors.confirmPassword }}</span>
                 </div>
               </div>
@@ -244,9 +244,9 @@ const fetchProfile = async () => {
   try {
     const data = await getParentProfile()
     profile.value = data
-    
+
     const parentData = data.parent || {}
-    
+
     form.value = {
       email: data.email || '',
       firstName: data.firstName || '',
@@ -261,7 +261,7 @@ const fetchProfile = async () => {
       motherPhone: parentData.mother?.phone || '',
       familyStatus: parentData.familyStatus || 'married'
     }
-    
+
     originalForm.value = { ...form.value }
   } catch (e) {
     console.error('Erreur de chargement', e)
@@ -276,7 +276,7 @@ const handleSaveProfile = async () => {
   error.value = ''
   successMessage.value = ''
   formErrors.value = {}
-  
+
   // N'envoyer que les champs modifiés
   const changedData = {}
   for (const key in form.value) {
@@ -294,7 +294,7 @@ const handleSaveProfile = async () => {
   try {
     const res = await updateParentProfile(changedData)
     successMessage.value = res.message || "Le profil a été mis à jour."
-    
+
     if (res.reauthenticationRequired) {
       setTimeout(() => {
         logout()
@@ -342,118 +342,24 @@ const handleSavePassword = async () => {
 </script>
 
 <style scoped>
-.profile-view {
-  max-width: 1024px;
-  margin: 0 auto;
-}
-
-.profile-view__hero {
-  margin-bottom: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .profile-view__grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-}
-
-.profile-view__hero-card {
-  --base-card-max-width: none;
-  overflow: hidden;
-  position: relative;
-  border-radius: 1rem;
-}
-
-.profile-view__hero-content {
-  padding: 2rem;
-}
-
-.profile-view__identity {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.profile-view__identity-copy {
-  display: flex;
-  flex-direction: column;
-}
-
-.profile-view__badges {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.profile-view__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 0.25rem;
-}
-
-.profile-view__email {
-  color: var(--color-text-light);
-}
-
-.profile-view__section {
-  margin-bottom: 2rem;
-}
-
-.profile-view__section-card {
-  --base-card-max-width: none;
-  padding: 2rem;
-  border-radius: 1rem;
-}
-
-.profile-view__section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.profile-view__section-subtitle {
-  color: var(--color-text-light);
-  margin-bottom: 1.5rem;
-}
-
-.profile-view__label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.profile-view__input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  outline: none;
-  transition: all 0.2s;
-}
-
-.profile-view__input:focus {
-  border-color: var(--color-primary);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
-}
-
-@media (max-width: 768px) {
-  .profile-view__identity {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem;
-  }
-  
-  .profile-view__badges {
-    justify-content: center;
-  }
-}
+.profile-view__container { max-width: none; }
+.profile-view__hero { margin-bottom: 24px; }
+.profile-view__hero-content { padding: 0; }
+.profile-view__identity { display: flex; align-items: center; gap: 20px; min-width: 0; }
+.profile-view__avatar-initials { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #f0f7f2; color: #123f35; font-size: 22px; font-weight: 500; }
+.profile-view__identity-copy { min-width: 0; }
+.profile-view__badges { margin-bottom: 8px; }
+.profile-view__title { font-size: 28px; font-weight: 500; overflow-wrap: anywhere; }
+.profile-view__email { color: var(--color-body); font-size: 14px; overflow-wrap: anywhere; }
+.profile-view__grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); align-items: start; gap: 24px; }
+.profile-view__section-card { padding: 24px; }
+.profile-view__section-title { font-size: 20px; font-weight: 500; }
+.profile-view__section-subtitle { margin-top: 8px; color: var(--color-body); font-size: 14px; }
+.profile-view__form { margin-top: 24px; }
+.profile-view__field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.profile-view__label { font-size: 13px; font-weight: 500; color: var(--color-heading); }
+.profile-view__input { width: 100%; min-height: 44px; padding: 10px 12px; background: var(--color-input-bg); border: 1px solid var(--color-border); border-radius: 8px; font-size: 15px; color: var(--color-heading); transition: border-color 160ms, background-color 160ms; }
+.profile-view__input:focus { border-color: var(--color-primary); background: white; outline: 2px solid #c4ddcd; outline-offset: 1px; }
+@media (max-width: 1200px) { .profile-view__grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) { .profile-view__section-card { padding: 20px; } .profile-view__identity { gap: 16px; } .profile-view__title { font-size: 24px; } .profile-view__avatar-initials { width: 48px; height: 48px; font-size: 18px; } }
 </style>

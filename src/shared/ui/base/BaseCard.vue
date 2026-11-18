@@ -65,172 +65,26 @@ const descriptionStyle = computed(() => ({
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .base-card {
-  --base-card-max-width: 24rem;
-  --base-card-width: 100%;
-
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: var(--base-card-width);
-  max-width: var(--base-card-max-width);
-  min-width: 0;
-  border-radius: var(--radius-card);
-  transition:
-      background-color var(--duration-normal) var(--ease-standard),
-      border-color var(--duration-normal) var(--ease-standard),
-      box-shadow var(--duration-normal) var(--ease-standard),
-      transform var(--duration-normal) var(--ease-standard),
-      color var(--duration-normal) var(--ease-standard);
-
-  &--padding-none {
-    padding: 0;
-  }
-
-  &--padding-sm {
-    padding: 1rem;
-  }
-
-  &--padding-md {
-    padding: 1.5rem;
-  }
-
-  &--padding-lg {
-    padding: 2rem;
-  }
-
-  &--padding-xl {
-    padding: 2.5rem;
-  }
-
-  &--default {
-    background-color: var(--color-white);
-    color: var(--color-heading);
-    box-shadow: var(--shadow-soft);
-  }
-
-  &--emphasis {
-    overflow: hidden;
-    background-color: var(--color-heading);
-    color: var(--color-white);
-    box-shadow: var(--shadow-float);
-
-    &::after {
-      content: '';
-      position: absolute;
-      right: -3rem;
-      bottom: -3rem;
-      width: 12rem;
-      height: 12rem;
-      border-radius: 50%;
-      pointer-events: none;
-      background: radial-gradient(
-          circle,
-          rgba(0, 200, 150, 0.14) 0%,
-          rgba(0, 200, 150, 0.08) 35%,
-          rgba(0, 200, 150, 0) 72%
-      );
-    }
-  }
-
-  &--dashed {
-    background-color: transparent;
-    color: var(--color-heading);
-    border: 2px dashed var(--color-border);
-  }
-
-  &--hoverable {
-    &.base-card--default:hover {
-      box-shadow: var(--shadow-float);
-      transform: translateY(-2px);
-    }
-
-    &.base-card--emphasis:hover {
-      transform: translateY(-2px);
-    }
-
-    &.base-card--dashed:hover {
-      border-color: var(--color-primary);
-      transform: translateY(-2px);
-    }
-  }
-
-  &__icon {
-    position: relative;
-    z-index: 1;
-    width: 3rem;
-    height: 3rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    border-radius: var(--radius-input);
-  }
-
-  &__header {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    min-width: 0;
-  }
-
-  &__title {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: inherit;
-    font-size: var(--text-h3);
-    font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-  }
-
-  &__description {
-    --base-card-description-lines: 3;
-
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: var(--base-card-description-lines);
-    line-clamp: var(--base-card-description-lines);
-    font-size: var(--text-body-lg);
-    line-height: 1.5;
-    word-break: break-word;
-  }
-
-  &__content {
-    position: relative;
-    z-index: 1;
-    min-width: 0;
-  }
-
-  &--default &__description,
-  &--dashed &__description {
-    color: var(--color-body);
-  }
-
-  &--emphasis &__description {
-    color: var(--color-white-soft-text);
-  }
-
-  &--default &__icon {
-    background-color: var(--color-success-bg);
-    color: var(--color-primary);
-  }
-
-  &--emphasis &__icon {
-    background-color: var(--color-white-soft-border);
-    color: var(--color-primary);
-  }
-
-  &--dashed &__icon {
-    background-color: var(--color-heading-soft);
-    color: var(--color-body-soft);
-  }
+  --base-card-max-width: none; --base-card-width: 100%;
+  display: flex; flex-direction: column; gap: 20px; width: var(--base-card-width);
+  max-width: var(--base-card-max-width); min-width: 0;
+  border: 1px solid var(--color-border); border-radius: var(--radius-card); background: white;
+  color: var(--color-heading); transition: border-color 160ms, background-color 160ms;
 }
+.base-card--padding-none { padding: 0; }
+.base-card--padding-sm { padding: 16px; }
+.base-card--padding-md, .base-card--padding-lg { padding: 24px; }
+.base-card--padding-xl { padding: 32px; }
+.base-card--emphasis { background: var(--color-heading); color: white; border-color: transparent; }
+.base-card--dashed { background: transparent; border-style: dashed; }
+.base-card--hoverable:hover { background: var(--color-input-bg); border-color: #9bc3ac; }
+.base-card__icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--color-primary); }
+.base-card__header { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.base-card__title { font-size: 20px; font-weight: 500; line-height: 1.4; }
+.base-card__description { color: var(--color-body); font-size: 14px; line-height: 1.6; }
+.base-card__content { min-width: 0; }
+.base-card--emphasis .base-card__description { color: #dfe5df; }
+@media (max-width: 640px) { .base-card--padding-lg, .base-card--padding-xl { padding: 24px; } }
 </style>

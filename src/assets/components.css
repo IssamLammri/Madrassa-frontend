@@ -1,0 +1,24 @@
+
+.custom-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 20px; width: auto;
+  border: 1px solid transparent; border-radius: var(--radius-button);
+  font-size: 14px; line-height: 1.4; font-weight: 500; cursor: pointer;
+  transition: background-color 160ms, color 160ms, border-color 160ms;
+}
+.btn-primary { background: var(--color-primary); color: white; }
+.btn-primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.btn-secondary { background: var(--color-heading); color: white; }
+.btn-secondary:hover:not(:disabled) { background: #34473c; }
+.btn-tertiary { background: white; border-color: var(--color-border); color: var(--color-heading); }
+.btn-tertiary:hover:not(:disabled) { background: var(--color-slate-50); border-color: #bdc8c0; }
+.custom-btn:disabled { opacity: .55; cursor: not-allowed; }
+.custom-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+
+.password-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); align-content: center; align-items: center; gap: 80px; max-width: 1200px; min-height: calc(100svh - 88px); width: 100%; margin-inline: auto; padding: 64px 40px; }
+.password-page__card { padding: 32px; border-color: var(--color-border); }
+.password-page__logo { width: 64px; height: 64px; object-fit: contain; padding-bottom: 0; margin-bottom: 24px; }
+.password-page h1 { font-size: 28px; font-weight: 500; }
+:is(button, a, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (max-width: 860px) { .password-page { grid-template-columns: minmax(0, 440px); justify-content: center; padding: 40px 24px; gap: 24px; } }
+@media (max-width: 480px) { .password-page { padding: 24px 16px; } .password-page__card { padding: 24px; } }

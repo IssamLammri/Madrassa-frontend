@@ -1,85 +1,34 @@
 <script setup>
-defineProps({
-  variant: {
-    type: String,
-    default: 'info', // info | warning
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  icon: {
-    type: null,
-    required: true,
-  },
-});
+import { computed } from 'vue'
+import { AlertCircle, CheckCircle2, Info } from 'lucide-vue-next'
+const props = defineProps({
+  variant: { type: String, default: 'info' },
+  type: { type: String, default: '' },
+  title: { type: String, default: '' },
+  description: { type: String, default: '' },
+  icon: { type: [Object, Function], default: null },
+})
+const tone = computed(() => props.type || props.variant)
+const alertIcon = computed(() => props.icon || (tone.value === 'success' ? CheckCircle2 : ['error', 'warning'].includes(tone.value) ? AlertCircle : Info))
 </script>
 
 <template>
-  <div :class="['base-alert', `base-alert--${variant}`]">
-    <component
-        :is="icon"
-        class="base-alert__icon"
-        :size="20"
-    />
+  <div :class="['base-alert', `base-alert--${tone}`]" :role="tone === 'error' ? 'alert' : 'status'">
+    <component :is="alertIcon" class="base-alert__icon" :size="18" aria-hidden="true" />
     <div class="base-alert__content">
-      <p class="base-alert__title">{{ title }}</p>
-      <p class="base-alert__description">{{ description }}</p>
+      <p v-if="title" class="base-alert__title">{{ title }}</p>
+      <p v-if="description" class="base-alert__description">{{ description }}</p>
+      <slot />
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-alert {
-  display: flex;
-  gap: 1rem;
-  padding: 1.25rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius-card-sm);
-
-  &__icon {
-    flex-shrink: 0;
-  }
-
-  &__content {
-    min-width: 0;
-  }
-
-  &__title {
-    margin: 0 0 0.25rem;
-    color: var(--color-heading);
-    font-size: var(--text-body-sm);
-    font-weight: 900;
-    line-height: 1.2;
-  }
-
-  &__description {
-    margin: 0;
-    color: var(--color-body);
-    font-size: var(--text-caption);
-    line-height: 1.5;
-  }
-
-  &--info {
-    background-color: var(--color-success-bg);
-    border-color: var(--color-success-border);
-
-    .base-alert__icon {
-      color: var(--color-primary);
-    }
-  }
-
-  &--warning {
-    background-color: var(--color-accent-bg);
-    border-color: var(--color-accent-border);
-
-    .base-alert__icon {
-      color: var(--color-accent);
-    }
-  }
-}
+<style scoped>
+.base-alert { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid #c4ddcd; border-radius: 8px; background: #f0f7f2; color: #123f35; font-size: 14px; }
+.base-alert__icon { flex-shrink: 0; margin-top: 2px; }
+.base-alert__content { flex: 1; min-width: 0; }
+.base-alert__title { margin-bottom: 4px; color: inherit; font-weight: 500; }
+.base-alert__description { color: inherit; line-height: 1.6; }
+.base-alert--warning { background: #fcf8ed; border-color: #ead8a7; color: #80531c; }
+.base-alert--error { background: #fcf4f3; border-color: #e8cace; color: #882d3a; }
 </style>

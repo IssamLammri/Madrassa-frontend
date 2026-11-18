@@ -38,10 +38,10 @@ const handleFileChange = (e) => {
       class="base-file-button__input"
       @change="handleFileChange"
     />
-    
-    <button 
-      type="button" 
-      :class="['file-btn', `btn-${variant}`]"
+
+    <button
+      type="button"
+      :class="['custom-btn', `btn-${variant}`]"
       @click="openFilePicker"
     >
       <Upload :size="18" />
@@ -50,49 +50,8 @@ const handleFileChange = (e) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-file-button {
-  display: inline-block;
-
-  &__input {
-    display: none;
-  }
-}
-
-.file-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: auto;
-
-  &.btn-primary {
-    background-color: var(--color-primary);
-    color: white;
-    &:hover {
-      background-color: var(--color-primary-hover);
-      transform: translateY(-1px);
-    }
-  }
-
-  &.btn-secondary {
-    background-color: var(--color-heading);
-    color: white;
-    &:hover { opacity: 0.9; }
-  }
-
-  &.btn-tertiary {
-    background-color: transparent;
-    border: 2px solid var(--color-border);
-    color: var(--color-heading);
-    &:hover { background-color: var(--color-bg-cream); }
-  }
-}
+<style scoped>
+.base-file-button { min-width: 0; }
+.base-file-button__input { display: none; }
+.base-file-button button { max-width: 100%; text-align: start; }
 </style>

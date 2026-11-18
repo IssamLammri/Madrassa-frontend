@@ -21,26 +21,8 @@ defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped>
-.base-section-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
-
-  &__icon {
-    color: var(--color-primary);
-    flex-shrink: 0;
-  }
-
-  &__title {
-    margin: 0;
-    color: var(--color-heading);
-    font-size: var(--text-h1);
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-}
+<style scoped>
+.base-section-header { display: flex; align-items: center; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid var(--color-border); }
+.base-section-header__icon { width: 20px; height: 20px; color: var(--color-primary); }
+.base-section-header__title { color: var(--color-heading); font-size: 20px; font-weight: 500; line-height: 1.4; }
 </style>
