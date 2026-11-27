@@ -72,7 +72,7 @@
 import AuthContext from '@/shared/ui/AuthContext.vue'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
+import apiClient from '@/services/apiClient.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -105,7 +105,7 @@ const submitReset = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await axios.post(`https://ecole.ccib38.fr/api/parent/reset-password/${token}`, {
+    const response = await apiClient.post(`/api/parent/reset-password/${encodeURIComponent(token)}`, {
       password: password.value,
       confirmPassword: confirmPassword.value
     })
