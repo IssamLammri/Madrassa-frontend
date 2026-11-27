@@ -52,7 +52,7 @@
 <script setup>
 import AuthContext from '@/shared/ui/AuthContext.vue'
 import { ref } from 'vue'
-import axios from 'axios'
+import apiClient from '@/services/apiClient.js'
 
 const email = ref('')
 const isLoading = ref(false)
@@ -65,7 +65,7 @@ const submitEmail = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await axios.post('https://ecole.ccib38.fr/api/parent/forgot-password', {
+    const response = await apiClient.post('/api/parent/forgot-password', {
       email: email.value
     })
 
